@@ -30,4 +30,4 @@ yarn.lock
 /coverage
 
 # fichier environnement
-/server/.env
+.env
