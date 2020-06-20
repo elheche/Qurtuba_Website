@@ -63,7 +63,7 @@ export class Application {
         res.status(err.status || this.internalError);
         res.send({
           message: err.message,
-          error: err,
+          error: err.stack,
         });
       });
     }
