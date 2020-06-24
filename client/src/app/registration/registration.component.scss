@@ -1,0 +1,34 @@
+.registration-container {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(245, 245, 245);
+}
+
+.registration-container mat-toolbar {
+  position: fixed;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  z-index: 100;
+}
+
+.registration-form-container {
+  width: 800px;
+  height: 450px;
+}
+
+.registration-form-container mat-card-header {
+  display: flex;
+  justify-content: center;
+  color: rgb(70, 70, 70);
+}
+
+.registration-form-container mat-form-field {
+  width: 100%;
+}
+
