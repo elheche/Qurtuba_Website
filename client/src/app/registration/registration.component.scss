@@ -26,9 +26,41 @@
   display: flex;
   justify-content: center;
   color: rgb(70, 70, 70);
+  height: 40px;
 }
 
-.registration-form-container mat-form-field {
+.registration-form-container mat-card-content {
+  height: calc(100% - 40px);
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper {
+  height: 100%;
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper form {
+  margin-top: 30px;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  mat-form-field {
   width: 100%;
 }
 
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  mat-form-field
+  button {
+  color: rgb(130, 130, 130);
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form
+  div
+  button {
+  float: right;
+}

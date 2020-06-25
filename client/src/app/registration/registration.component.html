@@ -16,13 +16,13 @@
         <!-- Step 1 -->
         <mat-step [stepControl]="loginFormGroup" [editable]="isEditable">
 
-          <form [formGroup]="loginFormGroup">
+          <form [formGroup]="loginFormGroup" id="loginFormGroup">
             <ng-template matStepLabel>Create your login</ng-template>
 
             <mat-form-field appearance="outline">
               <mat-label>Enter your email</mat-label>
               <input matInput placeholder="user@example.com" formControlName="email" required>
-              <mat-error *ngFor="let error of getErrors('email')">{{error}}</mat-error>
+              <mat-error *ngIf="loginFormGroup.get('email').invalid">{{getErrorMessage('email')}}</mat-error>
               <button mat-icon-button matPrefix disabled>
                 <mat-icon>email</mat-icon>
               </button>
@@ -30,8 +30,8 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Enter your password</mat-label>
-              <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required>
-              <mat-error *ngFor="let error of getErrors('password')">{{error}}</mat-error>
+              <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required (input)="onValueChange()">
+              <mat-error *ngIf="loginFormGroup.get('password').invalid">{{getErrorMessage('password')}}</mat-error>
               <button mat-icon-button matPrefix disabled>
                 <mat-icon>lock</mat-icon>
               </button>
@@ -44,7 +44,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Confirm your password</mat-label>
               <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmPassword" required>
-              <mat-error *ngFor="let error of getErrors('confirmPassword')">{{error}}</mat-error>
+              <mat-error *ngIf="loginFormGroup.get('confirmPassword').invalid">
+                {{getErrorMessage('confirmPassword')}}</mat-error>
               <button mat-icon-button matPrefix disabled>
                 <mat-icon>lock</mat-icon>
               </button>
@@ -55,7 +56,7 @@
             </mat-form-field>
 
             <div>
-              <button mat-button matStepperNext>Next</button>
+              <button mat-raised-button color="primary" matStepperNext [disabled]="loginFormGroup.invalid">Next</button>
             </div>
 
           </form>

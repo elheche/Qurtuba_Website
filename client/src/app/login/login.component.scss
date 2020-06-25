@@ -26,6 +26,7 @@
   display: flex;
   justify-content: center;
   color: rgb(70, 70, 70);
+  height: 40px;
 }
 
 .login-form-container mat-form-field {
@@ -37,10 +38,12 @@
 }
 
 .login-form-container mat-card-actions {
+  width: 100%;
+  margin: 0;
   display: flex;
   justify-content: center;
 }
 
 .login-form-container mat-card-actions button {
-  width: 80px;
+  width: 100%;
 }

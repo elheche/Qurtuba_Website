@@ -13,75 +13,70 @@ export class RegistrationComponent {
   profilFormGroup: FormGroup;
   hide: boolean;
   isEditable: boolean;
-  emailErrors: string[];
-  passwordErrors: string[];
-  confirmPasswordErrors: string[];
 
   constructor() {
+    this.hide = true;
+    this.isEditable = true;
 
-    this.loginFormGroup = new FormGroup(
-      {
-        email: new FormControl('', [
-          Validators.required,
-          Validators.email
-        ]),
-        password: new FormControl('', [
-          Validators.required,
-          // check whether the entered password has a number
-          CustomValidators.patternValidator(/\d/, { hasNumber: true }),
-          // check whether the entered password has upper case letter
-          CustomValidators.patternValidator(/[A-Z]/, { hasCapitalCase: true }),
-          // check whether the entered password has a lower-case letter
-          CustomValidators.patternValidator(/[a-z]/, { hasSmallCase: true }),
-          // check whether the entered password has a special character
-          CustomValidators.patternValidator(/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, { hasSpecialCharacters: true }),
-          // check whether the entered password has a minimum length of 8 characters
-          Validators.minLength(8)
-        ]),
-        confirmPassword: new FormControl('', [Validators.required])
-      },
-      {
-        // check whether our password and confirm password match
-        validators: CustomValidators.passwordMatchValidator
-      }
-    );
+    const passwordMinLength = 8;
+
+    this.loginFormGroup = new FormGroup({
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email
+      ]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(passwordMinLength),
+        CustomValidators.patternValidator(/\d/, { hasNumber: true }),
+        CustomValidators.patternValidator(/[A-Z]/, { hasCapitalCase: true }),
+        CustomValidators.patternValidator(/[a-z]/, { hasSmallCase: true }),
+        CustomValidators.patternValidator(/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, { hasSpecialCharacters: true }),
+      ]),
+      confirmPassword: new FormControl('', [
+        Validators.required,
+        CustomValidators.passwordMatchValidator('password')
+      ])
+    });
 
     this.profilFormGroup = new FormGroup({
       secondCtrl: new FormControl('', [Validators.required])
     });
-
-    this.hide = true;
-    this.isEditable = true;
-
-    this.emailErrors = Object.keys(this.loginFormGroup.get('email').errors);
-    this.passwordErrors = Object.keys(this.loginFormGroup.get('password').errors);
-    this.confirmPasswordErrors = Object.keys(this.loginFormGroup.get('confirmPassword').errors);
   }
 
   getErrorMessage(input: 'email' | 'password' | 'confirmPassword'): string {
     switch (input) {
       case 'email':
-        if (this.loginFormGroup.controls.email.hasError('required')) {
+        if (this.loginFormGroup.get('email').hasError('required')) {
           return 'You must enter an email address.';
         }
-        return this.loginFormGroup.controls.email.hasError('email') ? 'Not a valid email.' : '';
+        return this.loginFormGroup.get('email').hasError('email') ? 'Invalid email.' : '';
       case 'password':
-        console.log(this.loginFormGroup.controls.password.errors);
-        if (this.loginFormGroup.controls.password.hasError('required')) {
+        if (this.loginFormGroup.get('password').hasError('required')) {
           return 'You must enter a password.';
         }
-        return this.loginFormGroup.controls.password.hasError('hasNumber') ? 'Your password should contain a number.' : '';
+        if (
+          this.loginFormGroup.get('password').hasError('minlength') ||
+          this.loginFormGroup.get('password').hasError('hasNumber') ||
+          this.loginFormGroup.get('password').hasError('hasCapitalCase') ||
+          this.loginFormGroup.get('password').hasError('hasSmallCase') ||
+          this.loginFormGroup.get('password').hasError('hasSpecialCharacters')
+        ) {
+          return 'Invalid password. It must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character.';
+        }
+        return '';
+      case 'confirmPassword':
+        if (this.loginFormGroup.get('confirmPassword').hasError('required')) {
+          return 'You must confirm your password.';
+        }
+        return this.loginFormGroup.get('confirmPassword')
+          .hasError('noPassswordMatch') ? 'Error: your password and confirm password do not match.' : '';
       default:
         return '';
     }
   }
 
-  getErrors(input: 'email' | 'password' | 'confirmPassword'): string[] {
-    if (input === 'confirmPassword') {
-      console.log(this.loginFormGroup.errors);
-      return this.loginFormGroup.get(input).errors ? Object.keys(this.loginFormGroup.get(input).errors) : []
-        .concat(this.loginFormGroup.errors ? Object.keys(this.loginFormGroup.errors) : []);
-    }
-    return this.loginFormGroup.get(input).errors ? Object.keys(this.loginFormGroup.get(input).errors) : [];
+  onValueChange(): void {
+    this.loginFormGroup.get('confirmPassword').reset();
   }
 }

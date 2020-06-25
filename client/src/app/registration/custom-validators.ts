@@ -3,26 +3,23 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 export class CustomValidators {
 
   static patternValidator(regExp: RegExp, error: ValidationErrors): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
+    return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
-        // if control is empty return no error
         return null;
       }
-      // test the value of the control against the regexp supplied
       const valid = regExp.test(control.value);
-      // if true, return no error (no error), else return error passed in the second parameter
       return valid ? null : error;
     };
   }
 
-  static passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
-    const password: string = control.get('password').value; // get password from our password form control
-    const confirmPassword: string = control.get('confirmPassword').value; // get password from our confirmPassword form control
-    // compare is the password math
-    if (password !== confirmPassword) {
-      // if they don't match, set an error in our confirmPassword form control
-      return { NoPassswordMatch: true };
-    }
-    return null;
+  static passwordMatchValidator(comparingPassword: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.parent || !control.value || !control.parent.get(comparingPassword).value) {
+        return null;
+      }
+      const password = control.parent.get(comparingPassword).value;
+      const confirmPassword = control.value;
+      return password && confirmPassword && password === confirmPassword ? null : { noPassswordMatch: true };
+    };
   }
 }
