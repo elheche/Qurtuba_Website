@@ -16,7 +16,7 @@
         (ngSubmit)="onSubmit(loginFrom.value, loginFormDirective)">
         <mat-form-field appearance="outline">
           <mat-label>Enter your email</mat-label>
-          <input matInput placeholder="user@example.com" formControlName="email" required>
+          <input matInput type="email" placeholder="user@example.com" formControlName="email" required>
           <mat-error *ngIf="loginFrom.get('email').invalid">{{getErrorMessage('email')}}</mat-error>
           <button mat-icon-button matPrefix disabled>
             <mat-icon>email</mat-icon>
@@ -24,7 +24,7 @@
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Enter your password</mat-label>
-          <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required>
+          <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required maxlength="30">
           <mat-error *ngIf="loginFrom.get('password').invalid">{{getErrorMessage('password')}}</mat-error>
           <button mat-icon-button matPrefix disabled>
             <mat-icon>lock</mat-icon>

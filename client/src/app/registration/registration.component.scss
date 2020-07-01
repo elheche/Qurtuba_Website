@@ -18,8 +18,9 @@
 }
 
 .registration-form-container {
-  width: 800px;
-  height: 450px;
+  margin-top: 60px;
+  width: 1000px;
+  height: 520px;
 }
 
 .registration-form-container mat-card-header {
@@ -38,29 +39,113 @@
 }
 
 .registration-form-container mat-card-content mat-horizontal-stepper form {
-  margin-top: 30px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper h2,
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  div.stepper-navigation-button-container {
+  flex-basis: 100%;
 }
 
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
-  mat-form-field {
-  width: 100%;
+  div.stepper-navigation-button-container {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
-  mat-form-field
-  button {
-  color: rgb(130, 130, 130);
+  div.stepper-navigation-button-container
+  button
+  ~ button {
+  margin-left: 15px;
 }
 
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
   form
+  mat-form-field {
+  flex-basis: 48%;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-1 {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
+  mat-form-field:nth-last-child(-n + 3) {
+  flex-basis: 22%;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
+  #membership-type-container,
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
+  #account-type-container {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 48%;
+  margin-bottom: 15px;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
   div
-  button {
-  float: right;
+  label {
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
+  div
+  mat-radio-button
+  ~ mat-radio-button {
+  margin-left: 15px;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-3
+  mat-form-field:nth-last-child(-n + 5) {
+  flex-basis: 22%;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-4
+  mat-form-field:nth-child(5),
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-4
+  mat-form-field:nth-child(6) {
+  flex-basis: 22%;
 }

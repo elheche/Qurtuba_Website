@@ -7,31 +7,34 @@
       <mat-icon>login</mat-icon>
     </a>
   </mat-toolbar>
-  <mat-card class="registration-form-container">
+  <mat-card class="registration-form-container" #registrationFormContainer>
     <mat-card-header>
       <mat-card-title>Open an account</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-horizontal-stepper linear #stepper>
+      <mat-horizontal-stepper linear="false" #stepper>
         <!-- Step 1 -->
-        <mat-step [stepControl]="loginFormGroup" [editable]="isEditable">
-
-          <form [formGroup]="loginFormGroup" id="loginFormGroup">
-            <ng-template matStepLabel>Create your login</ng-template>
-
+        <mat-step [stepControl]="registrationFormStep1" [editable]="isEditable">
+          <form [formGroup]="registrationFormStep1" id="registration-form-step-1">
+            <ng-template matStepLabel>Step 1</ng-template>
+            <h2>Create your login</h2>
             <mat-form-field appearance="outline">
               <mat-label>Enter your email</mat-label>
-              <input matInput placeholder="user@example.com" formControlName="email" required>
-              <mat-error *ngIf="loginFormGroup.get('email').invalid">{{getErrorMessage('email')}}</mat-error>
+              <input matInput type="email" placeholder="user@example.com" formControlName="email" required>
+              <mat-error *ngIf="registrationFormStep1.get('email').invalid">{{getErrorMessage(inputs.EMAIL)}}
+              </mat-error>
               <button mat-icon-button matPrefix disabled>
                 <mat-icon>email</mat-icon>
               </button>
             </mat-form-field>
-
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline"
+              hintLabel="Your password must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character.">
               <mat-label>Enter your password</mat-label>
-              <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required (input)="onValueChange()">
-              <mat-error *ngIf="loginFormGroup.get('password').invalid">{{getErrorMessage('password')}}</mat-error>
+              <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required
+                (input)="onPasswordValueChange()" #passwordInput minlength="8" maxlength="30">
+              <mat-hint align="end">{{passwordInput.value?.length || 0}}/8</mat-hint>
+              <mat-error *ngIf="registrationFormStep1.get('password').invalid">{{getErrorMessage(inputs.PASSWORD)}}
+              </mat-error>
               <button mat-icon-button matPrefix disabled>
                 <mat-icon>lock</mat-icon>
               </button>
@@ -40,12 +43,11 @@
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
               </button>
             </mat-form-field>
-
             <mat-form-field appearance="outline">
               <mat-label>Confirm your password</mat-label>
               <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmPassword" required>
-              <mat-error *ngIf="loginFormGroup.get('confirmPassword').invalid">
-                {{getErrorMessage('confirmPassword')}}</mat-error>
+              <mat-error *ngIf="registrationFormStep1.get('confirmPassword').invalid">
+                {{getErrorMessage(inputs.CONFIRM_PASSWORD)}}</mat-error>
               <button mat-icon-button matPrefix disabled>
                 <mat-icon>lock</mat-icon>
               </button>
@@ -54,35 +56,187 @@
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
               </button>
             </mat-form-field>
-
-            <div>
-              <button mat-raised-button color="primary" matStepperNext [disabled]="loginFormGroup.invalid">Next</button>
+            <div class="stepper-navigation-button-container">
+              <button class="stepper-navigation-button" mat-raised-button color="primary" matStepperNext
+                [disabled]="registrationFormStep1.invalid">Next</button>
             </div>
-
           </form>
-
         </mat-step>
         <!-- Step 2 -->
-        <mat-step [stepControl]="profilFormGroup" [editable]="isEditable">
-          <form [formGroup]="profilFormGroup">
-            <ng-template matStepLabel>Fill out your address</ng-template>
-            <mat-form-field>
-              <mat-label>Address</mat-label>
-              <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
+        <mat-step [stepControl]="registrationFormStep2" [editable]="isEditable">
+          <form [formGroup]="registrationFormStep2" id="registration-form-step-2">
+            <ng-template matStepLabel>Step 2</ng-template>
+            <h2>Fill your membership application</h2>
+            <div id="membership-type-container">
+              <label id="membership-type-label">Indicate the type of membership</label>
+              <mat-radio-group aria-labelledby="membership-type-label" class="membership-type">
+                <mat-radio-button class="membership-type-radio-button" *ngFor="let membershipType of membershipTypes"
+                  [value]="membershipType">{{membershipType}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+            <div id="account-type-container">
+              <label id="account-type-label">Indicate the type of account</label>
+              <mat-radio-group aria-labelledby="account-type-label" class="account-type">
+                <mat-radio-button class="account-type-radio-button" *ngFor="let accountType of accountTypes"
+                  [value]="accountType">{{accountType}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>First name</mat-label>
+              <input matInput formControlName="firstName" required>
+              <mat-error *ngIf="registrationFormStep2.get('firstName').invalid">{{getErrorMessage(inputs.FIRST_NAME)}}
+              </mat-error>
             </mat-form-field>
-            <div>
-              <button mat-button matStepperPrevious>Back</button>
-              <button mat-button matStepperNext>Next</button>
+            <mat-form-field appearance="outline">
+              <mat-label>Last name</mat-label>
+              <input matInput formControlName="lastName" required>
+              <mat-error *ngIf="registrationFormStep2.get('lastName').invalid">{{getErrorMessage(inputs.LAST_NAME)}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Birth day</mat-label>
+              <input matInput type="date" formControlName="birthDay" required [min]="birthDateRange.minDate" [max]="birthDateRange.maxDate"
+                (input)="getErrorMessage(inputs.BIRTH_DAY)">
+              <mat-error *ngIf="registrationFormStep2.get('birthDay').invalid">{{getErrorMessage(inputs.BIRTH_DAY)}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Phone number</mat-label>
+              <input matInput type="tel" formControlName="phoneNumber" minlength="14" maxlength="14" required
+                (keypress)="formatPhoneNumber($event)">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Address</mat-label>
+              <input matInput formControlName="address" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Postal code</mat-label>
+              <input matInput formControlName="postalCode" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Province</mat-label>
+              <input matInput formControlName="province" required>
+            </mat-form-field>
+            <div class="stepper-navigation-button-container">
+              <button class="stepper-navigation-button" mat-raised-button color="primary"
+                matStepperPrevious>Back</button>
+              <button class="stepper-navigation-button" mat-raised-button color="primary" matStepperNext>Next</button>
             </div>
           </form>
         </mat-step>
         <!-- Step 3 -->
+        <mat-step [stepControl]="registrationFormStep3" [editable]="isEditable">
+          <form [formGroup]="registrationFormStep3" id="registration-form-step-3">
+            <ng-template matStepLabel>Step 3</ng-template>
+            <h2>Fill your membership application (continued)</h2>
+            <mat-form-field appearance="outline">
+              <mat-label>Social Insurance Number</mat-label>
+              <input matInput formControlName="socialInsuranceNumber" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Citizenship</mat-label>
+              <input matInput formControlName="citizenship" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Profession</mat-label>
+              <input matInput formControlName="profession" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Employer</mat-label>
+              <input matInput formControlName="employer" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Employer phone number</mat-label>
+              <input matInput formControlName="employerPhoneNumber" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Number of dependents</mat-label>
+              <input matInput formControlName="numberOfDependents" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Deposit amount</mat-label>
+              <input matInput formControlName="depositAmount" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Membership Fee</mat-label>
+              <input matInput formControlName="membershipFee" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Donation for mosque</mat-label>
+              <input matInput formControlName="donationForMosque" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Total amount</mat-label>
+              <input matInput formControlName="totalAmount" required>
+            </mat-form-field>
+            <div class="stepper-navigation-button-container">
+              <button class="stepper-navigation-button" mat-raised-button color="primary"
+                matStepperPrevious>Back</button>
+              <button class="stepper-navigation-button" mat-raised-button color="primary" matStepperNext>Next</button>
+            </div>
+          </form>
+        </mat-step>
+        <!-- Step 4 -->
+        <mat-step [stepControl]="registrationFormStep4" [editable]="isEditable">
+          <form [formGroup]="registrationFormStep4" id="registration-form-step-4">
+            <ng-template matStepLabel>Step 4</ng-template>
+            <h2>Fill the application form for the joint member</h2>
+            <mat-form-field appearance="outline">
+              <mat-label>First name</mat-label>
+              <input matInput formControlName="firstName" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Last name</mat-label>
+              <input matInput formControlName="lastName" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Address</mat-label>
+              <input matInput formControlName="address" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Postal code</mat-label>
+              <input matInput formControlName="postalCode" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Province</mat-label>
+              <input matInput formControlName="province" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Social Insurance Number</mat-label>
+              <input matInput formControlName="socialInsuranceNumber" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Citizenship</mat-label>
+              <input matInput formControlName="citizenship" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Profession</mat-label>
+              <input matInput formControlName="profession" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Relationship</mat-label>
+              <input matInput formControlName="relationship" required>
+            </mat-form-field>
+            <div class="stepper-navigation-button-container">
+              <button class="stepper-navigation-button" mat-raised-button color="primary"
+                matStepperPrevious>Back</button>
+              <button class="stepper-navigation-button" mat-raised-button color="primary" matStepperNext>Next</button>
+            </div>
+          </form>
+        </mat-step>
+        <!-- Step 5 -->
         <mat-step>
           <ng-template matStepLabel>Done</ng-template>
-          <p>You are now done.</p>
-          <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button (click)="stepper.reset()">Reset</button>
+          <h2>Please review the information you have entered</h2>
+          <mat-checkbox color="primary">
+            I / We have read the Regulations and By-laws of the "Co-operative" and I / We fully agree to abide by them.
+          </mat-checkbox>
+          <div class="stepper-navigation-button-container">
+            <button class="stepper-navigation-button" mat-raised-button color="primary" matStepperPrevious>Back</button>
+            <button class="stepper-navigation-button" mat-raised-button color="primary"
+              (click)="stepper.reset()">Reset</button>
           </div>
         </mat-step>
       </mat-horizontal-stepper>
