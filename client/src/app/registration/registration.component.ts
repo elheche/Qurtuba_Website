@@ -40,6 +40,8 @@ export class RegistrationComponent {
     });
 
     this.registrationFormStep2 = new FormGroup({
+      membershipType: new FormControl('', [Validators.required]),
+      accountType: new FormControl('', [Validators.required]),
       firstName: new FormControl('', [Validators.required]),
       lastName: new FormControl('', [Validators.required]),
       birthDay: new FormControl('', [
@@ -56,7 +58,10 @@ export class RegistrationComponent {
       address: new FormControl('', [Validators.required]),
       city: new FormControl('', [Validators.required]),
       province: new FormControl('', [Validators.required]),
-      postalCode: new FormControl('', [Validators.required]),
+      postalCode: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/)
+      ]),
     });
 
     this.registrationFormStep3 = new FormGroup({
@@ -108,6 +113,23 @@ export class RegistrationComponent {
     phoneNumber.input(inputValue);
     if (phoneNumber.getNumber()) {
       this.registrationFormStep2.get('phoneNumber').setValue(phoneNumber.getNumber().formatNational());
+    }
+  }
+
+  formatPostalCode(inputEvent: InputEvent): void {
+    if (!inputEvent.data) {
+      return;
+    }
+    if (/[/^¨`]/.test(inputEvent.data)) {
+      return;
+    }
+    const postalCode = this.registrationFormStep2.get('postalCode').value as string;
+    const postalCodeBlockLength = 3;
+    const firstBlockIndex = 0;
+    const secondBlockIndex = 4;
+    if (postalCode.length >= postalCodeBlockLength) {
+      this.registrationFormStep2.get('postalCode')
+        .setValue(`${postalCode.substr(firstBlockIndex, postalCodeBlockLength)} ${postalCode.substr(secondBlockIndex, postalCodeBlockLength)}`);
     }
   }
 }

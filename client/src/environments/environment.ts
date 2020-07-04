@@ -20,6 +20,21 @@ export const environment = {
       maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()).toISOString().slice(0, 10)
     },
     passwordMinLength: 8,
+    provinces: [
+      'British Columbia',
+      'Alberta',
+      'Saskatchewan',
+      'Manitoba',
+      'Ontario',
+      'Quebec',
+      'New Brunswick',
+      'Nova Scotia',
+      'Prince Edward Island',
+      'Newfoundland and Labrador',
+      'Yukon',
+      'Northwest Territories',
+      'Nunavut'
+    ],
     errorMessages: {
       email: {
         required: 'You must enter an email address.',
@@ -32,6 +47,12 @@ export const environment = {
       confirmPassword: {
         required: 'You must confirm your password.',
         noPassswordMatch: 'Error: your password and confirm password do not match.'
+      },
+      membershipType: {
+        required: 'You must choose the type of your membership.'
+      },
+      accountType: {
+        required: 'You must choose the type of your account.'
       },
       firstName: {
         required: 'You must enter your first name.'
@@ -53,6 +74,13 @@ export const environment = {
       },
       city: {
         required: 'You must enter the city of your address.'
+      },
+      province: {
+        required: 'You must choose the province of your address.'
+      },
+      postalCode: {
+        required: 'You must enter the postal code of your address.',
+        pattern: 'Invalid postal code.'
       }
     }
   }

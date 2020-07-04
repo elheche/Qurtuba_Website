@@ -106,7 +106,22 @@
   display: flex;
   flex-direction: column;
   flex-basis: 49%;
-  margin-bottom: 15px;
+  min-height: 77px;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
+  #membership-type-container
+  .mat-error,
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
+  #account-type-container
+  .mat-error {
+  font-size: 10.5px;
 }
 
 .registration-form-container

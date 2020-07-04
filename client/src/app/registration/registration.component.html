@@ -71,32 +71,42 @@
             <h2>Fill your membership application</h2>
             <div id="membership-type-container">
               <label id="membership-type-label">Indicate the type of membership</label>
-              <mat-radio-group aria-labelledby="membership-type-label" class="membership-type">
+              <mat-radio-group aria-labelledby="membership-type-label" class="membership-type"
+                formControlName="membershipType" required>
                 <mat-radio-button class="membership-type-radio-button"
                   *ngFor="let membershipType of environment.registration.membershipTypes" [value]="membershipType">
                   {{membershipType}}
                 </mat-radio-button>
               </mat-radio-group>
+              <mat-error *ngIf="registrationFormStep2.get('membershipType').invalid">
+                {{getErrorMessage('registrationFormStep2', 'membershipType')}}
+              </mat-error>
             </div>
             <div id="account-type-container">
               <label id="account-type-label">Indicate the type of account</label>
-              <mat-radio-group aria-labelledby="account-type-label" class="account-type">
+              <mat-radio-group aria-labelledby="account-type-label" class="account-type" formControlName="accountType"
+                required>
                 <mat-radio-button class="account-type-radio-button"
                   *ngFor="let accountType of environment.registration.accountTypes" [value]="accountType">
                   {{accountType}}
                 </mat-radio-button>
               </mat-radio-group>
+              <mat-error *ngIf="registrationFormStep2.get('accountType').invalid">
+                {{getErrorMessage('registrationFormStep2', 'accountType')}}
+              </mat-error>
             </div>
             <mat-form-field appearance="outline">
               <mat-label>First name</mat-label>
               <input matInput formControlName="firstName" required>
-              <mat-error *ngIf="registrationFormStep2.get('firstName').invalid">{{getErrorMessage('registrationFormStep2', 'firstName')}}
+              <mat-error *ngIf="registrationFormStep2.get('firstName').invalid">
+                {{getErrorMessage('registrationFormStep2', 'firstName')}}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Last name</mat-label>
               <input matInput formControlName="lastName" required>
-              <mat-error *ngIf="registrationFormStep2.get('lastName').invalid">{{getErrorMessage('registrationFormStep2', 'lastName')}}
+              <mat-error *ngIf="registrationFormStep2.get('lastName').invalid">
+                {{getErrorMessage('registrationFormStep2', 'lastName')}}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -104,7 +114,8 @@
               <input matInput type="date" formControlName="birthDay" required
                 [min]="environment.registration.birthDateRange.minDate"
                 [max]="environment.registration.birthDateRange.maxDate">
-              <mat-error *ngIf="registrationFormStep2.get('birthDay').invalid">{{getErrorMessage('registrationFormStep2', 'birthDay')}}
+              <mat-error *ngIf="registrationFormStep2.get('birthDay').invalid">
+                {{getErrorMessage('registrationFormStep2', 'birthDay')}}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -133,11 +144,24 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Province</mat-label>
-              <input matInput formControlName="province" required>
+              <mat-select formControlName="province" required>
+                <mat-option>None</mat-option>
+                <mat-option *ngFor="let province of environment.registration.provinces" [value]="province">
+                  {{province}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="registrationFormStep2.get('province').invalid">
+                {{getErrorMessage('registrationFormStep2', 'province')}}
+              </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Postal code</mat-label>
-              <input matInput formControlName="postalCode" required>
+              <input matInput formControlName="postalCode" maxlength="7" required
+                [value]="registrationFormStep2.get('postalCode').value | uppercase" (input)="formatPostalCode($event)"
+                placeholder="Ex. J4K 5G7">
+              <mat-error *ngIf="registrationFormStep2.get('postalCode').invalid">
+                {{getErrorMessage('registrationFormStep2', 'postalCode')}}
+              </mat-error>
             </mat-form-field>
             <div class="stepper-navigation-button-container">
               <button class="stepper-navigation-button" mat-raised-button color="primary"
