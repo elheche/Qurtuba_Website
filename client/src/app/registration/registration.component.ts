@@ -1,8 +1,8 @@
-import { Component, Type } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AsYouType, E164Number } from 'libphonenumber-js';
+import { AsYouType } from 'libphonenumber-js';
+import { environment } from '../../environments/environment';
 import { CustomValidators } from './custom-validators';
-import { Inputs } from './inputs.enum';
 
 @Component({
   selector: 'app-registration',
@@ -17,28 +17,12 @@ export class RegistrationComponent {
   registrationFormStep5: FormGroup;
   hide: boolean;
   isEditable: boolean;
-  membershipTypes: string[];
-  accountTypes: string[];
-  memberAccountType: string;
-  inputs: typeof Inputs;
-  birthDateRange: { minDate: string, maxDate: string };
+  environment: typeof environment;
 
   constructor() {
     this.hide = true;
-    this.isEditable = true; this.membershipTypes = ['Buy a house', 'Investment'];
-    this.accountTypes = ['Individual', 'Joint'];
-    this.memberAccountType = '';
-    this.inputs = Inputs;
-    const ageOfMajority = 18;
-    const lastDateOfMajority = new Date();
-    lastDateOfMajority.setFullYear(new Date().getFullYear() - ageOfMajority);
-    this.birthDateRange = {
-      minDate: '1900-01-01',
-      maxDate: lastDateOfMajority.toISOString().slice(0, 10)
-    };
-    const passwordMinLength = 8;
-    const birthDayLength = 10;
-    const phoneNumberLength = 14;
+    this.isEditable = true;
+    this.environment = environment;
 
     this.registrationFormStep1 = new FormGroup({
       email: new FormControl('', [
@@ -47,11 +31,7 @@ export class RegistrationComponent {
       ]),
       password: new FormControl('', [
         Validators.required,
-        Validators.minLength(passwordMinLength),
-        CustomValidators.patternValidator(/\d/, { hasNumber: true }),
-        CustomValidators.patternValidator(/[A-Z]/, { hasCapitalCase: true }),
-        CustomValidators.patternValidator(/[a-z]/, { hasSmallCase: true }),
-        CustomValidators.patternValidator(/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, { hasSpecialCharacters: true }),
+        Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,32}$/)
       ]),
       confirmPassword: new FormControl('', [
         Validators.required,
@@ -64,16 +44,19 @@ export class RegistrationComponent {
       lastName: new FormControl('', [Validators.required]),
       birthDay: new FormControl('', [
         Validators.required,
+        CustomValidators.dateRangeValidator(
+          environment.registration.birthDateRange.minDate,
+          environment.registration.birthDateRange.maxDate
+        )
       ]),
       phoneNumber: new FormControl('', [
         Validators.required,
-        Validators.minLength(phoneNumberLength),
-        Validators.maxLength(phoneNumberLength),
         Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)
       ]),
       address: new FormControl('', [Validators.required]),
-      postalCode: new FormControl('', [Validators.required]),
+      city: new FormControl('', [Validators.required]),
       province: new FormControl('', [Validators.required]),
+      postalCode: new FormControl('', [Validators.required]),
     });
 
     this.registrationFormStep3 = new FormGroup({
@@ -93,8 +76,9 @@ export class RegistrationComponent {
       firstName: new FormControl('', [Validators.required]),
       lastName: new FormControl('', [Validators.required]),
       address: new FormControl('', [Validators.required]),
-      postalCode: new FormControl('', [Validators.required]),
+      city: new FormControl('', [Validators.required]),
       province: new FormControl('', [Validators.required]),
+      postalCode: new FormControl('', [Validators.required]),
       socialInsuranceNumber: new FormControl('', [Validators.required]),
       citizenship: new FormControl('', [Validators.required]),
       profession: new FormControl('', [Validators.required]),
@@ -102,65 +86,28 @@ export class RegistrationComponent {
     });
   }
 
-  // tslint:disable-next-line: cyclomatic-complexity
-  getErrorMessage(input: Inputs): string {
-    switch (input) {
-      case 'EMAIL':
-        if (this.registrationFormStep1.get('email').hasError('required')) {
-          return 'You must enter an email address.';
-        }
-        return this.registrationFormStep1.get('email').hasError('email') ? 'Invalid email.' : '';
-      case 'PASSWORD':
-        if (this.registrationFormStep1.get('password').hasError('required')) {
-          return 'You must enter a password.';
-        }
-        if (
-          this.registrationFormStep1.get('password').hasError('minlength') ||
-          this.registrationFormStep1.get('password').hasError('hasNumber') ||
-          this.registrationFormStep1.get('password').hasError('hasCapitalCase') ||
-          this.registrationFormStep1.get('password').hasError('hasSmallCase') ||
-          this.registrationFormStep1.get('password').hasError('hasSpecialCharacters')
-        ) {
-          return 'Invalid password. It must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character.';
-        }
-        return '';
-      case 'CONFIRM_PASSWORD':
-        if (this.registrationFormStep1.get('confirmPassword').hasError('required')) {
-          return 'You must confirm your password.';
-        }
-        return this.registrationFormStep1.get('confirmPassword')
-          .hasError('noPassswordMatch') ? 'Error: your password and confirm password do not match.' : '';
-      case 'FIRST_NAME':
-        return 'You must enter your first name.';
-      case 'LAST_NAME':
-        return 'You must enter your last name.';
-      case 'BIRTH_DAY':
-        console.log(this.registrationFormStep2.get('birthDay').errors);
-        console.log(this.registrationFormStep2.get('birthDay').value);
-        console.log(this.birthDateRange);
-        if (this.registrationFormStep2.get('birthDay').hasError('required')) {
-          return 'You must enter your birth day.';
-        }
-        return this.registrationFormStep2.get('birthDay').hasError('maxlength') ? 'Invalid date.' : '';
-      default:
-        return '';
-    }
+  getErrorMessage(formGroup: string, input: string): string {
+    return environment.registration.errorMessages[input][Object.keys(this[formGroup].get(input).errors)[0]];
   }
 
   onPasswordValueChange(): void {
     this.registrationFormStep1.get('confirmPassword').reset();
   }
 
-  formatPhoneNumber(keyboardEvent: KeyboardEvent): boolean {
-    if (/[\d]/.test(keyboardEvent.key)) {
-      const phoneNumber = new AsYouType('CA');
-      phoneNumber.input(this.registrationFormStep2.get('phoneNumber').value);
-      if (phoneNumber.getNumber()) {
-        this.registrationFormStep2.get('phoneNumber').setValue(phoneNumber.getNumber().formatNational());
-      }
-      return true;
-    } else {
-      return false;
+  formatPhoneNumber(inputEvent: InputEvent): void {
+    let inputValue = this.registrationFormStep2.get('phoneNumber').value as string;
+    if (/[/^¨`]/.test(inputEvent.data)) {
+      return;
+    }
+    if (!/[\d]/.test(inputValue[inputValue.length - 1])) {
+      inputValue = inputValue.slice(0, inputValue.length - 1);
+      this.registrationFormStep2.get('phoneNumber').setValue(inputValue);
+      return;
+    }
+    const phoneNumber = new AsYouType('CA');
+    phoneNumber.input(inputValue);
+    if (phoneNumber.getNumber()) {
+      this.registrationFormStep2.get('phoneNumber').setValue(phoneNumber.getNumber().formatNational());
     }
   }
 }

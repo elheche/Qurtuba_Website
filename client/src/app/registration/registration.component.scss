@@ -74,7 +74,7 @@
   mat-horizontal-stepper
   form
   mat-form-field {
-  flex-basis: 48%;
+  flex-basis: 49%;
 }
 
 .registration-form-container
@@ -89,8 +89,8 @@
   mat-card-content
   mat-horizontal-stepper
   form#registration-form-step-2
-  mat-form-field:nth-last-child(-n + 3) {
-  flex-basis: 22%;
+  mat-form-field:nth-last-child(-n + 5) {
+  flex-basis: 23.5%;
 }
 
 .registration-form-container
@@ -105,7 +105,7 @@
   #account-type-container {
   display: flex;
   flex-direction: column;
-  flex-basis: 48%;
+  flex-basis: 49%;
   margin-bottom: 15px;
 }
 
@@ -134,9 +134,14 @@
   mat-horizontal-stepper
   form#registration-form-step-3
   mat-form-field:nth-last-child(-n + 5) {
-  flex-basis: 22%;
+  flex-basis: 23.5%;
 }
 
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-4
+  mat-form-field:nth-child(4),
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
@@ -146,6 +151,11 @@
   mat-card-content
   mat-horizontal-stepper
   form#registration-form-step-4
-  mat-form-field:nth-child(6) {
-  flex-basis: 22%;
+  mat-form-field:nth-child(6),
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-4
+  mat-form-field:nth-child(7) {
+  flex-basis: 23.5%;
 }
