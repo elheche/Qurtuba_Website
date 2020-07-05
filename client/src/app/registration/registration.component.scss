@@ -89,6 +89,18 @@
   mat-card-content
   mat-horizontal-stepper
   form#registration-form-step-2
+  mat-form-field:nth-child(6),
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
+  mat-form-field:nth-child(7) {
+  flex-basis: 23.5%;
+}
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
   mat-form-field:nth-last-child(-n + 5) {
   flex-basis: 23.5%;
 }

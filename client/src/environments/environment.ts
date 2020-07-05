@@ -20,21 +20,6 @@ export const environment = {
       maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()).toISOString().slice(0, 10)
     },
     passwordMinLength: 8,
-    provinces: [
-      'British Columbia',
-      'Alberta',
-      'Saskatchewan',
-      'Manitoba',
-      'Ontario',
-      'Quebec',
-      'New Brunswick',
-      'Nova Scotia',
-      'Prince Edward Island',
-      'Newfoundland and Labrador',
-      'Yukon',
-      'Northwest Territories',
-      'Nunavut'
-    ],
     errorMessages: {
       email: {
         required: 'You must enter an email address.',
@@ -74,6 +59,9 @@ export const environment = {
       },
       city: {
         required: 'You must enter the city of your address.'
+      },
+      country: {
+        required: 'You must choose the country of your address.'
       },
       province: {
         required: 'You must choose the province of your address.'

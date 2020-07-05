@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { AsYouType } from 'libphonenumber-js';
+import data from '../../assets/countries-regions-data.json';
 import { environment } from '../../environments/environment';
 import { CustomValidators } from './custom-validators';
+import { ICountry } from './icountry.data';
 
 @Component({
   selector: 'app-registration',
@@ -18,11 +22,18 @@ export class RegistrationComponent {
   hide: boolean;
   isEditable: boolean;
   environment: typeof environment;
+  countries: ICountry[];
 
-  constructor() {
+  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer,) {
     this.hide = true;
     this.isEditable = true;
     this.environment = environment;
+    this.countries = data as ICountry[];
+    this.countries.forEach((country) => {
+      const iconName = `flag-${country.countryShortCode.toLowerCase()}`;
+      const iconUrl = `../../assets/countries-flags/${country.countryShortCode.toLowerCase()}.svg`;
+      this.iconRegistry.addSvgIcon(iconName, this.sanitizer.bypassSecurityTrustResourceUrl(iconUrl));
+    });
 
     this.registrationFormStep1 = new FormGroup({
       email: new FormControl('', [
@@ -57,6 +68,7 @@ export class RegistrationComponent {
       ]),
       address: new FormControl('', [Validators.required]),
       city: new FormControl('', [Validators.required]),
+      country: new FormControl('', [Validators.required]),
       province: new FormControl('', [Validators.required]),
       postalCode: new FormControl('', [
         Validators.required,
@@ -131,5 +143,16 @@ export class RegistrationComponent {
       this.registrationFormStep2.get('postalCode')
         .setValue(`${postalCode.substr(firstBlockIndex, postalCodeBlockLength)} ${postalCode.substr(secondBlockIndex, postalCodeBlockLength)}`);
     }
+  }
+
+  findSelectedCountryIndex(): number {
+    return this.countries.findIndex((country) => country.countryName === this.registrationFormStep2.get('country').value);
+  }
+
+  getSelectedCountryFlagIconName(): string {
+    if (this.findSelectedCountryIndex() < 0) {
+      return '';
+    }
+    return `flag-${this.countries[this.findSelectedCountryIndex()].countryShortCode.toLowerCase()}`;
   }
 }
