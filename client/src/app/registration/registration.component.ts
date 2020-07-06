@@ -69,11 +69,8 @@ export class RegistrationComponent {
       address: new FormControl('', [Validators.required]),
       city: new FormControl('', [Validators.required]),
       country: new FormControl('', [Validators.required]),
-      province: new FormControl('', [Validators.required]),
-      postalCode: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/)
-      ]),
+      province: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      postalCode: new FormControl({ value: '', disabled: true }, [Validators.required]),
     });
 
     this.registrationFormStep3 = new FormGroup({
@@ -149,10 +146,25 @@ export class RegistrationComponent {
     return this.countries.findIndex((country) => country.countryName === this.registrationFormStep2.get('country').value);
   }
 
-  getSelectedCountryFlagIconName(): string {
-    if (this.findSelectedCountryIndex() < 0) {
-      return '';
+  onCountryValueChange(): void {
+    if (this.registrationFormStep2.get('country').value) {
+      this.registrationFormStep2.get('province').enable({ onlySelf: true });
+      this.registrationFormStep2.get('postalCode').enable({ onlySelf: true });
+      if (this.registrationFormStep2.get('country').value === 'Canada') {
+        this.registrationFormStep2.get('postalCode').setValidators([
+          Validators.required,
+          Validators.pattern(/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/)
+        ]);
+        this.registrationFormStep2.get('postalCode').updateValueAndValidity({ onlySelf: true });
+      } else {
+        this.registrationFormStep2.get('postalCode').setValidators([Validators.required]);
+        this.registrationFormStep2.get('postalCode').updateValueAndValidity({ onlySelf: true });
+      }
+    } else {
+      this.registrationFormStep2.get('province').reset();
+      this.registrationFormStep2.get('province').disable({ onlySelf: true });
+      this.registrationFormStep2.get('postalCode').reset();
+      this.registrationFormStep2.get('postalCode').disable({ onlySelf: true });
     }
-    return `flag-${this.countries[this.findSelectedCountryIndex()].countryShortCode.toLowerCase()}`;
   }
 }

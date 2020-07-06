@@ -144,7 +144,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <mat-select formControlName="country" required>
+              <mat-select formControlName="country" required (selectionChange)="onCountryValueChange()">
                 <mat-option>--</mat-option>
                 <mat-option *ngFor="let country of countries" [value]="country.countryName">
                   <mat-icon svgIcon="{{'flag-'.concat(country.countryShortCode.toLowerCase())}}"></mat-icon>
