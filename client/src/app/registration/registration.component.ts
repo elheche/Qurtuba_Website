@@ -1,7 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import * as fs from 'fs';
 import { AsYouType } from 'libphonenumber-js';
 import data from '../../assets/countries-regions-data.json';
 import { environment } from '../../environments/environment';
@@ -24,7 +26,7 @@ export class RegistrationComponent {
   environment: typeof environment;
   countries: ICountry[];
 
-  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer,) {
+  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, private http: HttpClient) {
     this.hide = true;
     this.isEditable = true;
     this.environment = environment;
@@ -147,6 +149,7 @@ export class RegistrationComponent {
   }
 
   onCountryValueChange(): void {
+    this.getPostalCodeRegEx();
     if (this.registrationFormStep2.get('country').value) {
       this.registrationFormStep2.get('province').enable({ onlySelf: true });
       this.registrationFormStep2.get('postalCode').enable({ onlySelf: true });
@@ -166,5 +169,35 @@ export class RegistrationComponent {
       this.registrationFormStep2.get('postalCode').reset();
       this.registrationFormStep2.get('postalCode').disable({ onlySelf: true });
     }
+  }
+
+  getPostalCodeRegEx(): void {
+    const countries: {
+      countryName: string,
+      countryShortCode: string,
+      postalCodeRegEx: string
+      regions: { name: string, shortCode: string }[]
+    }[] = [];
+    const url = 'http://i18napis.appspot.com/address/data/';
+
+    this.countries.forEach((country) => {
+      this.http.get(url.concat(country.countryShortCode)).subscribe((dataRegEX: any) => {
+        countries.push({
+          countryName: country.countryName,
+          countryShortCode: country.countryShortCode,
+          postalCodeRegEx: dataRegEX.zip ? `/^${dataRegEX.zip}$/` : '',
+          regions: country.regions
+        });
+        if (countries.length === 248) {
+          const dataUpdated = JSON.stringify(countries);
+          const file = fs;
+          file.writeFile('data.json', dataUpdated, (error) => {
+            if (error) console.error(error);
+            console.log('Writing complete');
+          });
+        }
+      });
+    });
+
   }
 }
