@@ -19,7 +19,6 @@ export const environment = {
       // User must be at least 18 years old
       maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()).toISOString().slice(0, 10)
     },
-    passwordMinLength: 8,
     errorMessages: {
       email: {
         required: 'You must enter an email address.',

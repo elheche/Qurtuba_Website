@@ -171,8 +171,8 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Zip/Postal code</mat-label>
-              <input matInput formControlName="postalCode" maxlength="7" required
-                [value]="registrationFormStep2.get('postalCode').value | uppercase" (input)="formatPostalCode($event)"
+              <input matInput formControlName="postalCode" maxlength="14" required
+                [value]="registrationFormStep2.get('postalCode').value | uppercase" (input)="formatCanadianPostalCode($event)"
                 placeholder="Ex. J4K 5G7">
               <mat-error *ngIf="registrationFormStep2.get('postalCode').invalid">
                 {{getErrorMessage('registrationFormStep2', 'postalCode')}}

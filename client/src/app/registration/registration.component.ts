@@ -3,9 +3,9 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import * as fs from 'fs';
+import FileSaver from 'file-saver';
 import { AsYouType } from 'libphonenumber-js';
-import data from '../../assets/countries-regions-data.json';
+import data from '../../assets/countries-data.json';
 import { environment } from '../../environments/environment';
 import { CustomValidators } from './custom-validators';
 import { ICountry } from './icountry.data';
@@ -127,11 +127,11 @@ export class RegistrationComponent {
     }
   }
 
-  formatPostalCode(inputEvent: InputEvent): void {
-    if (!inputEvent.data) {
-      return;
-    }
-    if (/[/^¨`]/.test(inputEvent.data)) {
+  formatCanadianPostalCode(inputEvent: InputEvent): void {
+    if (!inputEvent.data
+      || /[/^¨`]/.test(inputEvent.data)
+      || this.registrationFormStep2.get('country').value !== 'Canada'
+    ) {
       return;
     }
     const postalCode = this.registrationFormStep2.get('postalCode').value as string;
@@ -149,20 +149,16 @@ export class RegistrationComponent {
   }
 
   onCountryValueChange(): void {
-    this.getPostalCodeRegEx();
     if (this.registrationFormStep2.get('country').value) {
+      this.registrationFormStep2.get('province').reset();
       this.registrationFormStep2.get('province').enable({ onlySelf: true });
+      this.registrationFormStep2.get('postalCode').reset();
       this.registrationFormStep2.get('postalCode').enable({ onlySelf: true });
-      if (this.registrationFormStep2.get('country').value === 'Canada') {
-        this.registrationFormStep2.get('postalCode').setValidators([
-          Validators.required,
-          Validators.pattern(/^(?!.*[DFIOQU])[A-VXY][0-9][A-Z] ?[0-9][A-Z][0-9]$/)
-        ]);
-        this.registrationFormStep2.get('postalCode').updateValueAndValidity({ onlySelf: true });
-      } else {
-        this.registrationFormStep2.get('postalCode').setValidators([Validators.required]);
-        this.registrationFormStep2.get('postalCode').updateValueAndValidity({ onlySelf: true });
-      }
+      this.registrationFormStep2.get('postalCode').setValidators([
+        Validators.required,
+        Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex()].postalCodeRegEx))
+      ]);
+      this.registrationFormStep2.get('postalCode').updateValueAndValidity({ onlySelf: true });
     } else {
       this.registrationFormStep2.get('province').reset();
       this.registrationFormStep2.get('province').disable({ onlySelf: true });
@@ -171,7 +167,7 @@ export class RegistrationComponent {
     }
   }
 
-  getPostalCodeRegEx(): void {
+  /* getPostalCodeRegEx(): void {
     const countries: {
       countryName: string,
       countryShortCode: string,
@@ -185,19 +181,15 @@ export class RegistrationComponent {
         countries.push({
           countryName: country.countryName,
           countryShortCode: country.countryShortCode,
-          postalCodeRegEx: dataRegEX.zip ? `/^${dataRegEX.zip}$/` : '',
+          postalCodeRegEx: dataRegEX.zip ? `^${dataRegEX.zip}$` : '',
           regions: country.regions
         });
         if (countries.length === 248) {
           const dataUpdated = JSON.stringify(countries);
-          const file = fs;
-          file.writeFile('data.json', dataUpdated, (error) => {
-            if (error) console.error(error);
-            console.log('Writing complete');
-          });
+          const blob = new Blob([dataUpdated], { type: 'application/json;charset=utf-8' });
+          FileSaver.saveAs(blob, 'dataUpdated.json');
         }
       });
     });
-
-  }
+  } */
 }
