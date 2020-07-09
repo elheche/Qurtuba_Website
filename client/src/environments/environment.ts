@@ -68,6 +68,10 @@ export const environment = {
       postalCode: {
         required: 'You must enter the postal code of your address.',
         pattern: 'Invalid postal code.'
+      },
+      socialInsuranceNumber: {
+        required: 'You must enter your social insurance number (SIN).',
+        pattern: 'Invalid social insurance number (SIN).'
       }
     }
   }

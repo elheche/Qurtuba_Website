@@ -121,7 +121,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Phone number</mat-label>
               <input matInput type="tel" formControlName="phoneNumber" maxlength="14" required
-                (input)="formatPhoneNumber($event)" placeholder="(555) 555-1234">
+                (input)="formatPhoneNumber($event)" placeholder="Ex. (555) 555-1234">
               <mat-error *ngIf="registrationFormStep2.get('phoneNumber').invalid">
                 {{getErrorMessage('registrationFormStep2', 'phoneNumber')}}
               </mat-error>
@@ -172,8 +172,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Zip/Postal code</mat-label>
               <input matInput formControlName="postalCode" maxlength="14" required
-                [value]="registrationFormStep2.get('postalCode').value | uppercase" (input)="formatCanadianPostalCode($event)"
-                placeholder="Ex. J4K 5G7">
+                [value]="registrationFormStep2.get('postalCode').value | uppercase"
+                (input)="formatCanadianPostalCode($event)" placeholder="Ex. J4K 5G7">
               <mat-error *ngIf="registrationFormStep2.get('postalCode').invalid">
                 {{getErrorMessage('registrationFormStep2', 'postalCode')}}
               </mat-error>
@@ -192,7 +192,12 @@
             <h2>Fill your membership application (continued)</h2>
             <mat-form-field appearance="outline">
               <mat-label>Social Insurance Number</mat-label>
-              <input matInput formControlName="socialInsuranceNumber" required>
+              <input matInput formControlName="socialInsuranceNumber" maxlength="11" required
+                (input)="formatSocialInsuranceNumber($event)" placeholder="Ex. 111-111-111"
+                (blur)="formatSocialInsuranceNumber($event)">
+              <mat-error *ngIf="registrationFormStep3.get('socialInsuranceNumber').invalid">
+                {{getErrorMessage('registrationFormStep3', 'socialInsuranceNumber')}}
+              </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Citizenship</mat-label>

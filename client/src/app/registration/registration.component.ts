@@ -53,10 +53,18 @@ export class RegistrationComponent {
     });
 
     this.registrationFormStep2 = new FormGroup({
-      membershipType: new FormControl('', [Validators.required]),
-      accountType: new FormControl('', [Validators.required]),
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('', [Validators.required]),
+      membershipType: new FormControl('', [
+        Validators.required
+      ]),
+      accountType: new FormControl('', [
+        Validators.required
+      ]),
+      firstName: new FormControl('', [
+        Validators.required
+      ]),
+      lastName: new FormControl('', [
+        Validators.required
+      ]),
       birthDay: new FormControl('', [
         Validators.required,
         CustomValidators.dateRangeValidator(
@@ -68,37 +76,88 @@ export class RegistrationComponent {
         Validators.required,
         Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)
       ]),
-      address: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      country: new FormControl('', [Validators.required]),
-      province: new FormControl({ value: '', disabled: true }, [Validators.required]),
-      postalCode: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      address: new FormControl('', [
+        Validators.required
+      ]),
+      city: new FormControl('', [
+        Validators.required
+      ]),
+      country: new FormControl('', [
+        Validators.required
+      ]),
+      province: new FormControl({ value: '', disabled: true }, [
+        Validators.required
+      ]),
+      postalCode: new FormControl({ value: '', disabled: true }, [
+        Validators.required
+      ]),
     });
 
     this.registrationFormStep3 = new FormGroup({
-      socialInsuranceNumber: new FormControl('', [Validators.required]),
-      citizenship: new FormControl('', [Validators.required]),
-      profession: new FormControl('', [Validators.required]),
-      employer: new FormControl('', [Validators.required]),
-      employerPhoneNumber: new FormControl('', [Validators.required]),
-      numberOfDependents: new FormControl('', [Validators.required]),
-      depositAmount: new FormControl('', [Validators.required]),
-      membershipFee: new FormControl('', [Validators.required]),
-      donationForMosque: new FormControl('', [Validators.required]),
-      totalAmount: new FormControl('', [Validators.required]),
+      socialInsuranceNumber: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)
+      ]),
+      citizenship: new FormControl('', [
+        Validators.required
+      ]),
+      profession: new FormControl('', [
+        Validators.required
+      ]),
+      employer: new FormControl('', [
+        Validators.required
+      ]),
+      employerPhoneNumber: new FormControl('', [
+        Validators.required
+      ]),
+      numberOfDependents: new FormControl('', [
+        Validators.required
+      ]),
+      depositAmount: new FormControl('', [
+        Validators.required
+      ]),
+      membershipFee: new FormControl('', [
+        Validators.required
+      ]),
+      donationForMosque: new FormControl('', [
+        Validators.required
+      ]),
+      totalAmount: new FormControl('', [
+        Validators.required
+      ]),
     });
 
     this.registrationFormStep4 = new FormGroup({
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('', [Validators.required]),
-      address: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      province: new FormControl('', [Validators.required]),
-      postalCode: new FormControl('', [Validators.required]),
-      socialInsuranceNumber: new FormControl('', [Validators.required]),
-      citizenship: new FormControl('', [Validators.required]),
-      profession: new FormControl('', [Validators.required]),
-      relationship: new FormControl('', [Validators.required]),
+      firstName: new FormControl('', [
+        Validators.required
+      ]),
+      lastName: new FormControl('', [
+        Validators.required
+      ]),
+      address: new FormControl('', [
+        Validators.required
+      ]),
+      city: new FormControl('', [
+        Validators.required
+      ]),
+      province: new FormControl('', [
+        Validators.required
+      ]),
+      postalCode: new FormControl('', [
+        Validators.required
+      ]),
+      socialInsuranceNumber: new FormControl('', [
+        Validators.required
+      ]),
+      citizenship: new FormControl('', [
+        Validators.required
+      ]),
+      profession: new FormControl('', [
+        Validators.required
+      ]),
+      relationship: new FormControl('', [
+        Validators.required
+      ]),
     });
   }
 
@@ -164,6 +223,33 @@ export class RegistrationComponent {
       this.registrationFormStep2.get('province').disable({ onlySelf: true });
       this.registrationFormStep2.get('postalCode').reset();
       this.registrationFormStep2.get('postalCode').disable({ onlySelf: true });
+    }
+  }
+
+  formatSocialInsuranceNumber(event: unknown): void {
+    let inputValue = this.registrationFormStep3.get('socialInsuranceNumber').value as string;
+    const regEx1 = /^(\d{3})[\- ]?(\d{0,2})$/;
+    const regEx2 = /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{0,3})$/;
+    const regEx3 = /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{3})(.*)$/;
+    if ((event instanceof InputEvent) && (!event.data || /[/^¨`]/.test(event.data))) {
+      return;
+    }
+    if ((event instanceof InputEvent) && !/[\d]/.test(inputValue[inputValue.length - 1])) {
+      inputValue = inputValue.slice(0, inputValue.length - 1);
+      this.registrationFormStep3.get('socialInsuranceNumber').setValue(inputValue);
+      return;
+    }
+    if (regEx1.test(inputValue)) {
+      const inputValueFormatted = inputValue.replace(regEx1, '$1-$2');
+      this.registrationFormStep3.get('socialInsuranceNumber').setValue(inputValueFormatted);
+    } else if (regEx2.test(inputValue)) {
+      const inputValueFormatted = inputValue.replace(regEx2, '$1-$2-$3');
+      this.registrationFormStep3.get('socialInsuranceNumber').setValue(inputValueFormatted);
+    } else if (regEx3.test(inputValue)) {
+      const inputValueFormatted = inputValue.replace(regEx3, '$1-$2-$3');
+      this.registrationFormStep3.get('socialInsuranceNumber').setValue(inputValueFormatted);
+    } else {
+      return;
     }
   }
 
