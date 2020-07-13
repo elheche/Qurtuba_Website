@@ -108,7 +108,8 @@ export class RegistrationComponent {
         Validators.required
       ]),
       employerPhoneNumber: new FormControl('', [
-        Validators.required
+        Validators.required,
+        Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)
       ]),
       numberOfDependents: new FormControl('', [
         Validators.required
@@ -116,15 +117,11 @@ export class RegistrationComponent {
       depositAmount: new FormControl('', [
         Validators.required
       ]),
-      membershipFee: new FormControl('', [
-        Validators.required
-      ]),
       donationForMosque: new FormControl('', [
         Validators.required
       ]),
-      totalAmount: new FormControl('', [
-        Validators.required
-      ]),
+      membershipFee: new FormControl(environment.registration.membershipFeeDefaultAmount),
+      totalAmount: new FormControl(environment.registration.membershipFeeDefaultAmount)
     });
 
     this.registrationFormStep4 = new FormGroup({
@@ -140,14 +137,18 @@ export class RegistrationComponent {
       city: new FormControl('', [
         Validators.required
       ]),
-      province: new FormControl('', [
+      country: new FormControl('', [
         Validators.required
       ]),
-      postalCode: new FormControl('', [
+      province: new FormControl({ value: '', disabled: true }, [
+        Validators.required
+      ]),
+      postalCode: new FormControl({ value: '', disabled: true }, [
         Validators.required
       ]),
       socialInsuranceNumber: new FormControl('', [
-        Validators.required
+        Validators.required,
+        Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)
       ]),
       citizenship: new FormControl('', [
         Validators.required
@@ -169,65 +170,65 @@ export class RegistrationComponent {
     this.registrationFormStep1.get('confirmPassword').reset();
   }
 
-  formatPhoneNumber(inputEvent: InputEvent): void {
-    let inputValue = this.registrationFormStep2.get('phoneNumber').value as string;
+  formatPhoneNumber(inputEvent: InputEvent, formGroup: string, input: string): void {
+    let inputValue = this[formGroup].get(input).value as string;
     if (/[/^¨`]/.test(inputEvent.data)) {
       return;
     }
     if (!/[\d]/.test(inputValue[inputValue.length - 1])) {
       inputValue = inputValue.slice(0, inputValue.length - 1);
-      this.registrationFormStep2.get('phoneNumber').setValue(inputValue);
+      this[formGroup].get(input).setValue(inputValue);
       return;
     }
     const phoneNumber = new AsYouType('CA');
     phoneNumber.input(inputValue);
     if (phoneNumber.getNumber()) {
-      this.registrationFormStep2.get('phoneNumber').setValue(phoneNumber.getNumber().formatNational());
+      this[formGroup].get(input).setValue(phoneNumber.getNumber().formatNational());
     }
   }
 
-  formatCanadianPostalCode(inputEvent: InputEvent): void {
+  formatCanadianPostalCode(inputEvent: InputEvent, formGroup: string): void {
     if (!inputEvent.data
       || /[/^¨`]/.test(inputEvent.data)
-      || this.registrationFormStep2.get('country').value !== 'Canada'
+      || this[formGroup].get('country').value !== 'Canada'
     ) {
       return;
     }
-    const postalCode = this.registrationFormStep2.get('postalCode').value as string;
+    const postalCode = this[formGroup].get('postalCode').value as string;
     const postalCodeBlockLength = 3;
     const firstBlockIndex = 0;
     const secondBlockIndex = 4;
     if (postalCode.length >= postalCodeBlockLength) {
-      this.registrationFormStep2.get('postalCode')
+      this[formGroup].get('postalCode')
         .setValue(`${postalCode.substr(firstBlockIndex, postalCodeBlockLength)} ${postalCode.substr(secondBlockIndex, postalCodeBlockLength)}`);
     }
   }
 
-  findSelectedCountryIndex(): number {
-    return this.countries.findIndex((country) => country.countryName === this.registrationFormStep2.get('country').value);
+  findSelectedCountryIndex(formGroup: string): number {
+    return this.countries.findIndex((country) => country.countryName === this[formGroup].get('country').value);
   }
 
-  onCountryValueChange(): void {
-    if (this.registrationFormStep2.get('country').value) {
-      this.registrationFormStep2.get('province').reset();
-      this.registrationFormStep2.get('province').enable({ onlySelf: true });
-      this.registrationFormStep2.get('postalCode').reset();
-      this.registrationFormStep2.get('postalCode').enable({ onlySelf: true });
-      this.registrationFormStep2.get('postalCode').setValidators([
+  onCountryValueChange(formGroup: string): void {
+    if (this[formGroup].get('country').value) {
+      this[formGroup].get('province').reset();
+      this[formGroup].get('province').enable({ onlySelf: true });
+      this[formGroup].get('postalCode').reset();
+      this[formGroup].get('postalCode').enable({ onlySelf: true });
+      this[formGroup].get('postalCode').setValidators([
         Validators.required,
-        Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex()].postalCodeRegEx))
+        Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex(formGroup)].postalCodeRegEx))
       ]);
-      this.registrationFormStep2.get('postalCode').updateValueAndValidity({ onlySelf: true });
+      this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
     } else {
-      this.registrationFormStep2.get('province').reset();
-      this.registrationFormStep2.get('province').disable({ onlySelf: true });
-      this.registrationFormStep2.get('postalCode').reset();
-      this.registrationFormStep2.get('postalCode').disable({ onlySelf: true });
+      this[formGroup].get('province').reset();
+      this[formGroup].get('province').disable({ onlySelf: true });
+      this[formGroup].get('postalCode').reset();
+      this[formGroup].get('postalCode').disable({ onlySelf: true });
     }
   }
 
-  formatSocialInsuranceNumber(event: unknown): void {
-    let inputValue = this.registrationFormStep3.get('socialInsuranceNumber').value as string;
+  formatSocialInsuranceNumber(event: unknown, formGroup: string): void {
+    let inputValue = this[formGroup].get('socialInsuranceNumber').value as string;
     const regEx1 = /^(\d{3})[\- ]?(\d{0,2})$/;
     const regEx2 = /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{0,3})$/;
     const regEx3 = /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{3})(.*)$/;
@@ -236,21 +237,32 @@ export class RegistrationComponent {
     }
     if ((event instanceof InputEvent) && !/[\d]/.test(inputValue[inputValue.length - 1])) {
       inputValue = inputValue.slice(0, inputValue.length - 1);
-      this.registrationFormStep3.get('socialInsuranceNumber').setValue(inputValue);
+      this[formGroup].get('socialInsuranceNumber').setValue(inputValue);
       return;
     }
     if (regEx1.test(inputValue)) {
       const inputValueFormatted = inputValue.replace(regEx1, '$1-$2');
-      this.registrationFormStep3.get('socialInsuranceNumber').setValue(inputValueFormatted);
+      this[formGroup].get('socialInsuranceNumber').setValue(inputValueFormatted);
     } else if (regEx2.test(inputValue)) {
       const inputValueFormatted = inputValue.replace(regEx2, '$1-$2-$3');
-      this.registrationFormStep3.get('socialInsuranceNumber').setValue(inputValueFormatted);
+      this[formGroup].get('socialInsuranceNumber').setValue(inputValueFormatted);
     } else if (regEx3.test(inputValue)) {
       const inputValueFormatted = inputValue.replace(regEx3, '$1-$2-$3');
-      this.registrationFormStep3.get('socialInsuranceNumber').setValue(inputValueFormatted);
+      this[formGroup].get('socialInsuranceNumber').setValue(inputValueFormatted);
     } else {
       return;
     }
+  }
+
+  updateTotalAmount(): void {
+    const depositAmount = this.registrationFormStep3.get('depositAmount').value ?
+      this.registrationFormStep3.get('depositAmount').value : 0;
+    const donationForMosque = this.registrationFormStep3.get('donationForMosque').value ?
+      this.registrationFormStep3.get('donationForMosque').value : 0;
+    const membershipFee = this.registrationFormStep3.get('membershipFee').value ?
+      this.registrationFormStep3.get('membershipFee').value : 0;
+    const totalAmount = depositAmount + donationForMosque + membershipFee;
+    this.registrationFormStep3.get('totalAmount').setValue(totalAmount);
   }
 
   /* getPostalCodeRegEx(): void {

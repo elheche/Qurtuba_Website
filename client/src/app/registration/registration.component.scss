@@ -20,7 +20,7 @@
 .registration-form-container {
   margin-top: 60px;
   width: 1000px;
-  height: 520px;
+  height: 535px;
 }
 
 .registration-form-container mat-card-header {
@@ -58,6 +58,7 @@
   div.stepper-navigation-button-container {
   display: flex;
   justify-content: flex-end;
+  margin-top: 15px;
 }
 
 .registration-form-container
@@ -167,22 +168,45 @@
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
-  form#registration-form-step-4
-  mat-form-field:nth-child(4),
+  form#registration-form-step-3
+  input.deposit-amount {
+  text-align: right;
+  -moz-appearance: textfield;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-3
+  input.deposit-amount::-webkit-outer-spin-button,
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-3
+  input.deposit-amount::-webkit-inner-spin-button {
+  display: none;
+}
+
+::ng-deep
+  .registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-3
+  mat-form-field.mat-form-field-appearance-outline:nth-last-child(-n + 5)
+  .mat-form-field-suffix {
+  top: unset;
+  white-space: unset;
+}
+
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
   form#registration-form-step-4
-  mat-form-field:nth-child(5),
+  mat-form-field:nth-child(n + 5):nth-child(-n + 8),
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
   form#registration-form-step-4
-  mat-form-field:nth-child(6),
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-4
-  mat-form-field:nth-child(7) {
+  mat-form-field:nth-child(n + 11) {
   flex-basis: 23.5%;
 }

@@ -19,9 +19,14 @@ export const environment = {
       // User must be at least 18 years old
       maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()).toISOString().slice(0, 10)
     },
+    membershipFeeDefaultAmount: 75,
+    relationshipTypes: [
+      'Spouse',
+      'Fiance(e)'
+    ],
     errorMessages: {
       email: {
-        required: 'You must enter an email address.',
+        required: 'You must enter a valid email address.',
         email: 'Invalid email.'
       },
       password: {
@@ -29,20 +34,20 @@ export const environment = {
         pattern: 'Invalid password. It must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character.'
       },
       confirmPassword: {
-        required: 'You must confirm your password.',
-        noPassswordMatch: 'Error: your password and confirm password do not match.'
+        required: 'You must confirm the password.',
+        noPassswordMatch: 'Error: password and confirm password do not match.'
       },
       membershipType: {
-        required: 'You must choose the type of your membership.'
+        required: 'You must choose the type of the membership.'
       },
       accountType: {
-        required: 'You must choose the type of your account.'
+        required: 'You must choose the type of the account.'
       },
       firstName: {
-        required: 'You must enter your first name.'
+        required: 'You must enter a first name.'
       },
       lastName: {
-        required: 'You must enter your last name.'
+        required: 'You must enter a last name.'
       },
       birthDay: {
         required: 'Invalid date.',
@@ -50,28 +55,53 @@ export const environment = {
         aboveMaximumDateLimit: 'You must be at least 18 years old!'
       },
       phoneNumber: {
-        required: 'You must enter your phone number.',
+        required: 'You must enter a phone number.',
         pattern: 'Invalid phone number.'
       },
       address: {
-        required: 'You must enter your address.'
+        required: 'You must enter an address.'
       },
       city: {
-        required: 'You must enter the city of your address.'
+        required: 'You must enter a city.'
       },
       country: {
-        required: 'You must choose the country of your address.'
+        required: 'You must choose a country.'
       },
       province: {
-        required: 'You must choose the province of your address.'
+        required: 'You must choose a province.'
       },
       postalCode: {
-        required: 'You must enter the postal code of your address.',
+        required: 'You must enter a valid postal code.',
         pattern: 'Invalid postal code.'
       },
       socialInsuranceNumber: {
-        required: 'You must enter your social insurance number (SIN).',
+        required: 'You must enter a social insurance number (SIN).',
         pattern: 'Invalid social insurance number (SIN).'
+      },
+      citizenship: {
+        required: 'You must choose a citizenship.',
+      },
+      profession: {
+        required: 'You must enter a profession.',
+      },
+      employer: {
+        required: 'You must enter an employer.',
+      },
+      employerPhoneNumber: {
+        required: 'You must enter an employer phone number.',
+        pattern: 'Invalid phone number.'
+      },
+      numberOfDependents: {
+        required: 'you must enter the number of your dependents.',
+      },
+      depositAmount: {
+        required: 'you must enter your deposit amount.',
+      },
+      donationForMosque: {
+        required: 'you must enter your donation amount for mosque.',
+      },
+      relationship: {
+        required: 'you must choose a relationship.',
       }
     }
   }
