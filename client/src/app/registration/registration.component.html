@@ -396,13 +396,14 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Relationship</mat-label>
-              <mat-select formControlName="relationship" required>
-                <mat-option>--</mat-option>
-                <mat-option *ngFor="let relationshipType of environment.registration.relationshipTypes"
+              <input matInput type="text" formControlName="relationship" required [matAutocomplete]="auto"
+                [value]="registrationFormStep4.get('relationship').value | titlecase" placeholder="Ex. Wife">
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let relationshipType of filteredRelationshipTypes | async"
                   [value]="relationshipType">
                   {{relationshipType}}
                 </mat-option>
-              </mat-select>
+              </mat-autocomplete>
               <mat-error *ngIf="registrationFormStep4.get('relationship').invalid">
                 {{getErrorMessage('registrationFormStep4', 'relationship')}}
               </mat-error>
@@ -417,7 +418,7 @@
         <!-- Step 5 -->
         <mat-step>
           <ng-template matStepLabel>Done</ng-template>
-          <h2>Please review the information you have entered</h2>
+          <h2>Please check the information you have entered</h2>
           <mat-checkbox color="primary">
             I / We have read the Regulations and By-laws of the "Co-operative" and I / We fully agree to abide by them.
           </mat-checkbox>

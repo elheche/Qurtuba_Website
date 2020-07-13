@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import FileSaver from 'file-saver';
 import { AsYouType } from 'libphonenumber-js';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import data from '../../assets/countries-data.json';
 import { environment } from '../../environments/environment';
 import { CustomValidators } from './custom-validators';
@@ -15,7 +16,7 @@ import { ICountry } from './icountry.data';
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss']
 })
-export class RegistrationComponent {
+export class RegistrationComponent implements OnInit {
   registrationFormStep1: FormGroup;
   registrationFormStep2: FormGroup;
   registrationFormStep3: FormGroup;
@@ -25,6 +26,7 @@ export class RegistrationComponent {
   isEditable: boolean;
   environment: typeof environment;
   countries: ICountry[];
+  filteredRelationshipTypes: Observable<string[]>;
 
   constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, private http: HttpClient) {
     this.hide = true;
@@ -162,6 +164,16 @@ export class RegistrationComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.filteredRelationshipTypes = this.registrationFormStep4.get('relationship').valueChanges
+      .pipe(
+        startWith(''),
+        map((relationshipType) => {
+          return relationshipType ? this._filterRelationshipTypes(relationshipType) : environment.registration.relationshipTypes.slice();
+        })
+      );
+  }
+
   getErrorMessage(formGroup: string, input: string): string {
     return environment.registration.errorMessages[input][Object.keys(this[formGroup].get(input).errors)[0]];
   }
@@ -263,6 +275,11 @@ export class RegistrationComponent {
       this.registrationFormStep3.get('membershipFee').value : 0;
     const totalAmount = depositAmount + donationForMosque + membershipFee;
     this.registrationFormStep3.get('totalAmount').setValue(totalAmount);
+  }
+
+  private _filterRelationshipTypes(filterValue: string): string[] {
+    return environment.registration.relationshipTypes
+      .filter((relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0);
   }
 
   /* getPostalCodeRegEx(): void {
