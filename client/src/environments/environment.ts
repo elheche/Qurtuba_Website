@@ -135,7 +135,7 @@ export const environment = {
         required: 'you must enter your donation amount for mosque.',
       },
       relationship: {
-        required: 'you must choose a relationship.',
+        required: 'you must enter a relationship.',
       }
     }
   }
