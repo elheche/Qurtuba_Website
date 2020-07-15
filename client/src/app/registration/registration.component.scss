@@ -210,3 +210,28 @@
   mat-form-field:nth-child(n + 11) {
   flex-basis: 23.5%;
 }
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  div#form-information-verification {
+  display: flex;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  div#form-information-verification
+  p {
+  flex-basis: 33.33%;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  div#form-information-verification
+  mat-divider.mat-divider {
+  margin: 10px;
+}

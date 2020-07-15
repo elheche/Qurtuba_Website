@@ -12,7 +12,7 @@
       <mat-card-title>Open an account</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-horizontal-stepper linear="false" #stepper>
+      <mat-horizontal-stepper linear="true" #stepper>
         <!-- Step 1 -->
         <mat-step [stepControl]="registrationFormStep1" [editable]="isEditable">
           <form [formGroup]="registrationFormStep1" id="registration-form-step-1">
@@ -59,8 +59,7 @@
               </button>
             </mat-form-field>
             <div class="stepper-navigation-button-container">
-              <button class="stepper-navigation-button" mat-raised-button color="primary" matStepperNext
-                [disabled]="registrationFormStep1.invalid">Next</button>
+              <button class="stepper-navigation-button" mat-raised-button color="primary" matStepperNext>Next</button>
             </div>
           </form>
         </mat-step>
@@ -78,7 +77,8 @@
                   {{membershipType}}
                 </mat-radio-button>
               </mat-radio-group>
-              <mat-error *ngIf="registrationFormStep2.get('membershipType').invalid">
+              <mat-error
+                *ngIf="registrationFormStep2.get('membershipType').invalid && (registrationFormStep2.get('membershipType').touched || registrationFormStep2.get('membershipType').dirty)">
                 {{getErrorMessage('registrationFormStep2', 'membershipType')}}
               </mat-error>
             </div>
@@ -419,44 +419,54 @@
         <mat-step>
           <ng-template matStepLabel>Done</ng-template>
           <h2>Please check the information you have entered</h2>
-          <div>
-            <!-- Step 1 review-->
-            <strong>Email:</strong>&nbsp;{{registrationFormStep1.get('email').value}}<br>
-            <!-- Step 2 review-->
-            <strong>Membership type:</strong>&nbsp;{{registrationFormStep2.get('membershipType').value}}<br>
-            <strong>Account type:</strong>&nbsp;{{registrationFormStep2.get('accountType').value}}<br>
-            <strong>First name:</strong>&nbsp;{{registrationFormStep2.get('firstName').value}}<br>
-            <strong>Last name:</strong>&nbsp;{{registrationFormStep2.get('lastName').value}}<br>
-            <strong>Birthday:</strong>&nbsp;{{registrationFormStep2.get('birthDay').value}}<br>
-            <strong>Phone number:</strong>&nbsp;{{registrationFormStep2.get('phoneNumber').value}}<br>
-            <strong>Address:</strong>&nbsp;{{registrationFormStep2.get('address').value}}<br>
-            <strong>City:</strong>&nbsp;{{registrationFormStep2.get('city').value}}<br>
-            <strong>Country:</strong>&nbsp;{{registrationFormStep2.get('country').value}}<br>
-            <strong>Province:</strong>&nbsp;{{registrationFormStep2.get('province').value}}<br>
-            <strong>Postal code:</strong>&nbsp;{{registrationFormStep2.get('postalCode').value}}<br>
-            <!-- Step 3 review-->
-            <strong>Social insurance number (SIN):</strong>&nbsp;{{registrationFormStep3.get('socialInsuranceNumber').value}}<br>
-            <strong>Citizenship:</strong>&nbsp;{{registrationFormStep3.get('citizenship').value}}<br>
-            <strong>Profession:</strong>&nbsp;{{registrationFormStep3.get('profession').value}}<br>
-            <strong>Employer:</strong>&nbsp;{{registrationFormStep3.get('employer').value}}<br>
-            <strong>Employer phone number:</strong>&nbsp;{{registrationFormStep3.get('employerPhoneNumber').value}}<br>
-            <strong>Number Of dependents:</strong>&nbsp;{{registrationFormStep3.get('numberOfDependents').value}}<br>
-            <strong>Deposit amount:</strong>&nbsp;{{registrationFormStep3.get('depositAmount').value}}&nbsp;$<br>
-            <strong>Donation for mosque:</strong>&nbsp;{{registrationFormStep3.get('donationForMosque').value}}&nbsp;$<br>
-            <strong>Membership fee:</strong>&nbsp;{{registrationFormStep3.get('membershipFee').value}}&nbsp;$<br>
-            <strong>Total amount:</strong>&nbsp;{{registrationFormStep3.get('totalAmount').value}}&nbsp;$<br>
-            <!-- Step 4 review-->
-            <strong>First name:</strong>&nbsp;{{registrationFormStep4.get('firstName').value}}<br>
-            <strong>Last name:</strong>&nbsp;{{registrationFormStep4.get('lastName').value}}<br>
-            <strong>Address:</strong>&nbsp;{{registrationFormStep4.get('address').value}}<br>
-            <strong>City:</strong>&nbsp;{{registrationFormStep4.get('city').value}}<br>
-            <strong>Country:</strong>&nbsp;{{registrationFormStep4.get('country').value}}<br>
-            <strong>Province:</strong>&nbsp;{{registrationFormStep4.get('province').value}}<br>
-            <strong>Postal code:</strong>&nbsp;{{registrationFormStep4.get('postalCode').value}}<br>
-            <strong>Social insurance number (SIN):</strong>&nbsp;{{registrationFormStep4.get('socialInsuranceNumber').value}}<br>
-            <strong>Citizenship:</strong>&nbsp;{{registrationFormStep4.get('citizenship').value}}<br>
-            <strong>Profession:</strong>&nbsp;{{registrationFormStep4.get('profession').value}}<br>
-            <strong>Relationship:</strong>&nbsp;{{registrationFormStep4.get('relationship').value}}<br>
+          <div id="form-information-verification">
+            <p>
+              <strong style="color: #3f51b5;">1- Owner member</strong><br>
+              <strong>Email:</strong>&nbsp;{{registrationFormStep1.get('email').value}}<br>
+              <strong>Membership type:</strong>&nbsp;{{registrationFormStep2.get('membershipType').value}}<br>
+              <strong>Account type:</strong>&nbsp;{{registrationFormStep2.get('accountType').value}}<br>
+              <strong>First name:</strong>&nbsp;{{registrationFormStep2.get('firstName').value}}<br>
+              <strong>Last name:</strong>&nbsp;{{registrationFormStep2.get('lastName').value}}<br>
+              <strong>Birthday:</strong>&nbsp;{{registrationFormStep2.get('birthDay').value}}<br>
+              <strong>Phone number:</strong>&nbsp;{{registrationFormStep2.get('phoneNumber').value}}<br>
+              <strong>Address:</strong>&nbsp;{{registrationFormStep2.get('address').value}}<br>
+              <strong>City:</strong>&nbsp;{{registrationFormStep2.get('city').value}}<br>
+              <strong>Country:</strong>&nbsp;{{registrationFormStep2.get('country').value}}<br>
+              <strong>Province:</strong>&nbsp;{{registrationFormStep2.get('province').value}}<br>
+            </p>
+            <mat-divider [vertical]="true" [inset]="true"></mat-divider>
+            <p>
+              <strong>Postal code:</strong>&nbsp;{{registrationFormStep2.get('postalCode').value}}<br>
+              <strong>Social insurance number
+                (SIN):</strong>&nbsp;{{registrationFormStep3.get('socialInsuranceNumber').value}}<br>
+              <strong>Citizenship:</strong>&nbsp;{{registrationFormStep3.get('citizenship').value}}<br>
+              <strong>Profession:</strong>&nbsp;{{registrationFormStep3.get('profession').value}}<br>
+              <strong>Employer:</strong>&nbsp;{{registrationFormStep3.get('employer').value}}<br>
+              <strong>Employer phone
+                number:</strong>&nbsp;{{registrationFormStep3.get('employerPhoneNumber').value}}<br>
+              <strong>Number Of dependents:</strong>&nbsp;{{registrationFormStep3.get('numberOfDependents').value}}<br>
+              <strong>Deposit amount:</strong>&nbsp;{{registrationFormStep3.get('depositAmount').value}}&nbsp;$<br>
+              <strong>Donation for
+                mosque:</strong>&nbsp;{{registrationFormStep3.get('donationForMosque').value}}&nbsp;$<br>
+              <strong>Membership fee:</strong>&nbsp;{{registrationFormStep3.get('membershipFee').value}}&nbsp;$<br>
+              <strong>Total amount:</strong>&nbsp;{{registrationFormStep3.get('totalAmount').value}}&nbsp;$<br>
+            </p>
+            <mat-divider [vertical]="true" [inset]="true"></mat-divider>
+            <p>
+              <strong style="color: #3f51b5;">2- Joint member</strong><br>
+              <strong>First name:</strong>&nbsp;{{registrationFormStep4.get('firstName').value}}<br>
+              <strong>Last name:</strong>&nbsp;{{registrationFormStep4.get('lastName').value}}<br>
+              <strong>Address:</strong>&nbsp;{{registrationFormStep4.get('address').value}}<br>
+              <strong>City:</strong>&nbsp;{{registrationFormStep4.get('city').value}}<br>
+              <strong>Country:</strong>&nbsp;{{registrationFormStep4.get('country').value}}<br>
+              <strong>Province:</strong>&nbsp;{{registrationFormStep4.get('province').value}}<br>
+              <strong>Postal code:</strong>&nbsp;{{registrationFormStep4.get('postalCode').value}}<br>
+              <strong>Social insurance number
+                (SIN):</strong>&nbsp;{{registrationFormStep4.get('socialInsuranceNumber').value}}<br>
+              <strong>Citizenship:</strong>&nbsp;{{registrationFormStep4.get('citizenship').value}}<br>
+              <strong>Profession:</strong>&nbsp;{{registrationFormStep4.get('profession').value}}<br>
+              <strong>Relationship:</strong>&nbsp;{{registrationFormStep4.get('relationship').value}}<br>
+            </p>
           </div>
           <mat-checkbox color="primary">
             I / We have read the Regulations and By-laws of the "Co-operative" and I / We fully agree to abide by them.
