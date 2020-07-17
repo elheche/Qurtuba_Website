@@ -122,6 +122,40 @@
   min-height: 77px;
 }
 
+::ng-deep
+  .registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
+  .membership-type-container-invalid
+  .mat-radio-label-content,
+::ng-deep
+  .registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
+  .account-type-container-invalid
+  .mat-radio-label-content {
+  color: #f44336;
+}
+
+::ng-deep
+  .registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
+  .membership-type-container-invalid
+  .mat-radio-outer-circle,
+::ng-deep
+  .registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-2
+  .account-type-container-invalid
+  .mat-radio-outer-circle {
+  border-color: #f44336;
+}
+
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
@@ -135,6 +169,8 @@
   #account-type-container
   .mat-error {
   font-size: 10.5px;
+  margin-left: 10.5px;
+  animation: error-animation 0.5s; // See @keyframes error-animation below.
 }
 
 .registration-form-container
@@ -223,9 +259,17 @@
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
-  div#form-information-verification
+  div.form-information-verification-joint
   p {
   flex-basis: 33.33%;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  div.form-information-verification-individual
+  p {
+  flex-basis: 50%;
 }
 
 .registration-form-container
@@ -234,4 +278,54 @@
   div#form-information-verification
   mat-divider.mat-divider {
   margin: 10px;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-5
+  div#user-agreement-container {
+  min-height: 44px;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-5
+  div#user-agreement-container
+  .mat-error {
+  font-size: 10.5px;
+  margin-left: 10.5px;
+  animation: error-animation 0.5s;
+}
+
+@keyframes error-animation {
+  from {
+    transform: translateY(-50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+::ng-deep
+  .registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-5
+  .user-agreement-container-invalid
+  .mat-checkbox-label {
+  color: #f44336;
+}
+
+::ng-deep
+  .registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-5
+  .user-agreement-container-invalid
+  .mat-checkbox-frame {
+  border-color: #f44336;
 }

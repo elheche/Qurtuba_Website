@@ -27,6 +27,7 @@ export class RegistrationComponent implements OnInit {
   environment: typeof environment;
   countries: ICountry[];
   filteredRelationshipTypes: Observable<string[]>;
+  userAgreementText: string;
 
   constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, private http: HttpClient) {
     this.hide = true;
@@ -38,6 +39,7 @@ export class RegistrationComponent implements OnInit {
       const iconUrl = `../../assets/countries-flags/${country.countryShortCode.toLowerCase()}.svg`;
       this.iconRegistry.addSvgIcon(iconName, this.sanitizer.bypassSecurityTrustResourceUrl(iconUrl));
     });
+    this.userAgreementText = '';
 
     this.registrationFormStep1 = new FormGroup({
       email: new FormControl('', [
@@ -92,7 +94,7 @@ export class RegistrationComponent implements OnInit {
       ]),
       postalCode: new FormControl({ value: '', disabled: true }, [
         Validators.required
-      ]),
+      ])
     });
 
     this.registrationFormStep3 = new FormGroup({
@@ -160,7 +162,13 @@ export class RegistrationComponent implements OnInit {
       ]),
       relationship: new FormControl('', [
         Validators.required
-      ]),
+      ])
+    });
+
+    this.registrationFormStep5 = new FormGroup({
+      userAgreement: new FormControl('', [
+        Validators.required
+      ])
     });
   }
 
@@ -280,6 +288,12 @@ export class RegistrationComponent implements OnInit {
   private _filterRelationshipTypes(filterValue: string): string[] {
     return environment.registration.relationshipTypes
       .filter((relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0);
+  }
+
+  onAccountTypeSelectionChange(): void {
+    this.registrationFormStep2.get('accountType').value === 'Individual' ?
+      this.userAgreementText = environment.registration.userAgreementText.individual :
+      this.userAgreementText = environment.registration.userAgreementText.joint;
   }
 
   /* getPostalCodeRegEx(): void {

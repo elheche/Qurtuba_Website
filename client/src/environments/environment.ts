@@ -20,6 +20,10 @@ export const environment = {
       maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()).toISOString().slice(0, 10)
     },
     membershipFeeDefaultAmount: 75,
+    userAgreementText: {
+      individual: 'I have read the Regulations and By-laws of the "Co-operative" and I fully agree to abide by them.',
+      joint: 'We have read the Regulations and By-laws of the "Co-operative" and We fully agree to abide by them.'
+    },
     relationshipTypes: [
       'Aunt',
       'Brother-in-law',
@@ -136,6 +140,9 @@ export const environment = {
       },
       relationship: {
         required: 'you must enter a relationship.',
+      },
+      userAgreement: {
+        required: 'you must accept the regulation.',
       }
     }
   }
