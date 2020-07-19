@@ -7,7 +7,7 @@
       <mat-icon>login</mat-icon>
     </a>
   </mat-toolbar>
-  <mat-card class="registration-form-container" #registrationFormContainer>
+  <mat-card class="registration-form-container">
     <mat-card-header>
       <mat-card-title>Open an account</mat-card-title>
     </mat-card-header>
@@ -74,7 +74,7 @@
               <mat-radio-group aria-labelledby="membership-type-label" class="membership-type"
                 formControlName="membershipType" required>
                 <mat-radio-button class="membership-type-radio-button"
-                  *ngFor="let membershipType of environment.registration.membershipTypes" [value]="membershipType">
+                  *ngFor="let membershipType of environment.registration.membershipType.types" [value]="membershipType">
                   {{membershipType}}
                 </mat-radio-button>
               </mat-radio-group>
@@ -89,7 +89,7 @@
               <mat-radio-group aria-labelledby="account-type-label" class="account-type" formControlName="accountType"
                 required (change)="onAccountTypeSelectionChange()">
                 <mat-radio-button class="account-type-radio-button"
-                  *ngFor="let accountType of environment.registration.accountTypes" [value]="accountType">
+                  *ngFor="let accountType of environment.registration.accountType.types" [value]="accountType">
                   {{accountType}}
                 </mat-radio-button>
               </mat-radio-group>
@@ -116,8 +116,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Birth day</mat-label>
               <input matInput type="date" formControlName="birthDay" required
-                [min]="environment.registration.birthDateRange.minDate"
-                [max]="environment.registration.birthDateRange.maxDate">
+                [min]="environment.registration.birthDay.acceptedRange.minDate"
+                [max]="environment.registration.birthDay.acceptedRange.maxDate">
               <mat-error *ngIf="registrationFormStep2.get('birthDay').invalid">
                 {{getErrorMessage('registrationFormStep2', 'birthDay')}}
               </mat-error>

@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -29,7 +28,7 @@ export class RegistrationComponent implements OnInit {
   filteredRelationshipTypes: Observable<string[]>;
   userAgreementText: string;
 
-  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, private http: HttpClient) {
+  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
     this.hide = true;
     this.isEditable = true;
     this.environment = environment;
@@ -72,8 +71,8 @@ export class RegistrationComponent implements OnInit {
       birthDay: new FormControl('', [
         Validators.required,
         CustomValidators.dateRangeValidator(
-          environment.registration.birthDateRange.minDate,
-          environment.registration.birthDateRange.maxDate
+          environment.registration.birthDay.acceptedRange.minDate,
+          environment.registration.birthDay.acceptedRange.maxDate
         )
       ]),
       phoneNumber: new FormControl('', [
@@ -124,8 +123,8 @@ export class RegistrationComponent implements OnInit {
       donationForMosque: new FormControl('', [
         Validators.required
       ]),
-      membershipFee: new FormControl(environment.registration.membershipFeeDefaultAmount),
-      totalAmount: new FormControl(environment.registration.membershipFeeDefaultAmount)
+      membershipFee: new FormControl(environment.registration.membershipFee.defaultAmount),
+      totalAmount: new FormControl(environment.registration.membershipFee.defaultAmount)
     });
 
     this.registrationFormStep4 = new FormGroup({
@@ -177,13 +176,13 @@ export class RegistrationComponent implements OnInit {
       .pipe(
         startWith(''),
         map((relationshipType) => {
-          return relationshipType ? this._filterRelationshipTypes(relationshipType) : environment.registration.relationshipTypes.slice();
+          return relationshipType ? this._filterRelationshipTypes(relationshipType) : environment.registration.relationship.types.slice();
         })
       );
   }
 
   getErrorMessage(formGroup: string, input: string): string {
-    return environment.registration.errorMessages[input][Object.keys(this[formGroup].get(input).errors)[0]];
+    return environment.registration[input].errorMessages[Object.keys(this[formGroup].get(input).errors)[0]];
   }
 
   onPasswordValueChange(): void {
@@ -286,14 +285,14 @@ export class RegistrationComponent implements OnInit {
   }
 
   private _filterRelationshipTypes(filterValue: string): string[] {
-    return environment.registration.relationshipTypes
+    return environment.registration.relationship.types
       .filter((relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0);
   }
 
   onAccountTypeSelectionChange(): void {
     this.registrationFormStep2.get('accountType').value === 'Individual' ?
-      this.userAgreementText = environment.registration.userAgreementText.individual :
-      this.userAgreementText = environment.registration.userAgreementText.joint;
+      this.userAgreementText = environment.registration.userAgreement.text.individual :
+      this.userAgreementText = environment.registration.userAgreement.text.joint;
   }
 
   /* getPostalCodeRegEx(): void {

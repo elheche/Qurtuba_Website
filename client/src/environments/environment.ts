@@ -6,143 +6,191 @@
 export const environment = {
   production: false,
   registration: {
-    membershipTypes: [
-      'Buy a house',
-      'Investment'
-    ],
-    accountTypes: [
-      'Individual',
-      'Joint'
-    ],
-    birthDateRange: {
-      minDate: '1900-01-01',
-      // User must be at least 18 years old
-      maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()).toISOString().slice(0, 10)
-    },
-    membershipFeeDefaultAmount: 75,
-    userAgreementText: {
-      individual: 'I have read the Regulations and By-laws of the "Co-operative" and I fully agree to abide by them.',
-      joint: 'We have read the Regulations and By-laws of the "Co-operative" and We fully agree to abide by them.'
-    },
-    relationshipTypes: [
-      'Aunt',
-      'Brother-in-law',
-      'Brother',
-      'Cousin',
-      'Daughter-in-law',
-      'Daughter',
-      'Ex-husband',
-      'Ex-wife',
-      'Father-in-law',
-      'Father',
-      'Fiancé',
-      'Fiancée',
-      'Friend',
-      'Grand-daughter',
-      'Grand-father',
-      'Grand-mother',
-      'Grandson',
-      'Great grand-father',
-      'Great grand-mother',
-      'Half-brother',
-      'Half-sister',
-      'Husband',
-      'Mother in-law',
-      'Mother',
-      'Nephew',
-      'Niece',
-      'Sister in-law',
-      'Sister',
-      'Son-in-law',
-      'Son',
-      'Step-daughter',
-      'Step-father',
-      'Step-mother',
-      'Step-son',
-      'Uncle',
-      'Wife',
-    ],
-    errorMessages: {
-      email: {
+    email: {
+      errorMessages: {
         required: 'You must enter a valid email address.',
         email: 'Invalid email.'
-      },
-      password: {
+      }
+    },
+    password: {
+      errorMessages: {
         required: 'You must enter a password.',
         pattern: 'Invalid password. It must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character.'
-      },
-      confirmPassword: {
+      }
+    },
+    confirmPassword: {
+      errorMessages: {
         required: 'You must confirm the password.',
         noPassswordMatch: 'Error: password and confirm password do not match.'
-      },
-      membershipType: {
+      }
+    },
+    membershipType: {
+      errorMessages: {
         required: 'You must choose the type of the membership.'
       },
-      accountType: {
+      types: [
+        'Buy a house',
+        'Investment'
+      ]
+    },
+    accountType: {
+      errorMessages: {
         required: 'You must choose the type of the account.'
       },
-      firstName: {
+      types: [
+        'Individual',
+        'Joint'
+      ]
+    },
+    firstName: {
+      errorMessages: {
         required: 'You must enter a first name.'
-      },
-      lastName: {
+      }
+    },
+    lastName: {
+      errorMessages: {
         required: 'You must enter a last name.'
-      },
-      birthDay: {
+      }
+    },
+    birthDay: {
+      errorMessages: {
         required: 'Invalid date.',
         belowMinimumDateLimit: 'The minimum date allowed is 01/01/1900.',
         aboveMaximumDateLimit: 'You must be at least 18 years old!'
       },
-      phoneNumber: {
+      acceptedRange: {
+        minDate: '1900-01-01',
+        // User must be at least 18 years old
+        maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()).toISOString().slice(0, 10)
+      }
+    },
+    phoneNumber: {
+      errorMessages: {
         required: 'You must enter a phone number.',
         pattern: 'Invalid phone number.'
-      },
-      address: {
+      }
+    },
+    address: {
+      errorMessages: {
         required: 'You must enter an address.'
-      },
-      city: {
+      }
+    },
+    city: {
+      errorMessages: {
         required: 'You must enter a city.'
-      },
-      country: {
+      }
+    },
+    country: {
+      errorMessages: {
         required: 'You must choose a country.'
-      },
-      province: {
+      }
+    },
+    province: {
+      errorMessages: {
         required: 'You must choose a province.'
-      },
-      postalCode: {
+      }
+    },
+    postalCode: {
+      errorMessages: {
         required: 'You must enter a valid postal code.',
         pattern: 'Invalid postal code.'
-      },
-      socialInsuranceNumber: {
+      }
+    },
+    socialInsuranceNumber: {
+      errorMessages: {
         required: 'You must enter a social insurance number (SIN).',
         pattern: 'Invalid social insurance number (SIN).'
-      },
-      citizenship: {
+      }
+    },
+    citizenship: {
+      errorMessages: {
         required: 'You must choose a citizenship.',
-      },
-      profession: {
+      }
+    },
+    profession: {
+      errorMessages: {
         required: 'You must enter a profession.',
-      },
-      employer: {
+      }
+    },
+    employer: {
+      errorMessages: {
         required: 'You must enter an employer.',
-      },
-      employerPhoneNumber: {
+      }
+    },
+    employerPhoneNumber: {
+      errorMessages: {
         required: 'You must enter an employer phone number.',
         pattern: 'Invalid phone number.'
-      },
-      numberOfDependents: {
+      }
+    },
+    numberOfDependents: {
+      errorMessages: {
         required: 'you must enter the number of your dependents.',
-      },
-      depositAmount: {
+      }
+    },
+    depositAmount: {
+      errorMessages: {
         required: 'you must enter your deposit amount.',
-      },
-      donationForMosque: {
+      }
+    },
+    donationForMosque: {
+      errorMessages: {
         required: 'you must enter your donation amount for mosque.',
-      },
-      relationship: {
+      }
+    },
+    membershipFee: {
+      defaultAmount: 75
+    },
+    relationship: {
+      errorMessages: {
         required: 'you must enter a relationship.',
       },
-      userAgreement: {
+      types: [
+        'Aunt',
+        'Brother-in-law',
+        'Brother',
+        'Cousin',
+        'Daughter-in-law',
+        'Daughter',
+        'Ex-husband',
+        'Ex-wife',
+        'Father-in-law',
+        'Father',
+        'Fiancé',
+        'Fiancée',
+        'Friend',
+        'Grand-daughter',
+        'Grand-father',
+        'Grand-mother',
+        'Grandson',
+        'Great grand-father',
+        'Great grand-mother',
+        'Half-brother',
+        'Half-sister',
+        'Husband',
+        'Mother in-law',
+        'Mother',
+        'Nephew',
+        'Niece',
+        'Sister in-law',
+        'Sister',
+        'Son-in-law',
+        'Son',
+        'Step-daughter',
+        'Step-father',
+        'Step-mother',
+        'Step-son',
+        'Uncle',
+        'Wife',
+      ]
+    },
+    userAgreement: {
+      errorMessages: {
         required: 'you must accept the regulation.',
+      },
+      text: {
+        individual: 'I have read the Regulations and By-laws of the "Co-operative" and I fully agree to abide by them.',
+        joint: 'We have read the Regulations and By-laws of the "Co-operative" and We fully agree to abide by them.'
       }
     }
   }
