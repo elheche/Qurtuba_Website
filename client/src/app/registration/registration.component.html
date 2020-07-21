@@ -41,7 +41,7 @@
                 <mat-icon>lock</mat-icon>
               </button>
               <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hide">
+                [attr.aria-pressed]="hide" matTooltip="{{hide ? 'Show password' : 'Hide password'}}">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
               </button>
             </mat-form-field>
@@ -54,7 +54,7 @@
                 <mat-icon>lock</mat-icon>
               </button>
               <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hide">
+                [attr.aria-pressed]="hide" matTooltip="{{hide ? 'Show password' : 'Hide password'}}">
                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
               </button>
             </mat-form-field>
@@ -74,7 +74,7 @@
               <mat-radio-group aria-labelledby="membership-type-label" class="membership-type"
                 formControlName="membershipType" required>
                 <mat-radio-button class="membership-type-radio-button"
-                  *ngFor="let membershipType of environment.registration.membershipType.types" [value]="membershipType">
+                  *ngFor="let membershipType of environment.inputs.membershipType.types" [value]="membershipType">
                   {{membershipType}}
                 </mat-radio-button>
               </mat-radio-group>
@@ -89,7 +89,7 @@
               <mat-radio-group aria-labelledby="account-type-label" class="account-type" formControlName="accountType"
                 required (change)="onAccountTypeSelectionChange()">
                 <mat-radio-button class="account-type-radio-button"
-                  *ngFor="let accountType of environment.registration.accountType.types" [value]="accountType">
+                  *ngFor="let accountType of environment.inputs.accountType.types" [value]="accountType">
                   {{accountType}}
                 </mat-radio-button>
               </mat-radio-group>
@@ -116,8 +116,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Birth day</mat-label>
               <input matInput type="date" formControlName="birthDay" required
-                [min]="environment.registration.birthDay.acceptedRange.minDate"
-                [max]="environment.registration.birthDay.acceptedRange.maxDate">
+                [min]="environment.inputs.birthDay.acceptedRange.minDate"
+                [max]="environment.inputs.birthDay.acceptedRange.maxDate">
               <mat-error *ngIf="registrationFormStep2.get('birthDay').invalid">
                 {{getErrorMessage('registrationFormStep2', 'birthDay')}}
               </mat-error>

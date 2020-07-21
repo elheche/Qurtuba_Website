@@ -71,8 +71,8 @@ export class RegistrationComponent implements OnInit {
       birthDay: new FormControl('', [
         Validators.required,
         CustomValidators.dateRangeValidator(
-          environment.registration.birthDay.acceptedRange.minDate,
-          environment.registration.birthDay.acceptedRange.maxDate
+          environment.inputs.birthDay.acceptedRange.minDate,
+          environment.inputs.birthDay.acceptedRange.maxDate
         )
       ]),
       phoneNumber: new FormControl('', [
@@ -123,8 +123,8 @@ export class RegistrationComponent implements OnInit {
       donationForMosque: new FormControl('', [
         Validators.required
       ]),
-      membershipFee: new FormControl(environment.registration.membershipFee.defaultAmount),
-      totalAmount: new FormControl(environment.registration.membershipFee.defaultAmount)
+      membershipFee: new FormControl(environment.inputs.membershipFee.defaultAmount),
+      totalAmount: new FormControl(environment.inputs.membershipFee.defaultAmount)
     });
 
     this.registrationFormStep4 = new FormGroup({
@@ -176,13 +176,13 @@ export class RegistrationComponent implements OnInit {
       .pipe(
         startWith(''),
         map((relationshipType) => {
-          return relationshipType ? this._filterRelationshipTypes(relationshipType) : environment.registration.relationship.types.slice();
+          return relationshipType ? this._filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
         })
       );
   }
 
   getErrorMessage(formGroup: string, input: string): string {
-    return environment.registration[input].errorMessages[Object.keys(this[formGroup].get(input).errors)[0]];
+    return environment.inputs[input].errorMessages[Object.keys(this[formGroup].get(input).errors)[0]];
   }
 
   onPasswordValueChange(): void {
@@ -285,14 +285,14 @@ export class RegistrationComponent implements OnInit {
   }
 
   private _filterRelationshipTypes(filterValue: string): string[] {
-    return environment.registration.relationship.types
+    return environment.inputs.relationship.types
       .filter((relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0);
   }
 
   onAccountTypeSelectionChange(): void {
     this.registrationFormStep2.get('accountType').value === 'Individual' ?
-      this.userAgreementText = environment.registration.userAgreement.text.individual :
-      this.userAgreementText = environment.registration.userAgreement.text.joint;
+      this.userAgreementText = environment.inputs.userAgreement.text.individual :
+      this.userAgreementText = environment.inputs.userAgreement.text.joint;
   }
 
   /* getPostalCodeRegEx(): void {

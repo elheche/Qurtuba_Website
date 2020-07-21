@@ -5,18 +5,20 @@
 
 export const environment = {
   production: false,
-  registration: {
+  inputs: {
     email: {
       errorMessages: {
         required: 'You must enter a valid email address.',
         email: 'Invalid email.'
-      }
+      },
+      readonly: true
     },
     password: {
       errorMessages: {
         required: 'You must enter a password.',
         pattern: 'Invalid password. It must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character.'
-      }
+      },
+      readonly: true
     },
     confirmPassword: {
       errorMessages: {

@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule, MAT_RADIO_DEFAULT_OPTIONS } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
@@ -49,7 +50,8 @@ import { UserProfilComponent } from './user-profil/user-profil.component';
     MatSelectModule,
     HttpClientModule,
     MatAutocompleteModule,
-    MatDividerModule
+    MatDividerModule,
+    MatTabsModule
   ],
   providers: [
     {
