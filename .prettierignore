@@ -1,0 +1,9 @@
+# ignore assets
+assets
+# ignore icons
+*.ico
+# Ignore artifacts:
+build
+coverage
+# Ignore MacOs files system
+*.DS_Store

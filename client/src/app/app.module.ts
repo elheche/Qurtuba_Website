@@ -25,13 +25,7 @@ import { RegistrationComponent } from './registration/registration.component';
 import { UserProfilComponent } from './user-profil/user-profil.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    RegistrationComponent,
-    LogoutComponent,
-    UserProfilComponent
-  ],
+  declarations: [AppComponent, LoginComponent, RegistrationComponent, LogoutComponent, UserProfilComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -51,14 +45,14 @@ import { UserProfilComponent } from './user-profil/user-profil.component';
     HttpClientModule,
     MatAutocompleteModule,
     MatDividerModule,
-    MatTabsModule
+    MatTabsModule,
   ],
   providers: [
     {
       provide: MAT_RADIO_DEFAULT_OPTIONS,
       useValue: { color: 'primary' },
-    }
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

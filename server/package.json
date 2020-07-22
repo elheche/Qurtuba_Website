@@ -5,7 +5,38 @@
   "private": true,
   "scripts": {
     "start": "nodemon",
-    "lint": "tslint --project tsconfig.json \"./app/**/*.ts\" --format stylish"
+    "format": "prettier --config ../.prettierrc.yaml --write \"app/**/*\" --ignore-path ../.prettierignore",
+    "lint": "tslint --project tsconfig.json \"./app/**/*.ts\" --format stylish",
+    "test": "mocha --exit",
+    "coverage": "nyc mocha --exit"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "include": [
+      "app/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "exclude": [
+      "**/*.spec.ts",
+      "app/inversify.config.ts",
+      "app/www.ts",
+      "app/server.ts",
+      "app/app.ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "html",
+      "text"
+    ],
+    "all": true,
+    "cache": true,
+    "sourceMap": true,
+    "instrument": true
   },
   "author": "Hichem Lamraoui",
   "dependencies": {
@@ -29,6 +60,7 @@
     "@types/morgan": "^1.9.0",
     "@types/serve-favicon": "^2.5.0",
     "nodemon": "^2.0.4",
+    "prettier": "2.0.5",
     "ts-node": "^8.10.2",
     "tslint": "^6.1.2",
     "tslint-eslint-rules": "^5.4.0",

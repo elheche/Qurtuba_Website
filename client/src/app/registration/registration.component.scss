@@ -45,81 +45,43 @@
 }
 
 .registration-form-container mat-card-content mat-horizontal-stepper h2,
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  div.stepper-navigation-button-container {
+.registration-form-container mat-card-content mat-horizontal-stepper div.stepper-navigation-button-container {
   flex-basis: 100%;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  div.stepper-navigation-button-container {
+.registration-form-container mat-card-content mat-horizontal-stepper div.stepper-navigation-button-container {
   display: flex;
   justify-content: flex-end;
   margin-top: 15px;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  div.stepper-navigation-button-container
-  button
-  ~ button {
+.registration-form-container mat-card-content mat-horizontal-stepper div.stepper-navigation-button-container button ~ button {
   margin-left: 15px;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form
-  mat-form-field {
+.registration-form-container mat-card-content mat-horizontal-stepper form mat-form-field {
   flex-basis: 49%;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-1 {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 {
   display: flex;
   flex-flow: column wrap;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  mat-form-field:nth-child(6),
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  mat-form-field:nth-child(7) {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 mat-form-field:nth-child(6),
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 mat-form-field:nth-child(7) {
   flex-basis: 23.5%;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  mat-form-field:nth-last-child(-n + 5) {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 mat-form-field:nth-last-child(-n + 5) {
   flex-basis: 23.5%;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-3
-  mat-form-field:nth-last-child(-n + 5) {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-3 mat-form-field:nth-last-child(-n + 5) {
   flex-basis: 23.5%;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-3
-  input.deposit-amount {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-3 input.deposit-amount {
   text-align: right;
   -moz-appearance: textfield;
 }
@@ -153,61 +115,33 @@
   mat-horizontal-stepper
   form#registration-form-step-4
   mat-form-field:nth-child(n + 5):nth-child(-n + 8),
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-4
-  mat-form-field:nth-child(n + 11) {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-4 mat-form-field:nth-child(n + 11) {
   flex-basis: 23.5%;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  div#form-information-verification {
+.registration-form-container mat-card-content mat-horizontal-stepper div#form-information-verification {
   display: flex;
   font-size: 12px;
   margin-bottom: 15px;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  div.form-information-verification-joint
-  p {
+.registration-form-container mat-card-content mat-horizontal-stepper div.form-information-verification-joint p {
   flex-basis: 33.33%;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  div.form-information-verification-individual
-  p {
+.registration-form-container mat-card-content mat-horizontal-stepper div.form-information-verification-individual p {
   flex-basis: 50%;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  div#form-information-verification
-  mat-divider.mat-divider {
+.registration-form-container mat-card-content mat-horizontal-stepper div#form-information-verification mat-divider.mat-divider {
   margin: 10px;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-5
-  div#user-agreement-container {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-5 div#user-agreement-container {
   min-height: 44px;
 }
 
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-5
-  div#user-agreement-container
-  .mat-error {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-5 div#user-agreement-container .mat-error {
   font-size: 10.5px;
   margin-left: 10.5px;
   animation: error-animation 0.5s;

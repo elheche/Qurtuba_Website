@@ -16,17 +16,19 @@ export class DatabaseService {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
-      useCreateIndex: true
+      useCreateIndex: true,
     };
 
     this.uri = process.env.DATABASE_URL ? process.env.DATABASE_URL : '';
 
     mongoose.connect(this.uri, this.options).then(
-      () => { console.log('Connected to the database server.'); },
+      () => {
+        console.log('Connected to the database server.');
+      },
       (error) => {
         console.error(error);
         process.exit(1);
-      }
+      },
     );
   }
 

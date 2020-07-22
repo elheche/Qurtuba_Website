@@ -49,79 +49,39 @@
   flex-basis: 49%;
 }
 
-.user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#registration-form-step-1 {
+.user-profil-form-container mat-card-content mat-tab-group form#registration-form-step-1 {
   display: flex;
   flex-flow: column wrap;
 }
 
-::ng-deep
-  .user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#registration-form-step-1
-  .mat-form-field-suffix
-  .mat-icon-button {
+::ng-deep .user-profil-form-container mat-card-content mat-tab-group form#registration-form-step-1 .mat-form-field-suffix .mat-icon-button {
   display: inline;
 }
 
-.user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#registration-form-step-2
-  mat-form-field:nth-child(6),
-.user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#registration-form-step-2
-  mat-form-field:nth-child(7) {
+.user-profil-form-container mat-card-content mat-tab-group form#registration-form-step-2 mat-form-field:nth-child(6),
+.user-profil-form-container mat-card-content mat-tab-group form#registration-form-step-2 mat-form-field:nth-child(7) {
   flex-basis: 23.5%;
 }
 
-.user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#registration-form-step-2
-  mat-form-field:nth-last-child(-n + 5) {
+.user-profil-form-container mat-card-content mat-tab-group form#registration-form-step-2 mat-form-field:nth-last-child(-n + 5) {
   flex-basis: 23.5%;
 }
 
-.user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#registration-form-step-3 {
+.user-profil-form-container mat-card-content mat-tab-group form#registration-form-step-3 {
   margin-top: unset;
 }
 
-.user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#registration-form-step-3
-  mat-form-field:nth-last-child(-n + 4) {
+.user-profil-form-container mat-card-content mat-tab-group form#registration-form-step-3 mat-form-field:nth-last-child(-n + 4) {
   flex-basis: 23.5%;
 }
 
-.user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#registration-form-step-3
-  input.deposit-amount {
+.user-profil-form-container mat-card-content mat-tab-group form#registration-form-step-3 input.deposit-amount {
   text-align: right;
   -moz-appearance: textfield;
 }
 
-.user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#registration-form-step-3
-  input.deposit-amount::-webkit-outer-spin-button,
-.user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#registration-form-step-3
-  input.deposit-amount::-webkit-inner-spin-button {
+.user-profil-form-container mat-card-content mat-tab-group form#registration-form-step-3 input.deposit-amount::-webkit-outer-spin-button,
+.user-profil-form-container mat-card-content mat-tab-group form#registration-form-step-3 input.deposit-amount::-webkit-inner-spin-button {
   display: none;
 }
 
@@ -136,15 +96,7 @@
   white-space: unset;
 }
 
-.user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#registration-form-step-4
-  mat-form-field:nth-child(n + 4):nth-child(-n + 7),
-.user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#registration-form-step-4
-  mat-form-field:nth-child(n + 10) {
+.user-profil-form-container mat-card-content mat-tab-group form#registration-form-step-4 mat-form-field:nth-child(n + 4):nth-child(-n + 7),
+.user-profil-form-container mat-card-content mat-tab-group form#registration-form-step-4 mat-form-field:nth-child(n + 10) {
   flex-basis: 23.5%;
 }

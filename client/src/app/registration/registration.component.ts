@@ -13,7 +13,7 @@ import { ICountry } from './icountry.data';
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.scss']
+  styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
   registrationFormStep1: FormGroup;
@@ -41,144 +41,73 @@ export class RegistrationComponent implements OnInit {
     this.userAgreementText = '';
 
     this.registrationFormStep1 = new FormGroup({
-      email: new FormControl('', [
-        Validators.required,
-        Validators.email
-      ]),
+      email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,32}$/)
+        Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,32}$/),
       ]),
-      confirmPassword: new FormControl('', [
-        Validators.required,
-        CustomValidators.passwordMatchValidator('password')
-      ])
+      confirmPassword: new FormControl('', [Validators.required, CustomValidators.passwordMatchValidator('password')]),
     });
 
     this.registrationFormStep2 = new FormGroup({
-      membershipType: new FormControl('', [
-        Validators.required
-      ]),
-      accountType: new FormControl('', [
-        Validators.required
-      ]),
-      firstName: new FormControl('', [
-        Validators.required
-      ]),
-      lastName: new FormControl('', [
-        Validators.required
-      ]),
+      membershipType: new FormControl('', [Validators.required]),
+      accountType: new FormControl('', [Validators.required]),
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl('', [Validators.required]),
       birthDay: new FormControl('', [
         Validators.required,
         CustomValidators.dateRangeValidator(
           environment.inputs.birthDay.acceptedRange.minDate,
-          environment.inputs.birthDay.acceptedRange.maxDate
-        )
+          environment.inputs.birthDay.acceptedRange.maxDate,
+        ),
       ]),
-      phoneNumber: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)
-      ]),
-      address: new FormControl('', [
-        Validators.required
-      ]),
-      city: new FormControl('', [
-        Validators.required
-      ]),
-      country: new FormControl('', [
-        Validators.required
-      ]),
-      province: new FormControl({ value: '', disabled: true }, [
-        Validators.required
-      ]),
-      postalCode: new FormControl({ value: '', disabled: true }, [
-        Validators.required
-      ])
+      phoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
+      address: new FormControl('', [Validators.required]),
+      city: new FormControl('', [Validators.required]),
+      country: new FormControl('', [Validators.required]),
+      province: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      postalCode: new FormControl({ value: '', disabled: true }, [Validators.required]),
     });
 
     this.registrationFormStep3 = new FormGroup({
-      socialInsuranceNumber: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)
-      ]),
-      citizenship: new FormControl('', [
-        Validators.required
-      ]),
-      profession: new FormControl('', [
-        Validators.required
-      ]),
-      employer: new FormControl('', [
-        Validators.required
-      ]),
-      employerPhoneNumber: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)
-      ]),
-      numberOfDependents: new FormControl('', [
-        Validators.required
-      ]),
-      depositAmount: new FormControl('', [
-        Validators.required
-      ]),
-      donationForMosque: new FormControl('', [
-        Validators.required
-      ]),
+      socialInsuranceNumber: new FormControl('', [Validators.required, Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)]),
+      citizenship: new FormControl('', [Validators.required]),
+      profession: new FormControl('', [Validators.required]),
+      employer: new FormControl('', [Validators.required]),
+      employerPhoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
+      numberOfDependents: new FormControl('', [Validators.required]),
+      depositAmount: new FormControl('', [Validators.required]),
+      donationForMosque: new FormControl('', [Validators.required]),
       membershipFee: new FormControl(environment.inputs.membershipFee.defaultAmount),
-      totalAmount: new FormControl(environment.inputs.membershipFee.defaultAmount)
+      totalAmount: new FormControl(environment.inputs.membershipFee.defaultAmount),
     });
 
     this.registrationFormStep4 = new FormGroup({
-      firstName: new FormControl('', [
-        Validators.required
-      ]),
-      lastName: new FormControl('', [
-        Validators.required
-      ]),
-      address: new FormControl('', [
-        Validators.required
-      ]),
-      city: new FormControl('', [
-        Validators.required
-      ]),
-      country: new FormControl('', [
-        Validators.required
-      ]),
-      province: new FormControl({ value: '', disabled: true }, [
-        Validators.required
-      ]),
-      postalCode: new FormControl({ value: '', disabled: true }, [
-        Validators.required
-      ]),
-      socialInsuranceNumber: new FormControl('', [
-        Validators.required,
-        Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)
-      ]),
-      citizenship: new FormControl('', [
-        Validators.required
-      ]),
-      profession: new FormControl('', [
-        Validators.required
-      ]),
-      relationship: new FormControl('', [
-        Validators.required
-      ])
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl('', [Validators.required]),
+      address: new FormControl('', [Validators.required]),
+      city: new FormControl('', [Validators.required]),
+      country: new FormControl('', [Validators.required]),
+      province: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      postalCode: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      socialInsuranceNumber: new FormControl('', [Validators.required, Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)]),
+      citizenship: new FormControl('', [Validators.required]),
+      profession: new FormControl('', [Validators.required]),
+      relationship: new FormControl('', [Validators.required]),
     });
 
     this.registrationFormStep5 = new FormGroup({
-      userAgreement: new FormControl('', [
-        Validators.required
-      ])
+      userAgreement: new FormControl('', [Validators.required]),
     });
   }
 
   ngOnInit(): void {
-    this.filteredRelationshipTypes = this.registrationFormStep4.get('relationship').valueChanges
-      .pipe(
-        startWith(''),
-        map((relationshipType) => {
-          return relationshipType ? this._filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
-        })
-      );
+    this.filteredRelationshipTypes = this.registrationFormStep4.get('relationship').valueChanges.pipe(
+      startWith(''),
+      map((relationshipType) => {
+        return relationshipType ? this._filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
+      }),
+    );
   }
 
   getErrorMessage(formGroup: string, input: string): string {
@@ -207,10 +136,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   formatCanadianPostalCode(inputEvent: InputEvent, formGroup: string): void {
-    if (!inputEvent.data
-      || /[/^¨`]/.test(inputEvent.data)
-      || this[formGroup].get('country').value !== 'Canada'
-    ) {
+    if (!inputEvent.data || /[/^¨`]/.test(inputEvent.data) || this[formGroup].get('country').value !== 'Canada') {
       return;
     }
     const postalCode = this[formGroup].get('postalCode').value as string;
@@ -218,8 +144,11 @@ export class RegistrationComponent implements OnInit {
     const firstBlockIndex = 0;
     const secondBlockIndex = 4;
     if (postalCode.length >= postalCodeBlockLength) {
-      this[formGroup].get('postalCode')
-        .setValue(`${postalCode.substr(firstBlockIndex, postalCodeBlockLength)} ${postalCode.substr(secondBlockIndex, postalCodeBlockLength)}`);
+      this[formGroup]
+        .get('postalCode')
+        .setValue(
+          `${postalCode.substr(firstBlockIndex, postalCodeBlockLength)} ${postalCode.substr(secondBlockIndex, postalCodeBlockLength)}`,
+        );
     }
   }
 
@@ -233,10 +162,12 @@ export class RegistrationComponent implements OnInit {
       this[formGroup].get('province').enable({ onlySelf: true });
       this[formGroup].get('postalCode').reset();
       this[formGroup].get('postalCode').enable({ onlySelf: true });
-      this[formGroup].get('postalCode').setValidators([
-        Validators.required,
-        Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex(formGroup)].postalCodeRegEx))
-      ]);
+      this[formGroup]
+        .get('postalCode')
+        .setValidators([
+          Validators.required,
+          Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex(formGroup)].postalCodeRegEx)),
+        ]);
       this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
     } else {
       this[formGroup].get('province').reset();
@@ -251,10 +182,10 @@ export class RegistrationComponent implements OnInit {
     const regEx1 = /^(\d{3})[\- ]?(\d{0,2})$/;
     const regEx2 = /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{0,3})$/;
     const regEx3 = /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{3})(.*)$/;
-    if ((event instanceof InputEvent) && (!event.data || /[/^¨`]/.test(event.data))) {
+    if (event instanceof InputEvent && (!event.data || /[/^¨`]/.test(event.data))) {
       return;
     }
-    if ((event instanceof InputEvent) && !/[\d]/.test(inputValue[inputValue.length - 1])) {
+    if (event instanceof InputEvent && !/[\d]/.test(inputValue[inputValue.length - 1])) {
       inputValue = inputValue.slice(0, inputValue.length - 1);
       this[formGroup].get('socialInsuranceNumber').setValue(inputValue);
       return;
@@ -274,25 +205,25 @@ export class RegistrationComponent implements OnInit {
   }
 
   updateTotalAmount(): void {
-    const depositAmount = this.registrationFormStep3.get('depositAmount').value ?
-      this.registrationFormStep3.get('depositAmount').value : 0;
-    const donationForMosque = this.registrationFormStep3.get('donationForMosque').value ?
-      this.registrationFormStep3.get('donationForMosque').value : 0;
-    const membershipFee = this.registrationFormStep3.get('membershipFee').value ?
-      this.registrationFormStep3.get('membershipFee').value : 0;
+    const depositAmount = this.registrationFormStep3.get('depositAmount').value ? this.registrationFormStep3.get('depositAmount').value : 0;
+    const donationForMosque = this.registrationFormStep3.get('donationForMosque').value
+      ? this.registrationFormStep3.get('donationForMosque').value
+      : 0;
+    const membershipFee = this.registrationFormStep3.get('membershipFee').value ? this.registrationFormStep3.get('membershipFee').value : 0;
     const totalAmount = depositAmount + donationForMosque + membershipFee;
     this.registrationFormStep3.get('totalAmount').setValue(totalAmount);
   }
 
   protected _filterRelationshipTypes(filterValue: string): string[] {
-    return environment.inputs.relationship.types
-      .filter((relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0);
+    return environment.inputs.relationship.types.filter(
+      (relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0,
+    );
   }
 
   onAccountTypeSelectionChange(): void {
-    this.registrationFormStep2.get('accountType').value === 'Individual' ?
-      this.userAgreementText = environment.inputs.userAgreement.text.individual :
-      this.userAgreementText = environment.inputs.userAgreement.text.joint;
+    this.registrationFormStep2.get('accountType').value === 'Individual'
+      ? (this.userAgreementText = environment.inputs.userAgreement.text.individual)
+      : (this.userAgreementText = environment.inputs.userAgreement.text.joint);
   }
 
   /* getPostalCodeRegEx(): void {

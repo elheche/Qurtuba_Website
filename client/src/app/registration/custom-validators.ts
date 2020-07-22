@@ -1,7 +1,6 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export class CustomValidators {
-
   static passwordMatchValidator(comparingPassword: string): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.parent || !control.value || !control.parent.get(comparingPassword).value) {

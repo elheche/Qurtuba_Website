@@ -17,7 +17,8 @@ export class DatabaseController {
     this.router = Router();
 
     this.router.get('/users', async (req: Request, res: Response, next: NextFunction) => {
-      this.databaseService.getAllUsers()
+      this.databaseService
+        .getAllUsers()
         .then((users: mongoose.Document[]) => {
           res.json(users);
         })
@@ -27,7 +28,8 @@ export class DatabaseController {
     });
 
     this.router.get('/login', async (req: Request, res: Response, next: NextFunction) => {
-      this.databaseService.getUser(req.body)
+      this.databaseService
+        .getUser(req.body)
         .then((user: mongoose.Document) => {
           res.json(user);
         })
@@ -41,7 +43,8 @@ export class DatabaseController {
     });
 
     this.router.post('/registration', async (req: Request, res: Response, next: NextFunction) => {
-      this.databaseService.addUser(req.body)
+      this.databaseService
+        .addUser(req.body)
         .then((registredUser: mongoose.Document) => {
           res.status(Httpstatus.CREATED).send(registredUser);
         })
@@ -51,7 +54,8 @@ export class DatabaseController {
     });
 
     this.router.delete('/users/:id', async (req: Request, res: Response, next: NextFunction) => {
-      this.databaseService.deleteUser(req.params.id)
+      this.databaseService
+        .deleteUser(req.params.id)
         .then((deletedUser: mongoose.Document) => {
           res.status(Httpstatus.OK).send(deletedUser);
         })

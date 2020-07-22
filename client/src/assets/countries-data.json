@@ -3421,11 +3421,7 @@
     "countryName": "Montserrat",
     "countryShortCode": "MS",
     "postalCodeRegEx": "",
-    "regions": [
-      { "name": "Saint Anthony" },
-      { "name": "Saint Georges" },
-      { "name": "Saint Peter's" }
-    ]
+    "regions": [{ "name": "Saint Anthony" }, { "name": "Saint Georges" }, { "name": "Saint Peter's" }]
   },
   {
     "countryName": "Mozambique",
@@ -3553,11 +3549,7 @@
     "countryName": "New Caledonia",
     "countryShortCode": "NC",
     "postalCodeRegEx": "^988\\d{2}$",
-    "regions": [
-      { "name": "Iles Loyaute" },
-      { "name": "Nord" },
-      { "name": "Sud" }
-    ]
+    "regions": [{ "name": "Iles Loyaute" }, { "name": "Nord" }, { "name": "Sud" }]
   },
   {
     "countryName": "Niger",
@@ -3646,12 +3638,7 @@
     "countryName": "Northern Mariana Islands",
     "countryShortCode": "MP",
     "postalCodeRegEx": "^(9695[012])(?:[ \\-](\\d{4}))?$",
-    "regions": [
-      { "name": "Northern Islands" },
-      { "name": "Rota" },
-      { "name": "Saipan" },
-      { "name": "Tinian" }
-    ]
+    "regions": [{ "name": "Northern Islands" }, { "name": "Rota" }, { "name": "Saipan" }, { "name": "Tinian" }]
   },
   {
     "countryName": "Norfolk Island",
@@ -5266,11 +5253,7 @@
     "countryName": "Tokelau",
     "countryShortCode": "TK",
     "postalCodeRegEx": "",
-    "regions": [
-      { "name": "Atafu" },
-      { "name": "Fakaofo" },
-      { "name": "Nukunonu" }
-    ]
+    "regions": [{ "name": "Atafu" }, { "name": "Fakaofo" }, { "name": "Nukunonu" }]
   },
   {
     "countryName": "Tonga",
