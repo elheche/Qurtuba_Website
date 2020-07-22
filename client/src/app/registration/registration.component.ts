@@ -284,7 +284,7 @@ export class RegistrationComponent implements OnInit {
     this.registrationFormStep3.get('totalAmount').setValue(totalAmount);
   }
 
-  private _filterRelationshipTypes(filterValue: string): string[] {
+  protected _filterRelationshipTypes(filterValue: string): string[] {
     return environment.inputs.relationship.types
       .filter((relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0);
   }

@@ -68,35 +68,30 @@
           <form [formGroup]="registrationFormStep2" id="registration-form-step-2" #registrationFormStep2Ref="ngForm">
             <ng-template matStepLabel>Step 2</ng-template>
             <h2>Fill your membership application</h2>
-            <div id="membership-type-container"
-              [ngClass]="{'membership-type-container-invalid':registrationFormStep2.get('membershipType').invalid && registrationFormStep2Ref.submitted}">
-              <label id="membership-type-label">Indicate the type of membership</label>
-              <mat-radio-group aria-labelledby="membership-type-label" class="membership-type"
-                formControlName="membershipType" required>
-                <mat-radio-button class="membership-type-radio-button"
-                  *ngFor="let membershipType of environment.inputs.membershipType.types" [value]="membershipType">
+            <mat-form-field appearance="outline">
+              <mat-label>Indicate the type of membership</mat-label>
+              <mat-select formControlName="membershipType" required>
+                <mat-option>--</mat-option>
+                <mat-option *ngFor="let membershipType of environment.inputs.membershipType.types" [value]="membershipType">
                   {{membershipType}}
-                </mat-radio-button>
-              </mat-radio-group>
-              <mat-error
-                *ngIf="registrationFormStep2.get('membershipType').invalid && registrationFormStep2Ref.submitted">
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="registrationFormStep2.get('membershipType').invalid">
                 {{getErrorMessage('registrationFormStep2', 'membershipType')}}
               </mat-error>
-            </div>
-            <div id="account-type-container"
-              [ngClass]="{'account-type-container-invalid':registrationFormStep2.get('accountType').invalid && registrationFormStep2Ref.submitted}">
-              <label id="account-type-label">Indicate the type of account</label>
-              <mat-radio-group aria-labelledby="account-type-label" class="account-type" formControlName="accountType"
-                required (change)="onAccountTypeSelectionChange()">
-                <mat-radio-button class="account-type-radio-button"
-                  *ngFor="let accountType of environment.inputs.accountType.types" [value]="accountType">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Indicate the type of account</mat-label>
+              <mat-select formControlName="accountType" required (selectionChange)="onAccountTypeSelectionChange()">
+                <mat-option>--</mat-option>
+                <mat-option *ngFor="let accountType of environment.inputs.accountType.types" [value]="accountType">
                   {{accountType}}
-                </mat-radio-button>
-              </mat-radio-group>
-              <mat-error *ngIf="registrationFormStep2.get('accountType').invalid && registrationFormStep2Ref.submitted">
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="registrationFormStep2.get('accountType').invalid">
                 {{getErrorMessage('registrationFormStep2', 'accountType')}}
               </mat-error>
-            </div>
+            </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>First name</mat-label>
               <input matInput formControlName="firstName" required

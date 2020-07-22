@@ -24,7 +24,8 @@ export const environment = {
       errorMessages: {
         required: 'You must confirm the password.',
         noPassswordMatch: 'Error: password and confirm password do not match.'
-      }
+      },
+      readonly: false
     },
     membershipType: {
       errorMessages: {
@@ -33,7 +34,8 @@ export const environment = {
       types: [
         'Buy a house',
         'Investment'
-      ]
+      ],
+      readonly: true
     },
     accountType: {
       errorMessages: {
@@ -42,7 +44,8 @@ export const environment = {
       types: [
         'Individual',
         'Joint'
-      ]
+      ],
+      readonly: true
     },
     firstName: {
       errorMessages: {

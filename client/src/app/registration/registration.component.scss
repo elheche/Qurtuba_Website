@@ -98,99 +98,13 @@
   mat-form-field:nth-child(7) {
   flex-basis: 23.5%;
 }
+
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
   form#registration-form-step-2
   mat-form-field:nth-last-child(-n + 5) {
   flex-basis: 23.5%;
-}
-
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  #membership-type-container,
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  #account-type-container {
-  display: flex;
-  flex-direction: column;
-  flex-basis: 49%;
-  min-height: 77px;
-}
-
-::ng-deep
-  .registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  .membership-type-container-invalid
-  .mat-radio-label-content,
-::ng-deep
-  .registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  .account-type-container-invalid
-  .mat-radio-label-content {
-  color: #f44336;
-}
-
-::ng-deep
-  .registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  .membership-type-container-invalid
-  .mat-radio-outer-circle,
-::ng-deep
-  .registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  .account-type-container-invalid
-  .mat-radio-outer-circle {
-  border-color: #f44336;
-}
-
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  #membership-type-container
-  .mat-error,
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  #account-type-container
-  .mat-error {
-  font-size: 10.5px;
-  margin-left: 10.5px;
-  animation: error-animation 0.5s; // See @keyframes error-animation below.
-}
-
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  div
-  label {
-  margin-bottom: 15px;
-  font-weight: bold;
-}
-
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-2
-  div
-  mat-radio-button
-  ~ mat-radio-button {
-  margin-left: 15px;
 }
 
 .registration-form-container

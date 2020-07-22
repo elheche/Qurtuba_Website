@@ -45,6 +45,10 @@
   margin-top: 15px;
 }
 
+.user-profil-form-container mat-card-content mat-tab-group form mat-form-field {
+  flex-basis: 49%;
+}
+
 .user-profil-form-container
   mat-card-content
   mat-tab-group
@@ -61,4 +65,86 @@
   .mat-form-field-suffix
   .mat-icon-button {
   display: inline;
+}
+
+.user-profil-form-container
+  mat-card-content
+  mat-tab-group
+  form#registration-form-step-2
+  mat-form-field:nth-child(6),
+.user-profil-form-container
+  mat-card-content
+  mat-tab-group
+  form#registration-form-step-2
+  mat-form-field:nth-child(7) {
+  flex-basis: 23.5%;
+}
+
+.user-profil-form-container
+  mat-card-content
+  mat-tab-group
+  form#registration-form-step-2
+  mat-form-field:nth-last-child(-n + 5) {
+  flex-basis: 23.5%;
+}
+
+.user-profil-form-container
+  mat-card-content
+  mat-tab-group
+  form#registration-form-step-3 {
+  margin-top: unset;
+}
+
+.user-profil-form-container
+  mat-card-content
+  mat-tab-group
+  form#registration-form-step-3
+  mat-form-field:nth-last-child(-n + 4) {
+  flex-basis: 23.5%;
+}
+
+.user-profil-form-container
+  mat-card-content
+  mat-tab-group
+  form#registration-form-step-3
+  input.deposit-amount {
+  text-align: right;
+  -moz-appearance: textfield;
+}
+
+.user-profil-form-container
+  mat-card-content
+  mat-tab-group
+  form#registration-form-step-3
+  input.deposit-amount::-webkit-outer-spin-button,
+.user-profil-form-container
+  mat-card-content
+  mat-tab-group
+  form#registration-form-step-3
+  input.deposit-amount::-webkit-inner-spin-button {
+  display: none;
+}
+
+::ng-deep
+  .user-profil-form-container
+  mat-card-content
+  mat-tab-group
+  form#registration-form-step-3
+  mat-form-field.mat-form-field-appearance-outline:nth-last-child(-n + 4)
+  .mat-form-field-suffix {
+  top: unset;
+  white-space: unset;
+}
+
+.user-profil-form-container
+  mat-card-content
+  mat-tab-group
+  form#registration-form-step-4
+  mat-form-field:nth-child(n + 4):nth-child(-n + 7),
+.user-profil-form-container
+  mat-card-content
+  mat-tab-group
+  form#registration-form-step-4
+  mat-form-field:nth-child(n + 10) {
+  flex-basis: 23.5%;
 }
