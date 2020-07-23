@@ -46,11 +46,13 @@ export const environment = {
       errorMessages: {
         required: 'You must enter a first name.',
       },
+      readonly: true,
     },
     lastName: {
       errorMessages: {
         required: 'You must enter a last name.',
       },
+      readonly: true,
     },
     birthDay: {
       errorMessages: {
@@ -63,83 +65,99 @@ export const environment = {
         // User must be at least 18 years old
         maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()).toISOString().slice(0, 10),
       },
+      readonly: true,
     },
     phoneNumber: {
       errorMessages: {
         required: 'You must enter a phone number.',
         pattern: 'Invalid phone number.',
       },
+      readonly: true,
     },
     address: {
       errorMessages: {
         required: 'You must enter an address.',
       },
+      readonly: true,
     },
     city: {
       errorMessages: {
         required: 'You must enter a city.',
       },
+      readonly: true,
     },
     country: {
       errorMessages: {
         required: 'You must choose a country.',
       },
+      readonly: true,
     },
     province: {
       errorMessages: {
         required: 'You must choose a province.',
       },
+      readonly: true,
     },
     postalCode: {
       errorMessages: {
         required: 'You must enter a valid postal code.',
         pattern: 'Invalid postal code.',
       },
+      readonly: true,
     },
     socialInsuranceNumber: {
       errorMessages: {
         required: 'You must enter a social insurance number (SIN).',
         pattern: 'Invalid social insurance number (SIN).',
       },
+      readonly: true,
     },
     citizenship: {
       errorMessages: {
         required: 'You must choose a citizenship.',
       },
+      readonly: true,
     },
     profession: {
       errorMessages: {
         required: 'You must enter a profession.',
       },
+      readonly: true,
     },
     employer: {
       errorMessages: {
         required: 'You must enter an employer.',
       },
+      readonly: true,
     },
     employerPhoneNumber: {
       errorMessages: {
         required: 'You must enter an employer phone number.',
         pattern: 'Invalid phone number.',
       },
+      readonly: true,
     },
     numberOfDependents: {
       errorMessages: {
         required: 'you must enter the number of your dependents.',
       },
+      readonly: true,
     },
     depositAmount: {
       errorMessages: {
         required: 'you must enter your deposit amount.',
       },
+      readonly: true,
     },
     donationForMosque: {
       errorMessages: {
         required: 'you must enter your donation amount for mosque.',
       },
+      readonly: true,
     },
     membershipFee: {
       defaultAmount: 75,
+      readonly: true,
     },
     relationship: {
       errorMessages: {
@@ -183,6 +201,7 @@ export const environment = {
         'Uncle',
         'Wife',
       ],
+      readonly: true,
     },
     userAgreement: {
       errorMessages: {
@@ -192,6 +211,7 @@ export const environment = {
         individual: 'I have read the Regulations and By-laws of the "Co-operative" and I fully agree to abide by them.',
         joint: 'We have read the Regulations and By-laws of the "Co-operative" and We fully agree to abide by them.',
       },
+      readonly: true,
     },
   },
 };

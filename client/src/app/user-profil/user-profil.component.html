@@ -25,7 +25,7 @@
                 required
                 [readonly]="environment.inputs.email.readonly"
               />
-              <mat-error *ngIf="registrationFormStep1.get('email').invalid && !environment.inputs.email.readonly">
+              <mat-error *ngIf="registrationFormStep1.get('email').invalid">
                 {{ getErrorMessage('registrationFormStep1', 'email') }}
               </mat-error>
               <button mat-icon-button matPrefix disabled>
@@ -81,7 +81,13 @@
             </mat-form-field>
             <mat-form-field appearance="outline" *ngIf="!environment.inputs.password.readonly">
               <mat-label>Confirm your password</mat-label>
-              <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmPassword" required />
+              <input
+                matInput
+                [type]="hide ? 'password' : 'text'"
+                formControlName="confirmPassword"
+                required
+                [readonly]="environment.inputs.confirmPassword.readonly"
+              />
               <mat-error *ngIf="registrationFormStep1.get('confirmPassword').invalid">
                 {{ getErrorMessage('registrationFormStep1', 'confirmPassword') }}</mat-error
               >
@@ -105,7 +111,7 @@
         <mat-tab label="Personal informations">
           <form [formGroup]="registrationFormStep2" id="registration-form-step-2" #registrationFormStep2Ref="ngForm">
             <mat-form-field appearance="outline">
-              <mat-label>Indicate the type of membership</mat-label>
+              <mat-label>Type of membership</mat-label>
               <mat-select formControlName="membershipType" required>
                 <mat-option>--</mat-option>
                 <mat-option *ngFor="let membershipType of environment.inputs.membershipType.types" [value]="membershipType">
@@ -117,7 +123,7 @@
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
-              <mat-label>Indicate the type of account</mat-label>
+              <mat-label>Type of account</mat-label>
               <mat-select formControlName="accountType" required (selectionChange)="onAccountTypeSelectionChange()">
                 <mat-option>--</mat-option>
                 <mat-option *ngFor="let accountType of environment.inputs.accountType.types" [value]="accountType">
@@ -130,14 +136,26 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>First name</mat-label>
-              <input matInput formControlName="firstName" required [value]="registrationFormStep2.get('firstName').value | titlecase" />
+              <input
+                matInput
+                formControlName="firstName"
+                required
+                [value]="registrationFormStep2.get('firstName').value | titlecase"
+                [readonly]="environment.inputs.firstName.readonly"
+              />
               <mat-error *ngIf="registrationFormStep2.get('firstName').invalid">
                 {{ getErrorMessage('registrationFormStep2', 'firstName') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Last name</mat-label>
-              <input matInput formControlName="lastName" required [value]="registrationFormStep2.get('lastName').value | titlecase" />
+              <input
+                matInput
+                formControlName="lastName"
+                required
+                [value]="registrationFormStep2.get('lastName').value | titlecase"
+                [readonly]="environment.inputs.lastName.readonly"
+              />
               <mat-error *ngIf="registrationFormStep2.get('lastName').invalid">
                 {{ getErrorMessage('registrationFormStep2', 'lastName') }}
               </mat-error>
@@ -151,6 +169,7 @@
                 required
                 [min]="environment.inputs.birthDay.acceptedRange.minDate"
                 [max]="environment.inputs.birthDay.acceptedRange.maxDate"
+                [readonly]="environment.inputs.birthDay.readonly"
               />
               <mat-error *ngIf="registrationFormStep2.get('birthDay').invalid">
                 {{ getErrorMessage('registrationFormStep2', 'birthDay') }}
@@ -166,6 +185,7 @@
                 required
                 (input)="formatPhoneNumber($event, 'registrationFormStep2', 'phoneNumber')"
                 placeholder="Ex. (555) 555-1234"
+                [readonly]="environment.inputs.phoneNumber.readonly"
               />
               <mat-error *ngIf="registrationFormStep2.get('phoneNumber').invalid">
                 {{ getErrorMessage('registrationFormStep2', 'phoneNumber') }}
@@ -179,6 +199,7 @@
                 required
                 placeholder="Ex. 123 Main St Apt 10"
                 [value]="registrationFormStep2.get('address').value | titlecase"
+                [readonly]="environment.inputs.address.readonly"
               />
               <mat-error *ngIf="registrationFormStep2.get('address').invalid">
                 {{ getErrorMessage('registrationFormStep2', 'address') }}
@@ -192,6 +213,7 @@
                 required
                 placeholder="Ex. Montreal"
                 [value]="registrationFormStep2.get('city').value | titlecase"
+                [readonly]="environment.inputs.city.readonly"
               />
               <mat-error *ngIf="registrationFormStep2.get('city').invalid">
                 {{ getErrorMessage('registrationFormStep2', 'city') }}
@@ -239,6 +261,7 @@
                 [value]="registrationFormStep2.get('postalCode').value | uppercase"
                 (input)="formatCanadianPostalCode($event, 'registrationFormStep2')"
                 placeholder="Ex. J4K 5G7"
+                [readonly]="environment.inputs.postalCode.readonly"
               />
               <mat-error *ngIf="registrationFormStep2.get('postalCode').invalid">
                 {{ getErrorMessage('registrationFormStep2', 'postalCode') }}
@@ -256,6 +279,7 @@
                 (input)="formatSocialInsuranceNumber($event, 'registrationFormStep3')"
                 placeholder="Ex. 111-111-111"
                 (blur)="formatSocialInsuranceNumber($event, 'registrationFormStep3')"
+                [readonly]="environment.inputs.socialInsuranceNumber.readonly"
               />
               <mat-error *ngIf="registrationFormStep3.get('socialInsuranceNumber').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'socialInsuranceNumber') }}
@@ -276,14 +300,26 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Profession</mat-label>
-              <input matInput formControlName="profession" required [value]="registrationFormStep3.get('profession').value | titlecase" />
+              <input
+                matInput
+                formControlName="profession"
+                required
+                [value]="registrationFormStep3.get('profession').value | titlecase"
+                [readonly]="environment.inputs.profession.readonly"
+              />
               <mat-error *ngIf="registrationFormStep3.get('profession').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'profession') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Employer</mat-label>
-              <input matInput formControlName="employer" required [value]="registrationFormStep3.get('employer').value | titlecase" />
+              <input
+                matInput
+                formControlName="employer"
+                required
+                [value]="registrationFormStep3.get('employer').value | titlecase"
+                [readonly]="environment.inputs.employer.readonly"
+              />
               <mat-error *ngIf="registrationFormStep3.get('employer').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'employer') }}
               </mat-error>
@@ -298,6 +334,7 @@
                 required
                 (input)="formatPhoneNumber($event, 'registrationFormStep3', 'employerPhoneNumber')"
                 placeholder="Ex. (555) 555-1234"
+                [readonly]="environment.inputs.employerPhoneNumber.readonly"
               />
               <mat-error *ngIf="registrationFormStep3.get('employerPhoneNumber').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'employerPhoneNumber') }}
@@ -314,6 +351,7 @@
                 min="0"
                 max="15"
                 oninput="validity.valid||(value='');"
+                [readonly]="environment.inputs.numberOfDependents.readonly"
               />
               <mat-error *ngIf="registrationFormStep3.get('numberOfDependents').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'numberOfDependents') }}
@@ -331,6 +369,7 @@
                 oninput="validity.valid||(value='')"
                 class="deposit-amount"
                 (input)="updateTotalAmount()"
+                [readonly]="environment.inputs.depositAmount.readonly"
               />
               <span matSuffix class="deposit-amount-suffix">.00 </span>
               <span matSuffix class="deposit-amount-suffix">$&nbsp;</span>
@@ -350,6 +389,7 @@
                 oninput="validity.valid||(value='')"
                 class="deposit-amount"
                 (input)="updateTotalAmount()"
+                [readonly]="environment.inputs.donationForMosque.readonly"
               />
               <span matSuffix class="deposit-amount-suffix">.00 </span>
               <span matSuffix class="deposit-amount-suffix">$&nbsp;</span>
@@ -359,7 +399,15 @@
             </mat-form-field>
             <mat-form-field appearance="outline" hintLabel="$75.00 non-refundable.">
               <mat-label>Membership Fee</mat-label>
-              <input matInput type="number" formControlName="membershipFee" step="1" min="0" class="deposit-amount" readonly />
+              <input
+                matInput
+                type="number"
+                formControlName="membershipFee"
+                step="1"
+                min="0"
+                class="deposit-amount"
+                [readonly]="environment.inputs.membershipFee.readonly"
+              />
               <span matSuffix class="deposit-amount-suffix">.00 </span>
               <span matSuffix class="deposit-amount-suffix">$&nbsp;</span>
             </mat-form-field>
@@ -375,14 +423,26 @@
           <form [formGroup]="registrationFormStep4" id="registration-form-step-4">
             <mat-form-field appearance="outline">
               <mat-label>First name</mat-label>
-              <input matInput formControlName="firstName" required [value]="registrationFormStep4.get('firstName').value | titlecase" />
+              <input
+                matInput
+                formControlName="firstName"
+                required
+                [value]="registrationFormStep4.get('firstName').value | titlecase"
+                [readonly]="environment.inputs.firstName.readonly"
+              />
               <mat-error *ngIf="registrationFormStep4.get('firstName').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'firstName') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Last name</mat-label>
-              <input matInput formControlName="lastName" required [value]="registrationFormStep4.get('lastName').value | titlecase" />
+              <input
+                matInput
+                formControlName="lastName"
+                required
+                [value]="registrationFormStep4.get('lastName').value | titlecase"
+                [readonly]="environment.inputs.lastName.readonly"
+              />
               <mat-error *ngIf="registrationFormStep4.get('lastName').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'lastName') }}
               </mat-error>
@@ -395,6 +455,7 @@
                 required
                 placeholder="Ex. 123 Main St Apt 10"
                 [value]="registrationFormStep4.get('address').value | titlecase"
+                [readonly]="environment.inputs.address.readonly"
               />
               <mat-error *ngIf="registrationFormStep4.get('address').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'address') }}
@@ -408,6 +469,7 @@
                 required
                 placeholder="Ex. Montreal"
                 [value]="registrationFormStep4.get('city').value | titlecase"
+                [readonly]="environment.inputs.city.readonly"
               />
               <mat-error *ngIf="registrationFormStep4.get('city').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'city') }}
@@ -455,6 +517,7 @@
                 [value]="registrationFormStep4.get('postalCode').value | uppercase"
                 (input)="formatCanadianPostalCode($event, 'registrationFormStep4')"
                 placeholder="Ex. J4K 5G7"
+                [readonly]="environment.inputs.postalCode.readonly"
               />
               <mat-error *ngIf="registrationFormStep4.get('postalCode').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'postalCode') }}
@@ -470,6 +533,7 @@
                 (input)="formatSocialInsuranceNumber($event, 'registrationFormStep4')"
                 placeholder="Ex. 111-111-111"
                 (blur)="formatSocialInsuranceNumber($event, 'registrationFormStep4')"
+                [readonly]="environment.inputs.socialInsuranceNumber.readonly"
               />
               <mat-error *ngIf="registrationFormStep4.get('socialInsuranceNumber').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'socialInsuranceNumber') }}
@@ -490,7 +554,13 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Profession</mat-label>
-              <input matInput formControlName="profession" required [value]="registrationFormStep4.get('profession').value | titlecase" />
+              <input
+                matInput
+                formControlName="profession"
+                required
+                [value]="registrationFormStep4.get('profession').value | titlecase"
+                [readonly]="environment.inputs.profession.readonly"
+              />
               <mat-error *ngIf="registrationFormStep4.get('profession').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'profession') }}
               </mat-error>
@@ -505,6 +575,7 @@
                 [matAutocomplete]="auto"
                 [value]="registrationFormStep4.get('relationship').value | titlecase"
                 placeholder="Ex. Wife"
+                [readonly]="environment.inputs.relationship.readonly"
               />
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let relationshipType of filteredRelationshipTypes | async" [value]="relationshipType">
