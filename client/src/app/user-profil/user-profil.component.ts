@@ -72,6 +72,10 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
       this.registrationFormStep4.get(input).setValue(inputs4[input]);
     });
 
+    this.registrationFormStep2.get('province').enable({ onlySelf: true });
+    this.registrationFormStep2.get('postalCode').enable({ onlySelf: true });
+    this.registrationFormStep4.get('province').enable({ onlySelf: true });
+    this.registrationFormStep4.get('postalCode').enable({ onlySelf: true });
   }
 
   onEdit(input: string): void {

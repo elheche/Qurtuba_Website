@@ -112,24 +112,43 @@
           <form [formGroup]="registrationFormStep2" id="registration-form-step-2" #registrationFormStep2Ref="ngForm">
             <mat-form-field appearance="outline">
               <mat-label>Type of membership</mat-label>
-              <mat-select formControlName="membershipType" required>
+              <mat-select formControlName="membershipType" required *ngIf="!environment.inputs.membershipType.readonly">
                 <mat-option>--</mat-option>
                 <mat-option *ngFor="let membershipType of environment.inputs.membershipType.types" [value]="membershipType">
                   {{ membershipType }}
                 </mat-option>
               </mat-select>
+              <input
+                matInput
+                formControlName="membershipType"
+                required
+                [readonly]="environment.inputs.membershipType.readonly"
+                *ngIf="environment.inputs.membershipType.readonly"
+              />
               <mat-error *ngIf="registrationFormStep2.get('membershipType').invalid">
                 {{ getErrorMessage('registrationFormStep2', 'membershipType') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Type of account</mat-label>
-              <mat-select formControlName="accountType" required (selectionChange)="onAccountTypeSelectionChange()">
+              <mat-select
+                formControlName="accountType"
+                required
+                (selectionChange)="onAccountTypeSelectionChange()"
+                *ngIf="!environment.inputs.accountType.readonly"
+              >
                 <mat-option>--</mat-option>
                 <mat-option *ngFor="let accountType of environment.inputs.accountType.types" [value]="accountType">
                   {{ accountType }}
                 </mat-option>
               </mat-select>
+              <input
+                matInput
+                formControlName="accountType"
+                required
+                [readonly]="environment.inputs.accountType.readonly"
+                *ngIf="environment.inputs.accountType.readonly"
+              />
               <mat-error *ngIf="registrationFormStep2.get('accountType').invalid">
                 {{ getErrorMessage('registrationFormStep2', 'accountType') }}
               </mat-error>
@@ -221,20 +240,32 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('registrationFormStep2')">
+              <mat-select
+                formControlName="country"
+                required
+                (selectionChange)="onCountryValueChange('registrationFormStep2')"
+                *ngIf="!environment.inputs.country.readonly"
+              >
                 <mat-option>--</mat-option>
                 <mat-option *ngFor="let country of countries" [value]="country.countryName">
                   <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                   {{ country.countryName }}
                 </mat-option>
               </mat-select>
+              <input
+                matInput
+                formControlName="country"
+                required
+                [readonly]="environment.inputs.country.readonly"
+                *ngIf="environment.inputs.country.readonly"
+              />
               <mat-error *ngIf="registrationFormStep2.get('country').invalid">
                 {{ getErrorMessage('registrationFormStep2', 'country') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>State/Province/Region</mat-label>
-              <mat-select formControlName="province" required>
+              <mat-select formControlName="province" required *ngIf="!environment.inputs.province.readonly">
                 <mat-option>--</mat-option>
                 <mat-option
                   *ngFor="
@@ -247,6 +278,13 @@
                   {{ province.name }} ({{ province.shortCode }})
                 </mat-option>
               </mat-select>
+              <input
+                matInput
+                formControlName="province"
+                required
+                [readonly]="environment.inputs.province.readonly"
+                *ngIf="environment.inputs.province.readonly"
+              />
               <mat-error *ngIf="registrationFormStep2.get('province').invalid">
                 {{ getErrorMessage('registrationFormStep2', 'province') }}
               </mat-error>
@@ -287,13 +325,20 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Citizenship</mat-label>
-              <mat-select formControlName="citizenship" required>
+              <mat-select formControlName="citizenship" required *ngIf="!environment.inputs.citizenship.readonly">
                 <mat-option>--</mat-option>
                 <mat-option *ngFor="let country of countries" [value]="country.countryName">
                   <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                   {{ country.countryName }}
                 </mat-option>
               </mat-select>
+              <input
+                matInput
+                formControlName="citizenship"
+                required
+                [readonly]="environment.inputs.citizenship.readonly"
+                *ngIf="environment.inputs.citizenship.readonly"
+              />
               <mat-error *ngIf="registrationFormStep3.get('citizenship').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'citizenship') }}
               </mat-error>
@@ -477,20 +522,32 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('registrationFormStep4')">
+              <mat-select
+                formControlName="country"
+                required
+                (selectionChange)="onCountryValueChange('registrationFormStep4')"
+                *ngIf="!environment.inputs.country.readonly"
+              >
                 <mat-option>--</mat-option>
                 <mat-option *ngFor="let country of countries" [value]="country.countryName">
                   <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                   {{ country.countryName }}
                 </mat-option>
               </mat-select>
+              <input
+                matInput
+                formControlName="country"
+                required
+                [readonly]="environment.inputs.country.readonly"
+                *ngIf="environment.inputs.country.readonly"
+              />
               <mat-error *ngIf="registrationFormStep4.get('country').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'country') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>State/Province/Region</mat-label>
-              <mat-select formControlName="province" required>
+              <mat-select formControlName="province" required *ngIf="!environment.inputs.province.readonly">
                 <mat-option>--</mat-option>
                 <mat-option
                   *ngFor="
@@ -503,6 +560,13 @@
                   {{ province.name }} ({{ province.shortCode }})
                 </mat-option>
               </mat-select>
+              <input
+                matInput
+                formControlName="province"
+                required
+                [readonly]="environment.inputs.province.readonly"
+                *ngIf="environment.inputs.province.readonly"
+              />
               <mat-error *ngIf="registrationFormStep4.get('province').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'province') }}
               </mat-error>
@@ -541,13 +605,20 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Citizenship</mat-label>
-              <mat-select formControlName="citizenship" required>
+              <mat-select formControlName="citizenship" required *ngIf="!environment.inputs.citizenship.readonly">
                 <mat-option>--</mat-option>
                 <mat-option *ngFor="let country of countries" [value]="country.countryName">
                   <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                   {{ country.countryName }}
                 </mat-option>
               </mat-select>
+              <input
+                matInput
+                formControlName="citizenship"
+                required
+                [readonly]="environment.inputs.citizenship.readonly"
+                *ngIf="environment.inputs.citizenship.readonly"
+              />
               <mat-error *ngIf="registrationFormStep4.get('citizenship').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'citizenship') }}
               </mat-error>
