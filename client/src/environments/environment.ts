@@ -26,7 +26,7 @@ export const environment = {
         required: 'You must confirm the password.',
         noPassswordMatch: 'Error: password and confirm password do not match.',
       },
-      readonly: false,
+      readonly: true,
     },
     membershipType: {
       errorMessages: {
@@ -159,6 +159,9 @@ export const environment = {
       defaultAmount: 75,
       readonly: true,
     },
+    totalAmount: {
+      readonly: true,
+    },
     relationship: {
       errorMessages: {
         required: 'you must enter a relationship.',
@@ -213,6 +216,20 @@ export const environment = {
       },
       readonly: true,
     },
+  },
+  userProfil: {
+    tabs: {
+      loginTab: 0,
+      personalTab: 1,
+      jointMemberTab: 2,
+    },
+    forms: {
+      registrationFormStep1: 0,
+      registrationFormStep2: 1,
+      registrationFormStep3: 2,
+      registrationFormStep4: 3,
+    },
+    snackbarDuration: 3000,
   },
 };
 

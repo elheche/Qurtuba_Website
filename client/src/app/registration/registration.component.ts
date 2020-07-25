@@ -105,7 +105,7 @@ export class RegistrationComponent implements OnInit {
     this.filteredRelationshipTypes = this.registrationFormStep4.get('relationship').valueChanges.pipe(
       startWith(''),
       map((relationshipType) => {
-        return relationshipType ? this._filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
+        return relationshipType ? this.filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
       }),
     );
   }
@@ -160,6 +160,7 @@ export class RegistrationComponent implements OnInit {
     if (this[formGroup].get('country').value) {
       this[formGroup].get('province').reset();
       this[formGroup].get('province').enable({ onlySelf: true });
+      this[formGroup].get('province').updateValueAndValidity({ onlySelf: true });
       this[formGroup].get('postalCode').reset();
       this[formGroup].get('postalCode').enable({ onlySelf: true });
       this[formGroup]
@@ -214,7 +215,7 @@ export class RegistrationComponent implements OnInit {
     this.registrationFormStep3.get('totalAmount').setValue(totalAmount);
   }
 
-  protected _filterRelationshipTypes(filterValue: string): string[] {
+  protected filterRelationshipTypes(filterValue: string): string[] {
     return environment.inputs.relationship.types.filter(
       (relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0,
     );

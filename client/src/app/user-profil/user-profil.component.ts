@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { MatIconRegistry } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { DomSanitizer } from '@angular/platform-browser';
 import { map, startWith } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { RegistrationComponent } from '../registration/registration.component';
@@ -6,7 +11,7 @@ import { RegistrationComponent } from '../registration/registration.component';
 const inputs1 = {
   email: 'hichem.lamraoui@yahoo.ca',
   password: 'Elheche2020@',
-  confirmPassword: '',
+  confirmPassword: 'Elheche2020@',
 };
 const inputs2 = {
   membershipType: 'Buy a house',
@@ -51,11 +56,24 @@ const inputs4 = {
   styleUrls: ['./user-profil.component.scss'],
 })
 export class UserProfilComponent extends RegistrationComponent implements OnInit {
+  readonly: boolean;
+  activeTabIndex: number;
+  tabsDisabled: boolean[];
+  formValuesChanged: boolean[];
+
+  constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer, private snackBar: MatSnackBar) {
+    super(iconRegistry, sanitizer);
+    this.readonly = true;
+    this.activeTabIndex = 0;
+    this.tabsDisabled = [false, false, false];
+    this.formValuesChanged = [false, false, false, false];
+  }
+
   ngOnInit(): void {
     this.filteredRelationshipTypes = this.registrationFormStep4.get('relationship').valueChanges.pipe(
       startWith(''),
       map((relationshipType) => {
-        return relationshipType ? this._filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
+        return relationshipType ? this.filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
       }),
     );
 
@@ -72,13 +90,122 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
       this.registrationFormStep4.get(input).setValue(inputs4[input]);
     });
 
-    this.registrationFormStep2.get('province').enable({ onlySelf: true });
-    this.registrationFormStep2.get('postalCode').enable({ onlySelf: true });
-    this.registrationFormStep4.get('province').enable({ onlySelf: true });
-    this.registrationFormStep4.get('postalCode').enable({ onlySelf: true });
+    this.enableProvinceAndPostalCodeInput('registrationFormStep2');
+    this.enableProvinceAndPostalCodeInput('registrationFormStep4');
   }
 
-  onEdit(input: string): void {
-    this.environment.inputs[input].readonly = !this.environment.inputs[input].readonly;
+  onEdit(): void {
+    switch (this.activeTabIndex) {
+      case 0:
+        if (!this.checkFormsValidity(['registrationFormStep1'])) {
+          return;
+        }
+        this.toggleReadOnlyFormAttribute(['registrationFormStep1']);
+        this.onSave(['registrationFormStep1']);
+        break;
+      case 1:
+        if (!this.checkFormsValidity(['registrationFormStep2', 'registrationFormStep3'])) {
+          return;
+        }
+        this.toggleReadOnlyFormAttribute(['registrationFormStep2', 'registrationFormStep3']);
+        this.onSave(['registrationFormStep2', 'registrationFormStep3']);
+        break;
+      case 2:
+        if (!this.checkFormsValidity(['registrationFormStep4'])) {
+          return;
+        }
+        this.toggleReadOnlyFormAttribute(['registrationFormStep4']);
+        this.onSave(['registrationFormStep4']);
+        break;
+      default:
+        return;
+    }
+  }
+
+  onTabChange(tabChangeEvent: MatTabChangeEvent): void {
+    this.activeTabIndex = tabChangeEvent.index;
+  }
+
+  onFormChange(formGroup: string): void {
+    this.formValuesChanged[environment.userProfil.forms[formGroup]] = true;
+  }
+
+  private checkFormsValidity(forms: string[]): boolean {
+    let formsValidity = true;
+    for (const form of forms) {
+      if (this[form].invalid) {
+        formsValidity = false;
+        break;
+      }
+    }
+    if (!this.readonly && !formsValidity) {
+      forms.forEach((form: string) => {
+        formsValidity = this[form].markAllAsTouched();
+      });
+      this.snackBar.open('Error: Some fields are invalid!', undefined, {
+        duration: environment.userProfil.snackbarDuration,
+        panelClass: 'snackbar',
+      });
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  private toggleReadOnlyFormAttribute(forms: string[]): void {
+    this.readonly = !this.readonly;
+    switch (this.activeTabIndex) {
+      case 0:
+        this.tabsDisabled[environment.userProfil.tabs.personalTab] = !this.tabsDisabled[environment.userProfil.tabs.personalTab];
+        this.tabsDisabled[environment.userProfil.tabs.jointMemberTab] = !this.tabsDisabled[environment.userProfil.tabs.jointMemberTab];
+        break;
+      case 1:
+        this.tabsDisabled[environment.userProfil.tabs.loginTab] = !this.tabsDisabled[environment.userProfil.tabs.loginTab];
+        this.tabsDisabled[environment.userProfil.tabs.jointMemberTab] = !this.tabsDisabled[environment.userProfil.tabs.jointMemberTab];
+        break;
+      case 2:
+        this.tabsDisabled[environment.userProfil.tabs.loginTab] = !this.tabsDisabled[environment.userProfil.tabs.loginTab];
+        this.tabsDisabled[environment.userProfil.tabs.personalTab] = !this.tabsDisabled[environment.userProfil.tabs.personalTab];
+    }
+    forms.forEach((form: string) => {
+      Object.keys(this[form].controls).forEach((input: string) => {
+        this.environment.inputs[input].readonly = !this.environment.inputs[input].readonly;
+      });
+    });
+  }
+
+  private onSave(forms: string[]): void {
+    let formsAreChanged = false;
+    for (const form of forms) {
+      if (this.formValuesChanged[environment.userProfil.forms[form]]) {
+        formsAreChanged = true;
+        break;
+      }
+    }
+
+    if (this.readonly && formsAreChanged) {
+      this.snackBar.open('Success: Changes have been saved.', undefined, {
+        duration: environment.userProfil.snackbarDuration,
+        panelClass: 'snackbar',
+      });
+      for (const form of forms) {
+        this.formValuesChanged[environment.userProfil.forms[form]] = false;
+      }
+    }
+  }
+
+  private enableProvinceAndPostalCodeInput(formGroup: string): void {
+    if (this[formGroup].get('country').value) {
+      this[formGroup].get('province').enable({ onlySelf: true });
+      this[formGroup].get('province').updateValueAndValidity({ onlySelf: true });
+      this[formGroup].get('postalCode').enable({ onlySelf: true });
+      this[formGroup]
+        .get('postalCode')
+        .setValidators([
+          Validators.required,
+          Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex(formGroup)].postalCodeRegEx)),
+        ]);
+      this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
+    }
   }
 }
