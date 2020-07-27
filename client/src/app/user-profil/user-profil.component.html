@@ -233,11 +233,11 @@
                   required
                   (selectionChange)="onCountryValueChange('registrationFormStep2')"
                   msInfiniteScroll
-                  (infiniteScroll)="getNextBatch()"
-                  [complete]="offset === data.length"
+                  (infiniteScroll)="getNextBatch('country')"
+                  [complete]="offsets.get('country') === data.length"
                 >
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let country of countries | async" [value]="country.countryName">
+                  <mat-option *ngFor="let country of countries.get('country') | async" [value]="country.countryName">
                     <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                     {{ country.countryName }}
                   </mat-option>
@@ -313,11 +313,11 @@
                   formControlName="citizenship"
                   required
                   msInfiniteScroll
-                  (infiniteScroll)="getNextBatch()"
-                  [complete]="offset === data.length"
+                  (infiniteScroll)="getNextBatch('citizenship')"
+                  [complete]="offsets.get('citizenship') === data.length"
                 >
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let country of countries | async" [value]="country.countryName">
+                  <mat-option *ngFor="let country of countries.get('citizenship') | async" [value]="country.countryName">
                     <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                     {{ country.countryName }}
                   </mat-option>
@@ -512,11 +512,11 @@
                   required
                   (selectionChange)="onCountryValueChange('registrationFormStep4')"
                   msInfiniteScroll
-                  (infiniteScroll)="getNextBatch()"
-                  [complete]="offset === data.length"
+                  (infiniteScroll)="getNextBatch('jointMemberCountry')"
+                  [complete]="offsets.get('jointMemberCountry') === data.length"
                 >
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let country of countries | async" [value]="country.countryName">
+                  <mat-option *ngFor="let country of countries.get('jointMemberCountry') | async" [value]="country.countryName">
                     <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                     {{ country.countryName }}
                   </mat-option>
@@ -590,11 +590,11 @@
                   formControlName="citizenship"
                   required
                   msInfiniteScroll
-                  (infiniteScroll)="getNextBatch()"
-                  [complete]="offset === data.length"
+                  (infiniteScroll)="getNextBatch('jointMemberCitizenship')"
+                  [complete]="offsets.get('jointMemberCitizenship') === data.length"
                 >
                   <mat-option>--</mat-option>
-                  <mat-option *ngFor="let country of countries | async" [value]="country.countryName">
+                  <mat-option *ngFor="let country of countries.get('jointMemberCitizenship') | async" [value]="country.countryName">
                     <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                     {{ country.countryName }}
                   </mat-option>

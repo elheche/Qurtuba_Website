@@ -28,28 +28,54 @@ export class RegistrationComponent implements OnInit {
   filteredRelationshipTypes: Observable<string[]>;
   userAgreementText: string;
   limit: number;
-  offset: number;
-  countriesSource: BehaviorSubject<ICountry[]>;
-  countries: Observable<ICountry[]>;
+  offsets: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', number>;
+  countriesSources: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', BehaviorSubject<ICountry[]>>;
+  countries: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', Observable<ICountry[]>>;
 
   constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
     this.hide = true;
     this.isEditable = true;
     this.environment = environment;
     this.data = data as ICountry[];
+
     this.data.forEach((country) => {
       const iconName = `flag-${country.countryShortCode.toLowerCase()}`;
       const iconUrl = `../../assets/countries-flags/${country.countryShortCode.toLowerCase()}.svg`;
       this.iconRegistry.addSvgIcon(iconName, this.sanitizer.bypassSecurityTrustResourceUrl(iconUrl));
     });
+
     this.limit = 8;
-    this.offset = 0;
-    this.countriesSource = new BehaviorSubject<ICountry[]>([]);
-    this.countries = this.countriesSource.asObservable().pipe(
-      scan((acc, curr) => {
-        return [...acc, ...curr];
-      }, []),
-    );
+
+    this.offsets = new Map([
+      ['country', 0],
+      ['citizenship', 0],
+      ['jointMemberCountry', 0],
+      ['jointMemberCitizenship', 0],
+    ]);
+
+    this.countriesSources = new Map([
+      ['country', new BehaviorSubject<ICountry[]>([])],
+      ['citizenship', new BehaviorSubject<ICountry[]>([])],
+      ['jointMemberCountry', new BehaviorSubject<ICountry[]>([])],
+      ['jointMemberCitizenship', new BehaviorSubject<ICountry[]>([])],
+    ]);
+
+    this.countries = new Map();
+
+    for (const key of this.countriesSources.keys()) {
+      this.countries.set(
+        key,
+        this.countriesSources
+          .get(key)
+          .asObservable()
+          .pipe(
+            scan((acc, curr) => {
+              return [...acc, ...curr];
+            }, []),
+          ),
+      );
+    }
+
     this.userAgreementText = '';
 
     this.registrationFormStep1 = new FormGroup({
@@ -120,7 +146,10 @@ export class RegistrationComponent implements OnInit {
         return relationshipType ? this.filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
       }),
     );
-    this.getNextBatch();
+
+    for (const key of this.countries.keys()) {
+      this.getNextBatch(key);
+    }
   }
 
   getErrorMessage(formGroup: string, input: string): string {
@@ -235,15 +264,20 @@ export class RegistrationComponent implements OnInit {
   }
 
   onAccountTypeSelectionChange(): void {
-    this.registrationFormStep2.get('accountType').value === 'Individual'
-      ? (this.userAgreementText = environment.inputs.userAgreement.text.individual)
-      : (this.userAgreementText = environment.inputs.userAgreement.text.joint);
+    if (this.registrationFormStep2.get('accountType').value === 'Individual') {
+      this.userAgreementText = environment.inputs.userAgreement.text.individual;
+    } else {
+      this.userAgreementText = environment.inputs.userAgreement.text.joint;
+      this.offsets.set('jointMemberCountry', 0);
+      this.offsets.set('jointMemberCitizenship', 0);
+    }
   }
 
-  getNextBatch(): void {
-    const result = this.data.slice(this.offset, this.offset + this.limit);
-    this.countriesSource.next(result);
-    this.offset += this.limit;
+  getNextBatch(input: 'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship'): void {
+    const result = this.data.slice(this.offsets.get(input), this.offsets.get(input) + this.limit);
+    this.countriesSources.get(input).next(result);
+    const offset = this.offsets.get(input) + this.limit;
+    this.offsets.set(input, offset);
   }
 
   /* getPostalCodeRegEx(): void {
