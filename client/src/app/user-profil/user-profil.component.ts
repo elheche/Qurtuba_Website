@@ -70,12 +70,7 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
   }
 
   ngOnInit(): void {
-    this.filteredRelationshipTypes = this.registrationFormStep4.get('relationship').valueChanges.pipe(
-      startWith(''),
-      map((relationshipType) => {
-        return relationshipType ? this.filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
-      }),
-    );
+    super.ngOnInit();
 
     Object.keys(inputs1).forEach((input: string) => {
       this.registrationFormStep1.get(input).setValue(inputs1[input]);
@@ -203,7 +198,7 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
         .get('postalCode')
         .setValidators([
           Validators.required,
-          Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex(formGroup)].postalCodeRegEx)),
+          Validators.pattern(new RegExp(this.data[this.findSelectedCountryIndex(formGroup)].postalCodeRegEx)),
         ]);
       this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
     }

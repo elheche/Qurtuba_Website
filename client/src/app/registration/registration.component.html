@@ -187,9 +187,16 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('registrationFormStep2')">
+              <mat-select
+                formControlName="country"
+                required
+                (selectionChange)="onCountryValueChange('registrationFormStep2')"
+                msInfiniteScroll
+                (infiniteScroll)="getNextBatch()"
+                [complete]="offset === data.length"
+              >
                 <mat-option>--</mat-option>
-                <mat-option *ngFor="let country of countries" [value]="country.countryName">
+                <mat-option *ngFor="let country of countries | async" [value]="country.countryName">
                   <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                   {{ country.countryName }}
                 </mat-option>
@@ -204,8 +211,8 @@
                 <mat-option>--</mat-option>
                 <mat-option
                   *ngFor="
-                    let province of countries[findSelectedCountryIndex('registrationFormStep2')]
-                      ? countries[findSelectedCountryIndex('registrationFormStep2')].regions
+                    let province of data[findSelectedCountryIndex('registrationFormStep2')]
+                      ? data[findSelectedCountryIndex('registrationFormStep2')].regions
                       : []
                   "
                   [value]="province.name"
@@ -260,9 +267,15 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Citizenship</mat-label>
-              <mat-select formControlName="citizenship" required>
+              <mat-select
+                formControlName="citizenship"
+                required
+                msInfiniteScroll
+                (infiniteScroll)="getNextBatch()"
+                [complete]="offset === data.length"
+              >
                 <mat-option>--</mat-option>
-                <mat-option *ngFor="let country of countries" [value]="country.countryName">
+                <mat-option *ngFor="let country of countries | async" [value]="country.countryName">
                   <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                   {{ country.countryName }}
                 </mat-option>
@@ -423,9 +436,16 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('registrationFormStep4')">
+              <mat-select
+                formControlName="country"
+                required
+                (selectionChange)="onCountryValueChange('registrationFormStep4')"
+                msInfiniteScroll
+                (infiniteScroll)="getNextBatch()"
+                [complete]="offset === data.length"
+              >
                 <mat-option>--</mat-option>
-                <mat-option *ngFor="let country of countries" [value]="country.countryName">
+                <mat-option *ngFor="let country of countries | async" [value]="country.countryName">
                   <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                   {{ country.countryName }}
                 </mat-option>
@@ -440,8 +460,8 @@
                 <mat-option>--</mat-option>
                 <mat-option
                   *ngFor="
-                    let province of countries[findSelectedCountryIndex('registrationFormStep4')]
-                      ? countries[findSelectedCountryIndex('registrationFormStep4')].regions
+                    let province of data[findSelectedCountryIndex('registrationFormStep4')]
+                      ? data[findSelectedCountryIndex('registrationFormStep4')].regions
                       : []
                   "
                   [value]="province.name"
@@ -485,9 +505,15 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Citizenship</mat-label>
-              <mat-select formControlName="citizenship" required>
+              <mat-select
+                formControlName="citizenship"
+                required
+                msInfiniteScroll
+                (infiniteScroll)="getNextBatch()"
+                [complete]="offset === data.length"
+              >
                 <mat-option>--</mat-option>
-                <mat-option *ngFor="let country of countries" [value]="country.countryName">
+                <mat-option *ngFor="let country of countries | async" [value]="country.countryName">
                   <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                   {{ country.countryName }}
                 </mat-option>

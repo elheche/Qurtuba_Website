@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AsYouType } from 'libphonenumber-js';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, scan, startWith } from 'rxjs/operators';
 import data from '../../assets/countries-data.json';
 import { environment } from '../../environments/environment';
 import { CustomValidators } from './custom-validators';
@@ -24,20 +24,32 @@ export class RegistrationComponent implements OnInit {
   hide: boolean;
   isEditable: boolean;
   environment: typeof environment;
-  countries: ICountry[];
+  data: ICountry[];
   filteredRelationshipTypes: Observable<string[]>;
   userAgreementText: string;
+  limit: number;
+  offset: number;
+  countriesSource: BehaviorSubject<ICountry[]>;
+  countries: Observable<ICountry[]>;
 
   constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
     this.hide = true;
     this.isEditable = true;
     this.environment = environment;
-    this.countries = data as ICountry[];
-    this.countries.forEach((country) => {
+    this.data = data as ICountry[];
+    this.data.forEach((country) => {
       const iconName = `flag-${country.countryShortCode.toLowerCase()}`;
       const iconUrl = `../../assets/countries-flags/${country.countryShortCode.toLowerCase()}.svg`;
       this.iconRegistry.addSvgIcon(iconName, this.sanitizer.bypassSecurityTrustResourceUrl(iconUrl));
     });
+    this.limit = 8;
+    this.offset = 0;
+    this.countriesSource = new BehaviorSubject<ICountry[]>([]);
+    this.countries = this.countriesSource.asObservable().pipe(
+      scan((acc, curr) => {
+        return [...acc, ...curr];
+      }, []),
+    );
     this.userAgreementText = '';
 
     this.registrationFormStep1 = new FormGroup({
@@ -108,6 +120,7 @@ export class RegistrationComponent implements OnInit {
         return relationshipType ? this.filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
       }),
     );
+    this.getNextBatch();
   }
 
   getErrorMessage(formGroup: string, input: string): string {
@@ -153,7 +166,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   findSelectedCountryIndex(formGroup: string): number {
-    return this.countries.findIndex((country) => country.countryName === this[formGroup].get('country').value);
+    return this.data.findIndex((country) => country.countryName === this[formGroup].get('country').value);
   }
 
   onCountryValueChange(formGroup: string): void {
@@ -167,7 +180,7 @@ export class RegistrationComponent implements OnInit {
         .get('postalCode')
         .setValidators([
           Validators.required,
-          Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex(formGroup)].postalCodeRegEx)),
+          Validators.pattern(new RegExp(this.data[this.findSelectedCountryIndex(formGroup)].postalCodeRegEx)),
         ]);
       this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
     } else {
@@ -225,6 +238,12 @@ export class RegistrationComponent implements OnInit {
     this.registrationFormStep2.get('accountType').value === 'Individual'
       ? (this.userAgreementText = environment.inputs.userAgreement.text.individual)
       : (this.userAgreementText = environment.inputs.userAgreement.text.joint);
+  }
+
+  getNextBatch(): void {
+    const result = this.data.slice(this.offset, this.offset + this.limit);
+    this.countriesSource.next(result);
+    this.offset += this.limit;
   }
 
   /* getPostalCodeRegEx(): void {

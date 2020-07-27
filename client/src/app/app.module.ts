@@ -18,6 +18,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSelectInfiniteScrollModule } from 'ng-mat-select-infinite-scroll';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -47,7 +48,8 @@ import { UserProfilComponent } from './user-profil/user-profil.component';
     MatAutocompleteModule,
     MatDividerModule,
     MatTabsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSelectInfiniteScrollModule,
   ],
   providers: [
     {
