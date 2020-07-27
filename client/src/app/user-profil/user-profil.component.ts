@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { DomSanitizer } from '@angular/platform-browser';
-import { map, startWith } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { RegistrationComponent } from '../registration/registration.component';
 
@@ -61,8 +61,8 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
   tabsDisabled: boolean[];
   formValuesChanged: boolean[];
 
-  constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer, private snackBar: MatSnackBar) {
-    super(iconRegistry, sanitizer);
+  constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer, alertDialog: MatDialog, private snackBar: MatSnackBar) {
+    super(iconRegistry, sanitizer, alertDialog);
     this.readonly = true;
     this.activeTabIndex = 0;
     this.tabsDisabled = [false, false, false];

@@ -5,6 +5,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectInfiniteScrollModule } from 'ng-mat-select-infinite-scroll';
+import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -27,7 +29,7 @@ import { RegistrationComponent } from './registration/registration.component';
 import { UserProfilComponent } from './user-profil/user-profil.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegistrationComponent, LogoutComponent, UserProfilComponent],
+  declarations: [AppComponent, LoginComponent, RegistrationComponent, LogoutComponent, UserProfilComponent, AlertDialogComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -50,6 +52,7 @@ import { UserProfilComponent } from './user-profil/user-profil.component';
     MatTabsModule,
     MatSnackBarModule,
     MatSelectInfiniteScrollModule,
+    MatDialogModule,
   ],
   providers: [
     {
@@ -58,5 +61,6 @@ import { UserProfilComponent } from './user-profil/user-profil.component';
     },
   ],
   bootstrap: [AppComponent],
+  entryComponents: [AlertDialogComponent],
 })
 export class AppModule {}

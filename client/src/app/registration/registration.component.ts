@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AsYouType } from 'libphonenumber-js';
@@ -7,6 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, scan, startWith } from 'rxjs/operators';
 import data from '../../assets/countries-data.json';
 import { environment } from '../../environments/environment';
+import { AlertDialogComponent } from '../alert-dialog/alert-dialog.component';
 import { CustomValidators } from './custom-validators';
 import { ICountry } from './icountry.data';
 
@@ -23,6 +25,7 @@ export class RegistrationComponent implements OnInit {
   registrationFormStep5: FormGroup;
   hide: boolean;
   isEditable: boolean;
+  isActive: boolean;
   environment: typeof environment;
   data: ICountry[];
   filteredRelationshipTypes: Observable<string[]>;
@@ -32,9 +35,10 @@ export class RegistrationComponent implements OnInit {
   countriesSources: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', BehaviorSubject<ICountry[]>>;
   countries: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', Observable<ICountry[]>>;
 
-  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
+  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, private alertDialog: MatDialog) {
     this.hide = true;
     this.isEditable = true;
+    this.isActive = false;
     this.environment = environment;
     this.data = data as ICountry[];
 
@@ -257,19 +261,28 @@ export class RegistrationComponent implements OnInit {
     this.registrationFormStep3.get('totalAmount').setValue(totalAmount);
   }
 
-  protected filterRelationshipTypes(filterValue: string): string[] {
-    return environment.inputs.relationship.types.filter(
-      (relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0,
-    );
-  }
-
   onAccountTypeSelectionChange(): void {
+    console.log(Object.values(this.registrationFormStep4.value));
+    const registrationFormStep4Values = Object.values(this.registrationFormStep4.value);
+    for (const value of registrationFormStep4Values) {
+      if (value) {
+        this.openAlertDialog();
+        break;
+      }
+    }
     if (this.registrationFormStep2.get('accountType').value === 'Individual') {
+      this.isActive = false;
       this.userAgreementText = environment.inputs.userAgreement.text.individual;
-    } else {
+    } else if (this.registrationFormStep2.get('accountType').value === 'Joint') {
+      this.isActive = true;
       this.userAgreementText = environment.inputs.userAgreement.text.joint;
       this.offsets.set('jointMemberCountry', 0);
       this.offsets.set('jointMemberCitizenship', 0);
+      this.getNextBatch('jointMemberCountry');
+      this.getNextBatch('jointMemberCitizenship');
+    } else {
+      this.isActive = false;
+      this.userAgreementText = '';
     }
   }
 
@@ -278,6 +291,22 @@ export class RegistrationComponent implements OnInit {
     this.countriesSources.get(input).next(result);
     const offset = this.offsets.get(input) + this.limit;
     this.offsets.set(input, offset);
+  }
+
+  protected filterRelationshipTypes(filterValue: string): string[] {
+    return environment.inputs.relationship.types.filter(
+      (relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0,
+    );
+  }
+
+  protected openAlertDialog(): void {
+    const alertDialogRef = this.alertDialog.open(AlertDialogComponent, {
+      width: '250px',
+    });
+
+    alertDialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed: ' + result);
+    });
   }
 
   /* getPostalCodeRegEx(): void {

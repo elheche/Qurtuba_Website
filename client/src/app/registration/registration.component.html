@@ -386,11 +386,7 @@
           </form>
         </mat-step>
         <!-- Step 4 -->
-        <mat-step
-          [stepControl]="registrationFormStep4"
-          [editable]="isEditable"
-          *ngIf="registrationFormStep2.get('accountType').value === 'Joint'"
-        >
+        <mat-step [stepControl]="registrationFormStep4" [editable]="isEditable" *ngIf="isActive">
           <form [formGroup]="registrationFormStep4" id="registration-form-step-4">
             <ng-template matStepLabel>Step 4</ng-template>
             <h2>Fill the application form for the joint member</h2>
