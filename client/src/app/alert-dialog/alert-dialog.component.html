@@ -1,6 +1,13 @@
-<h1 mat-dialog-title>Hi</h1>
-<div mat-dialog-content></div>
-<div mat-dialog-actions>
-  <button mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
-  <button mat-button [mat-dialog-close]="'OK'">Ok</button>
+<h1 mat-dialog-title>
+  <mat-icon class="material-icons-round">warning</mat-icon>
+  Warning!
+</h1>
+<div mat-dialog-content>
+  You have already entered data in the joint member form.<br>
+  You will lose them if you change your account type.<br> 
+  Do you want to continue?
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button color="primary" [mat-dialog-close]="'Cancel'" cdkFocusInitial>Cancel</button>
+  <button mat-button color="primary" [mat-dialog-close]="'OK'">OK</button>
 </div>

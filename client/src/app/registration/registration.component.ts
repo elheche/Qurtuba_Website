@@ -262,27 +262,42 @@ export class RegistrationComponent implements OnInit {
   }
 
   onAccountTypeSelectionChange(): void {
-    console.log(Object.values(this.registrationFormStep4.value));
-    const registrationFormStep4Values = Object.values(this.registrationFormStep4.value);
-    for (const value of registrationFormStep4Values) {
-      if (value) {
-        this.openAlertDialog();
-        break;
+    let isEmpty = true;
+    if (this.isActive) {
+      const registrationFormStep4Values = Object.values(this.registrationFormStep4.value);
+      for (const value of registrationFormStep4Values) {
+        if (value) {
+          isEmpty = false;
+          break;
+        }
       }
     }
-    if (this.registrationFormStep2.get('accountType').value === 'Individual') {
-      this.isActive = false;
-      this.userAgreementText = environment.inputs.userAgreement.text.individual;
-    } else if (this.registrationFormStep2.get('accountType').value === 'Joint') {
-      this.isActive = true;
-      this.userAgreementText = environment.inputs.userAgreement.text.joint;
-      this.offsets.set('jointMemberCountry', 0);
-      this.offsets.set('jointMemberCitizenship', 0);
-      this.getNextBatch('jointMemberCountry');
-      this.getNextBatch('jointMemberCitizenship');
-    } else {
-      this.isActive = false;
-      this.userAgreementText = '';
+    const accountType = this.registrationFormStep2.get('accountType').value;
+    switch (accountType) {
+      case 'Individual':
+        if (isEmpty) {
+          this.isActive = false;
+          this.userAgreementText = environment.inputs.userAgreement.text.individual;
+        } else {
+          this.openAlertDialog();
+        }
+        break;
+      case 'Joint':
+        this.registrationFormStep4.reset();
+        this.offsets.set('jointMemberCountry', 0);
+        this.offsets.set('jointMemberCitizenship', 0);
+        this.getNextBatch('jointMemberCountry');
+        this.getNextBatch('jointMemberCitizenship');
+        this.userAgreementText = environment.inputs.userAgreement.text.joint;
+        this.isActive = true;
+        break;
+      default:
+        if (isEmpty) {
+          this.isActive = false;
+          this.userAgreementText = '';
+        } else {
+          this.openAlertDialog();
+        }
     }
   }
 
@@ -300,12 +315,22 @@ export class RegistrationComponent implements OnInit {
   }
 
   protected openAlertDialog(): void {
+    if (this.alertDialog.openDialogs.length > 0) {
+      return;
+    }
     const alertDialogRef = this.alertDialog.open(AlertDialogComponent, {
-      width: '250px',
+      width: '400px',
+      disableClose: true,
     });
-
-    alertDialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed: ' + result);
+    alertDialogRef.afterClosed().subscribe((result: 'OK' | 'Cancel') => {
+      if (result === 'OK') {
+        this.isActive = false;
+        this.registrationFormStep2.get('accountType').value === 'Individual'
+          ? (this.userAgreementText = environment.inputs.userAgreement.text.individual)
+          : (this.userAgreementText = '');
+      } else {
+        this.registrationFormStep2.get('accountType').setValue('Joint');
+      }
     });
   }
 
