@@ -217,6 +217,9 @@ export const environment = {
       readonly: true,
     },
   },
+  registration: {
+    batchLength: 8,
+  },
   userProfil: {
     tabs: {
       loginTab: 0,

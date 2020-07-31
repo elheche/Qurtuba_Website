@@ -12,7 +12,7 @@
       <mat-card-title>Open an account</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-horizontal-stepper linear="false" #stepper>
+      <mat-horizontal-stepper linear="true" #stepper>
         <!-- Step 1 -->
         <mat-step [stepControl]="registrationFormStep1" [editable]="isEditable">
           <form [formGroup]="registrationFormStep1" id="registration-form-step-1">
@@ -95,7 +95,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Indicate the type of membership</mat-label>
               <mat-select formControlName="membershipType" required>
-                <mat-option>--</mat-option>
+                <mat-option>-- Clear --</mat-option>
                 <mat-option *ngFor="let membershipType of environment.inputs.membershipType.types" [value]="membershipType">
                   {{ membershipType }}
                 </mat-option>
@@ -107,7 +107,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Indicate the type of account</mat-label>
               <mat-select formControlName="accountType" required (selectionChange)="onAccountTypeSelectionChange()">
-                <mat-option>--</mat-option>
+                <mat-option>-- Clear --</mat-option>
                 <mat-option *ngFor="let accountType of environment.inputs.accountType.types" [value]="accountType">
                   {{ accountType }}
                 </mat-option>
@@ -195,9 +195,9 @@
                 (infiniteScroll)="getNextBatch('country')"
                 [complete]="offsets.get('country') === data.length"
               >
-                <mat-option>--</mat-option>
+                <mat-option>-- Clear --</mat-option>
                 <mat-option *ngFor="let country of countries.get('country') | async" [value]="country.countryName">
-                  <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
+                  <mat-icon class="flag-icon" svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                   {{ country.countryName }}
                 </mat-option>
               </mat-select>
@@ -208,14 +208,14 @@
             <mat-form-field appearance="outline">
               <mat-label>State/Province/Region</mat-label>
               <mat-select formControlName="province" required>
-                <mat-option>--</mat-option>
+                <mat-option>-- Clear --</mat-option>
                 <mat-option
                   *ngFor="
-                    let province of data[findSelectedCountryIndex('registrationFormStep2')]
-                      ? data[findSelectedCountryIndex('registrationFormStep2')].regions
+                    let province of data[findSelectedCountryIndex('registrationFormStep2', 'country')]
+                      ? data[findSelectedCountryIndex('registrationFormStep2', 'country')].regions
                       : []
                   "
-                  [value]="province.name"
+                  [value]="province.name + ' (' + province.shortCode + ')'"
                 >
                   {{ province.name }} ({{ province.shortCode }})
                 </mat-option>
@@ -274,9 +274,9 @@
                 (infiniteScroll)="getNextBatch('citizenship')"
                 [complete]="offsets.get('citizenship') === data.length"
               >
-                <mat-option>--</mat-option>
+                <mat-option>-- Clear --</mat-option>
                 <mat-option *ngFor="let country of countries.get('citizenship') | async" [value]="country.countryName">
-                  <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
+                  <mat-icon class="flag-icon" svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                   {{ country.countryName }}
                 </mat-option>
               </mat-select>
@@ -440,9 +440,9 @@
                 (infiniteScroll)="getNextBatch('jointMemberCountry')"
                 [complete]="offsets.get('jointMemberCountry') === data.length"
               >
-                <mat-option>--</mat-option>
+                <mat-option>-- Clear --</mat-option>
                 <mat-option *ngFor="let country of countries.get('jointMemberCountry') | async" [value]="country.countryName">
-                  <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
+                  <mat-icon class="flag-icon" svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                   {{ country.countryName }}
                 </mat-option>
               </mat-select>
@@ -453,14 +453,14 @@
             <mat-form-field appearance="outline">
               <mat-label>State/Province/Region</mat-label>
               <mat-select formControlName="province" required>
-                <mat-option>--</mat-option>
+                <mat-option>-- Clear --</mat-option>
                 <mat-option
                   *ngFor="
-                    let province of data[findSelectedCountryIndex('registrationFormStep4')]
-                      ? data[findSelectedCountryIndex('registrationFormStep4')].regions
+                    let province of data[findSelectedCountryIndex('registrationFormStep4', 'country')]
+                      ? data[findSelectedCountryIndex('registrationFormStep4', 'country')].regions
                       : []
                   "
-                  [value]="province.name"
+                  [value]="province.name + ' (' + province.shortCode + ')'"
                 >
                   {{ province.name }} ({{ province.shortCode }})
                 </mat-option>
@@ -508,9 +508,9 @@
                 (infiniteScroll)="getNextBatch('jointMemberCitizenship')"
                 [complete]="offsets.get('jointMemberCitizenship') === data.length"
               >
-                <mat-option>--</mat-option>
+                <mat-option>-- Clear --</mat-option>
                 <mat-option *ngFor="let country of countries.get('jointMemberCitizenship') | async" [value]="country.countryName">
-                  <mat-icon svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
+                  <mat-icon class="flag-icon" svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
                   {{ country.countryName }}
                 </mat-option>
               </mat-select>

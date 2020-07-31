@@ -35,7 +35,7 @@ export class RegistrationComponent implements OnInit {
   countriesSources: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', BehaviorSubject<ICountry[]>>;
   countries: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', Observable<ICountry[]>>;
 
-  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, private alertDialog: MatDialog) {
+  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, protected alertDialog: MatDialog) {
     this.hide = true;
     this.isEditable = true;
     this.isActive = false;
@@ -48,7 +48,7 @@ export class RegistrationComponent implements OnInit {
       this.iconRegistry.addSvgIcon(iconName, this.sanitizer.bypassSecurityTrustResourceUrl(iconUrl));
     });
 
-    this.limit = 8;
+    this.limit = environment.registration.batchLength;
 
     this.offsets = new Map([
       ['country', 0],
@@ -198,8 +198,8 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  findSelectedCountryIndex(formGroup: string): number {
-    return this.data.findIndex((country) => country.countryName === this[formGroup].get('country').value);
+  findSelectedCountryIndex(formGroup: string, input: 'country' | 'citizenship'): number {
+    return this.data.findIndex((country) => country.countryName === this[formGroup].get(input).value);
   }
 
   onCountryValueChange(formGroup: string): void {
@@ -213,7 +213,7 @@ export class RegistrationComponent implements OnInit {
         .get('postalCode')
         .setValidators([
           Validators.required,
-          Validators.pattern(new RegExp(this.data[this.findSelectedCountryIndex(formGroup)].postalCodeRegEx)),
+          Validators.pattern(new RegExp(this.data[this.findSelectedCountryIndex(formGroup, 'country')].postalCodeRegEx)),
         ]);
       this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
     } else {
@@ -277,6 +277,7 @@ export class RegistrationComponent implements OnInit {
       case 'Individual':
         if (isEmpty) {
           this.isActive = false;
+          this.registrationFormStep5.reset();
           this.userAgreementText = environment.inputs.userAgreement.text.individual;
         } else {
           this.openAlertDialog();
@@ -288,12 +289,14 @@ export class RegistrationComponent implements OnInit {
         this.offsets.set('jointMemberCitizenship', 0);
         this.getNextBatch('jointMemberCountry');
         this.getNextBatch('jointMemberCitizenship');
+        this.registrationFormStep5.reset();
         this.userAgreementText = environment.inputs.userAgreement.text.joint;
         this.isActive = true;
         break;
       default:
         if (isEmpty) {
           this.isActive = false;
+          this.registrationFormStep5.reset();
           this.userAgreementText = '';
         } else {
           this.openAlertDialog();
@@ -316,7 +319,7 @@ export class RegistrationComponent implements OnInit {
 
   protected openAlertDialog(): void {
     if (this.alertDialog.openDialogs.length > 0) {
-      return;
+      return; // To avoid selectionChange bug (triggered twice when value === undefined).
     }
     const alertDialogRef = this.alertDialog.open(AlertDialogComponent, {
       width: '400px',
@@ -325,6 +328,7 @@ export class RegistrationComponent implements OnInit {
     alertDialogRef.afterClosed().subscribe((result: 'OK' | 'Cancel') => {
       if (result === 'OK') {
         this.isActive = false;
+        this.registrationFormStep5.reset();
         this.registrationFormStep2.get('accountType').value === 'Individual'
           ? (this.userAgreementText = environment.inputs.userAgreement.text.individual)
           : (this.userAgreementText = '');
@@ -333,30 +337,4 @@ export class RegistrationComponent implements OnInit {
       }
     });
   }
-
-  /* getPostalCodeRegEx(): void {
-    const countries: {
-      countryName: string,
-      countryShortCode: string,
-      postalCodeRegEx: string
-      regions: { name: string, shortCode: string }[]
-    }[] = [];
-    const url = 'http://i18napis.appspot.com/address/data/';
-
-    this.countries.forEach((country) => {
-      this.http.get(url.concat(country.countryShortCode)).subscribe((dataRegEX: any) => {
-        countries.push({
-          countryName: country.countryName,
-          countryShortCode: country.countryShortCode,
-          postalCodeRegEx: dataRegEX.zip ? `^${dataRegEX.zip}$` : '',
-          regions: country.regions
-        });
-        if (countries.length === 248) {
-          const dataUpdated = JSON.stringify(countries);
-          const blob = new Blob([dataUpdated], { type: 'application/json;charset=utf-8' });
-          FileSaver.saveAs(blob, 'dataUpdated.json');
-        }
-      });
-    });
-  } */
 }

@@ -23,7 +23,7 @@ const inputs2 = {
   address: '8689, 13E Avenue',
   city: 'Montreal',
   country: 'Canada',
-  province: 'Quebec',
+  province: 'Quebec (QC)',
   postalCode: 'H1Z 3K6',
 };
 const inputs3 = {
@@ -33,8 +33,9 @@ const inputs3 = {
   employer: 'Polytechnique Montreal',
   employerPhoneNumber: '(514) 444-5555',
   numberOfDependents: '0',
-  depositAmount: '45000',
+  depositAmount: '50000',
   donationForMosque: '100',
+  membershipFee: '75',
 };
 const inputs4 = {
   firstName: 'Amina',
@@ -42,7 +43,7 @@ const inputs4 = {
   address: '8689, 13E Avenue',
   city: 'Montreal',
   country: 'Canada',
-  province: 'Quebec',
+  province: 'Quebec (QC)',
   postalCode: 'H1Z 3K6',
   socialInsuranceNumber: '444-555-666',
   citizenship: 'Algeria',
@@ -87,6 +88,12 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
 
     this.enableProvinceAndPostalCodeInput('registrationFormStep2');
     this.enableProvinceAndPostalCodeInput('registrationFormStep4');
+
+    this.registrationFormStep3.get('totalAmount').setValue(+inputs3.depositAmount + +inputs3.donationForMosque + +inputs3.membershipFee);
+
+    if (inputs2.accountType === 'Joint') {
+      this.isActive = true;
+    }
   }
 
   onEdit(): void {
@@ -104,6 +111,7 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
         }
         this.toggleReadOnlyFormAttribute(['registrationFormStep2', 'registrationFormStep3']);
         this.onSave(['registrationFormStep2', 'registrationFormStep3']);
+        this.resetCountryInputScroll();
         break;
       case 2:
         if (!this.checkFormsValidity(['registrationFormStep4'])) {
@@ -111,6 +119,7 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
         }
         this.toggleReadOnlyFormAttribute(['registrationFormStep4']);
         this.onSave(['registrationFormStep4']);
+        this.resetCountryInputScroll();
         break;
       default:
         return;
@@ -161,6 +170,9 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
       case 2:
         this.tabsDisabled[environment.userProfil.tabs.loginTab] = !this.tabsDisabled[environment.userProfil.tabs.loginTab];
         this.tabsDisabled[environment.userProfil.tabs.personalTab] = !this.tabsDisabled[environment.userProfil.tabs.personalTab];
+        break;
+      default:
+        return;
     }
     forms.forEach((form: string) => {
       Object.keys(this[form].controls).forEach((input: string) => {
@@ -198,9 +210,33 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
         .get('postalCode')
         .setValidators([
           Validators.required,
-          Validators.pattern(new RegExp(this.data[this.findSelectedCountryIndex(formGroup)].postalCodeRegEx)),
+          Validators.pattern(new RegExp(this.data[this.findSelectedCountryIndex(formGroup, 'country')].postalCodeRegEx)),
         ]);
       this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
+    }
+  }
+
+  private resetCountryInputScroll(): void {
+    if (!this.readonly) {
+      return;
+    }
+    switch (this.activeTabIndex) {
+      case 0:
+        break;
+      case 1:
+        this.offsets.set('country', 0);
+        this.offsets.set('citizenship', 0);
+        this.getNextBatch('country');
+        this.getNextBatch('citizenship');
+        break;
+      case 2:
+        this.offsets.set('jointMemberCountry', 0);
+        this.offsets.set('jointMemberCitizenship', 0);
+        this.getNextBatch('jointMemberCountry');
+        this.getNextBatch('jointMemberCitizenship');
+        break;
+      default:
+        return;
     }
   }
 }
