@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,7 @@ export class LoginComponent {
   loginFrom: FormGroup;
   hide: boolean;
 
-  constructor() {
+  constructor(private router: Router) {
     this.loginFrom = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
@@ -36,6 +37,7 @@ export class LoginComponent {
   onSubmit(loginFormValue: { email: string; password: string }, loginFormDirective: FormGroupDirective): void {
     loginFormDirective.resetForm();
     this.loginFrom.reset();
+    this.router.navigateByUrl('/userProfil');
     console.log(loginFormValue);
   }
 }
