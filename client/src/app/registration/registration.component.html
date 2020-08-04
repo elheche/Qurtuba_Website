@@ -12,7 +12,43 @@
       <mat-card-title>Open an account</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-horizontal-stepper linear="true" #stepper>
+      <mat-horizontal-stepper linear="false" #stepper>
+        <!-- Step 0 -->
+        <mat-step [stepControl]="registrationFormStep0" [editable]="isEditable">
+          <form [formGroup]="registrationFormStep0" id="registration-form-step-0" #registrationFormStep0Ref="ngForm">
+            <ng-template matStepLabel>Step 0</ng-template>
+            <h2>Welcome</h2>
+            <div>
+              <p>Opening an account only takes a few minutes!</p>
+              <mat-divider [inset]="true"></mat-divider>
+            </div>
+            <div>
+              <p>Make sure to have the following information on hand:</p>
+              <mat-list role="list">
+                <mat-list-item role="listitem">Item 1</mat-list-item>
+                <mat-list-item role="listitem">Item 2</mat-list-item>
+                <mat-list-item role="listitem">Item 3</mat-list-item>
+              </mat-list>
+              <mat-divider [inset]="true"></mat-divider>
+            </div>
+            <div
+              id="user-agreement-container"
+              [ngClass]="{
+                'user-agreement-container-invalid': registrationFormStep0.get('userAgreement').invalid && registrationFormStep0Ref.submitted
+              }"
+            >
+              <mat-checkbox color="primary" formControlName="userAgreement" required>
+                {{ userAgreementText }}
+              </mat-checkbox>
+              <mat-error *ngIf="registrationFormStep0.get('userAgreement').invalid && registrationFormStep0Ref.submitted">
+                {{ getErrorMessage('registrationFormStep0', 'userAgreement') }}
+              </mat-error>
+            </div>
+            <div class="stepper-navigation-button-container">
+              <button class="stepper-navigation-button" mat-raised-button color="primary" matStepperNext>Next</button>
+            </div>
+          </form>
+        </mat-step>
         <!-- Step 1 -->
         <mat-step [stepControl]="registrationFormStep1" [editable]="isEditable">
           <form [formGroup]="registrationFormStep1" id="registration-form-step-1">
@@ -83,6 +119,7 @@
               </button>
             </mat-form-field>
             <div class="stepper-navigation-button-container">
+              <button class="stepper-navigation-button" mat-raised-button color="primary" matStepperPrevious>Back</button>
               <button class="stepper-navigation-button" mat-raised-button color="primary" matStepperNext>Next</button>
             </div>
           </form>
@@ -606,17 +643,17 @@
               <strong>Relationship:</strong>&nbsp;{{ registrationFormStep4.get('relationship').value }}<br />
             </p>
           </div>
-          <form [formGroup]="registrationFormStep5" id="registration-form-step-5" #registrationFormStep3Ref="ngForm">
+          <form [formGroup]="registrationFormStep5" id="registration-form-step-5" #registrationFormStep5Ref="ngForm">
             <div
               id="user-agreement-container"
               [ngClass]="{
-                'user-agreement-container-invalid': registrationFormStep5.get('userAgreement').invalid && registrationFormStep3Ref.submitted
+                'user-agreement-container-invalid': registrationFormStep5.get('userAgreement').invalid && registrationFormStep5Ref.submitted
               }"
             >
               <mat-checkbox color="primary" formControlName="userAgreement" required>
                 {{ userAgreementText }}
               </mat-checkbox>
-              <mat-error *ngIf="registrationFormStep5.get('userAgreement').invalid && registrationFormStep3Ref.submitted">
+              <mat-error *ngIf="registrationFormStep5.get('userAgreement').invalid && registrationFormStep5Ref.submitted">
                 {{ getErrorMessage('registrationFormStep5', 'userAgreement') }}
               </mat-error>
             </div>

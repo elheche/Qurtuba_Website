@@ -18,6 +18,7 @@ import { ICountry } from './icountry.data';
   styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
+  registrationFormStep0: FormGroup;
   registrationFormStep1: FormGroup;
   registrationFormStep2: FormGroup;
   registrationFormStep3: FormGroup;
@@ -81,6 +82,10 @@ export class RegistrationComponent implements OnInit {
     }
 
     this.userAgreementText = '';
+
+    this.registrationFormStep0 = new FormGroup({
+      userAgreement: new FormControl('', [Validators.required]),
+    });
 
     this.registrationFormStep1 = new FormGroup({
       email: new FormControl('', [
