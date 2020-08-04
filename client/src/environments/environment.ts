@@ -9,7 +9,7 @@ export const environment = {
     email: {
       errorMessages: {
         required: 'You must enter a valid email address.',
-        email: 'Invalid email.',
+        pattern: 'Invalid email.',
       },
       readonly: true,
     },

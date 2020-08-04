@@ -12,11 +12,11 @@
       <mat-card-title>Please login to continue</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <form id="loginFrom" [formGroup]="loginFrom" #loginFormDirective="ngForm" (ngSubmit)="onSubmit(loginFrom.value, loginFormDirective)">
+      <form id="loginForm" [formGroup]="loginForm" #loginFormDirective="ngForm" (ngSubmit)="onSubmit(loginForm.value, loginFormDirective)">
         <mat-form-field appearance="outline">
           <mat-label>Enter your email</mat-label>
           <input matInput type="email" placeholder="user@example.com" formControlName="email" required />
-          <mat-error *ngIf="loginFrom.get('email').invalid">{{ getErrorMessage('email') }}</mat-error>
+          <mat-error *ngIf="loginForm.get('email').invalid">{{ getErrorMessage('loginForm', 'email') }}</mat-error>
           <button mat-icon-button matPrefix disabled>
             <mat-icon class="material-icons-round">email</mat-icon>
           </button>
@@ -24,7 +24,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Enter your password</mat-label>
           <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" required maxlength="30" />
-          <mat-error *ngIf="loginFrom.get('password').invalid">{{ getErrorMessage('password') }}</mat-error>
+          <mat-error *ngIf="loginForm.get('password').invalid">{{ getErrorMessage('loginForm', 'password') }}</mat-error>
           <button mat-icon-button matPrefix disabled>
             <mat-icon class="material-icons-round">lock</mat-icon>
           </button>
@@ -42,7 +42,7 @@
       </form>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit" form="loginFrom" [disabled]="loginFrom.invalid">Login</button>
+      <button mat-raised-button color="primary" type="submit" form="loginForm" [disabled]="loginForm.invalid">Login</button>
     </mat-card-actions>
   </mat-card>
 </div>
