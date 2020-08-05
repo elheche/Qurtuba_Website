@@ -142,11 +142,11 @@
   margin: 10px;
 }
 
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-5 div#user-agreement-container {
+.registration-form-container mat-card-content mat-horizontal-stepper form .user-agreement-container {
   min-height: 44px;
 }
 
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-5 div#user-agreement-container .mat-error {
+.registration-form-container mat-card-content mat-horizontal-stepper form .user-agreement-container .mat-error {
   font-size: 10.5px;
   margin-left: 10.5px;
   animation: error-animation 0.5s;
@@ -163,22 +163,10 @@
   }
 }
 
-::ng-deep
-  .registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-5
-  .user-agreement-container-invalid
-  .mat-checkbox-label {
+::ng-deep .registration-form-container mat-card-content mat-horizontal-stepper form .user-agreement-container-invalid .mat-checkbox-label {
   color: #f44336;
 }
 
-::ng-deep
-  .registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-5
-  .user-agreement-container-invalid
-  .mat-checkbox-frame {
+::ng-deep .registration-form-container mat-card-content mat-horizontal-stepper form .user-agreement-container-invalid .mat-checkbox-frame {
   border-color: #f44336;
 }

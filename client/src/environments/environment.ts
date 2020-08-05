@@ -206,7 +206,7 @@ export const environment = {
       ],
       readonly: true,
     },
-    userAgreement: {
+    userAgreementStepDone: {
       errorMessages: {
         required: 'you must accept the regulation.',
       },

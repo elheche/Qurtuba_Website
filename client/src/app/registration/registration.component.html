@@ -32,16 +32,16 @@
               <mat-divider [inset]="true"></mat-divider>
             </div>
             <div
-              id="user-agreement-container"
+              class="user-agreement-container"
               [ngClass]="{
-                'user-agreement-container-invalid': registrationFormStep0.get('userAgreement').invalid && registrationFormStep0Ref.submitted
+                'user-agreement-container-invalid': registrationFormStep0.get('userAgreementStep0').invalid && registrationFormStep0Ref.submitted
               }"
             >
-              <mat-checkbox color="primary" formControlName="userAgreement" required>
-                {{ userAgreementText }}
+              <mat-checkbox color="primary" formControlName="userAgreementStep0" required>
+                {{ userAgreementStep0Text }}
               </mat-checkbox>
-              <mat-error *ngIf="registrationFormStep0.get('userAgreement').invalid && registrationFormStep0Ref.submitted">
-                {{ getErrorMessage('registrationFormStep0', 'userAgreement') }}
+              <mat-error *ngIf="registrationFormStep0.get('userAgreementStep0').invalid && registrationFormStep0Ref.submitted">
+                {{ getErrorMessage('registrationFormStep0', 'userAgreementStep0') }}
               </mat-error>
             </div>
             <div class="stepper-navigation-button-container">
@@ -645,16 +645,16 @@
           </div>
           <form [formGroup]="registrationFormStep5" id="registration-form-step-5" #registrationFormStep5Ref="ngForm">
             <div
-              id="user-agreement-container"
+              class="user-agreement-container"
               [ngClass]="{
-                'user-agreement-container-invalid': registrationFormStep5.get('userAgreement').invalid && registrationFormStep5Ref.submitted
+                'user-agreement-container-invalid': registrationFormStep5.get('userAgreementStepDone').invalid && registrationFormStep5Ref.submitted
               }"
             >
-              <mat-checkbox color="primary" formControlName="userAgreement" required>
-                {{ userAgreementText }}
+              <mat-checkbox color="primary" formControlName="userAgreementStepDone" required>
+                {{ userAgreementStepDoneText }}
               </mat-checkbox>
-              <mat-error *ngIf="registrationFormStep5.get('userAgreement').invalid && registrationFormStep5Ref.submitted">
-                {{ getErrorMessage('registrationFormStep5', 'userAgreement') }}
+              <mat-error *ngIf="registrationFormStep5.get('userAgreementStepDone').invalid && registrationFormStep5Ref.submitted">
+                {{ getErrorMessage('registrationFormStep5', 'userAgreementStepDone') }}
               </mat-error>
             </div>
             <div class="stepper-navigation-button-container">

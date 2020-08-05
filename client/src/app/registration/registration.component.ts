@@ -30,7 +30,8 @@ export class RegistrationComponent implements OnInit {
   environment: typeof environment;
   data: ICountry[];
   filteredRelationshipTypes: Observable<string[]>;
-  userAgreementText: string;
+  userAgreementStep0Text: string;
+  userAgreementStepDoneText: string;
   limit: number;
   offsets: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', number>;
   countriesSources: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', BehaviorSubject<ICountry[]>>;
@@ -81,10 +82,11 @@ export class RegistrationComponent implements OnInit {
       );
     }
 
-    this.userAgreementText = '';
+    this.userAgreementStep0Text = '';
+    this.userAgreementStepDoneText = '';
 
     this.registrationFormStep0 = new FormGroup({
-      userAgreement: new FormControl('', [Validators.required]),
+      userAgreementStep0: new FormControl('', [Validators.required]),
     });
 
     this.registrationFormStep1 = new FormGroup({
@@ -149,7 +151,7 @@ export class RegistrationComponent implements OnInit {
     });
 
     this.registrationFormStep5 = new FormGroup({
-      userAgreement: new FormControl('', [Validators.required]),
+      userAgreementStepDone: new FormControl('', [Validators.required]),
     });
   }
 
@@ -288,7 +290,7 @@ export class RegistrationComponent implements OnInit {
         if (isEmpty) {
           this.isActive = false;
           this.registrationFormStep5.reset();
-          this.userAgreementText = environment.inputs.userAgreement.text.individual;
+          this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.text.individual;
         } else {
           this.openAlertDialog();
         }
@@ -300,14 +302,14 @@ export class RegistrationComponent implements OnInit {
         this.getNextBatch('jointMemberCountry');
         this.getNextBatch('jointMemberCitizenship');
         this.registrationFormStep5.reset();
-        this.userAgreementText = environment.inputs.userAgreement.text.joint;
+        this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.text.joint;
         this.isActive = true;
         break;
       default:
         if (isEmpty) {
           this.isActive = false;
           this.registrationFormStep5.reset();
-          this.userAgreementText = '';
+          this.userAgreementStepDoneText = '';
         } else {
           this.openAlertDialog();
         }
@@ -340,8 +342,8 @@ export class RegistrationComponent implements OnInit {
         this.isActive = false;
         this.registrationFormStep5.reset();
         this.registrationFormStep2.get('accountType').value === 'Individual'
-          ? (this.userAgreementText = environment.inputs.userAgreement.text.individual)
-          : (this.userAgreementText = '');
+          ? (this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.text.individual)
+          : (this.userAgreementStepDoneText = '');
       } else {
         this.registrationFormStep2.get('accountType').setValue('Joint');
       }
