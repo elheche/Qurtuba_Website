@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -18,6 +18,7 @@ import { ICountry } from './icountry.data';
   styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
+  @ViewChild('registrationFormStep0Ref') registrationFormStep0Ref: FormGroupDirective;
   registrationFormStep0: FormGroup;
   registrationFormStep1: FormGroup;
   registrationFormStep2: FormGroup;
@@ -30,7 +31,6 @@ export class RegistrationComponent implements OnInit {
   environment: typeof environment;
   data: ICountry[];
   filteredRelationshipTypes: Observable<string[]>;
-  userAgreementStep0Text: string;
   userAgreementStepDoneText: string;
   limit: number;
   offsets: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', number>;
@@ -82,7 +82,6 @@ export class RegistrationComponent implements OnInit {
       );
     }
 
-    this.userAgreementStep0Text = '';
     this.userAgreementStepDoneText = '';
 
     this.registrationFormStep0 = new FormGroup({
@@ -290,7 +289,7 @@ export class RegistrationComponent implements OnInit {
         if (isEmpty) {
           this.isActive = false;
           this.registrationFormStep5.reset();
-          this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.text.individual;
+          this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.checkBoxText.individual;
         } else {
           this.openAlertDialog();
         }
@@ -302,7 +301,7 @@ export class RegistrationComponent implements OnInit {
         this.getNextBatch('jointMemberCountry');
         this.getNextBatch('jointMemberCitizenship');
         this.registrationFormStep5.reset();
-        this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.text.joint;
+        this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.checkBoxText.joint;
         this.isActive = true;
         break;
       default:
@@ -342,11 +341,25 @@ export class RegistrationComponent implements OnInit {
         this.isActive = false;
         this.registrationFormStep5.reset();
         this.registrationFormStep2.get('accountType').value === 'Individual'
-          ? (this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.text.individual)
+          ? (this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.checkBoxText.individual)
           : (this.userAgreementStepDoneText = '');
       } else {
         this.registrationFormStep2.get('accountType').setValue('Joint');
       }
     });
+  }
+
+  @HostListener('click', ['$event'])
+  onClick(event: MouseEvent): void {
+    for (const eventTarget of event.composedPath()) {
+      const eventTargetTagName = (eventTarget as HTMLElement).tagName;
+      if (eventTargetTagName === 'MAT-STEP-HEADER') {
+        const eventTargetContent = (eventTarget as HTMLElement).lastElementChild.textContent;
+        if (eventTargetContent !== 'Step 0') {
+          this.registrationFormStep0Ref.onSubmit(undefined);
+        }
+        break;
+      }
+    }
   }
 }

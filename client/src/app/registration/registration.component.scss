@@ -73,6 +73,59 @@
   flex-flow: column wrap;
 }
 
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-0 div#opening-account-container {
+  background-color: #f8f8f8;
+  border: 1px solid #e2e2e2;
+  padding: 15px;
+  font-size: 14px;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-0
+  div#opening-account-container
+  p:nth-of-type(1) {
+  font-size: 20px;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-0
+  div#opening-account-container
+  p:nth-of-type(2) {
+  font-size: 16px;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-0
+  div#opening-account-container
+  mat-divider.mat-divider {
+  margin-bottom: 12px;
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-0 div#opening-account-container ul {
+  list-style: none;
+}
+
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-0
+  div#opening-account-container
+  ul
+  li::before {
+  content: '\2022';
+  color: #3f51b5;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
 .registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 mat-form-field:nth-child(6),
 .registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 mat-form-field:nth-child(7) {
   flex-basis: 23.5%;

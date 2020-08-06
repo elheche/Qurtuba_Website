@@ -6,6 +6,18 @@
 export const environment = {
   production: false,
   inputs: {
+    userAgreementStep0: {
+      errorMessages: {
+        required: 'You must agree to the terms and conditions to continue.',
+      },
+      requiredInformations: [
+        'Your social insurance number.',
+        'Your bank information.',
+        "Your employer's full information (if you plan to choose to contribute by payroll deductions).",
+      ],
+      checkBoxText:
+        'I consent to the Privacy Policy and confirm that I am between the ages of 18 and 70 and reside in Quebec.',
+    },
     email: {
       errorMessages: {
         required: 'You must enter a valid email address.',
@@ -139,19 +151,19 @@ export const environment = {
     },
     numberOfDependents: {
       errorMessages: {
-        required: 'you must enter the number of your dependents.',
+        required: 'You must enter the number of your dependents.',
       },
       readonly: true,
     },
     depositAmount: {
       errorMessages: {
-        required: 'you must enter your deposit amount.',
+        required: 'You must enter your deposit amount.',
       },
       readonly: true,
     },
     donationForMosque: {
       errorMessages: {
-        required: 'you must enter your donation amount for mosque.',
+        required: 'You must enter your donation amount for mosque.',
       },
       readonly: true,
     },
@@ -164,7 +176,7 @@ export const environment = {
     },
     relationship: {
       errorMessages: {
-        required: 'you must enter a relationship.',
+        required: 'You must enter a relationship.',
       },
       types: [
         'Aunt',
@@ -208,9 +220,9 @@ export const environment = {
     },
     userAgreementStepDone: {
       errorMessages: {
-        required: 'you must accept the regulation.',
+        required: 'You must accept the regulation.',
       },
-      text: {
+      checkBoxText: {
         individual: 'I have read the Regulations and By-laws of the "Co-operative" and I fully agree to abide by them.',
         joint: 'We have read the Regulations and By-laws of the "Co-operative" and We fully agree to abide by them.',
       },
