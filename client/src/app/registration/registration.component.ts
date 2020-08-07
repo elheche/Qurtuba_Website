@@ -85,72 +85,72 @@ export class RegistrationComponent implements OnInit {
     this.userAgreementStepDoneText = '';
 
     this.registrationFormStep0 = new FormGroup({
-      userAgreementStep0: new FormControl('', [Validators.required]),
+      userAgreementStep0: new FormControl(null, [Validators.required]),
     });
 
     this.registrationFormStep1 = new FormGroup({
-      email: new FormControl('', [
+      email: new FormControl(null, [
         Validators.required,
         Validators.pattern(
           /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
         ),
       ]),
-      password: new FormControl('', [
+      password: new FormControl(null, [
         Validators.required,
         Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,32}$/),
       ]),
-      confirmPassword: new FormControl('', [Validators.required, CustomValidators.passwordMatchValidator('password')]),
+      confirmPassword: new FormControl(null, [Validators.required, CustomValidators.passwordMatchValidator('password')]),
     });
 
     this.registrationFormStep2 = new FormGroup({
-      membershipType: new FormControl('', [Validators.required]),
-      accountType: new FormControl('', [Validators.required]),
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('', [Validators.required]),
-      birthDay: new FormControl('', [
+      membershipType: new FormControl(null, [Validators.required]),
+      accountType: new FormControl(null, [Validators.required]),
+      firstName: new FormControl(null, [Validators.required]),
+      lastName: new FormControl(null, [Validators.required]),
+      birthDay: new FormControl(null, [
         Validators.required,
         CustomValidators.dateRangeValidator(
           environment.inputs.birthDay.acceptedRange.minDate,
           environment.inputs.birthDay.acceptedRange.maxDate,
         ),
       ]),
-      phoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
-      address: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      country: new FormControl('', [Validators.required]),
-      province: new FormControl({ value: '', disabled: true }, [Validators.required]),
-      postalCode: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
+      address: new FormControl(null, [Validators.required]),
+      city: new FormControl(null, [Validators.required]),
+      country: new FormControl(null, [Validators.required]),
+      province: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
     });
 
     this.registrationFormStep3 = new FormGroup({
-      socialInsuranceNumber: new FormControl('', [Validators.required, Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)]),
-      citizenship: new FormControl('', [Validators.required]),
-      profession: new FormControl('', [Validators.required]),
-      employer: new FormControl('', [Validators.required]),
-      employerPhoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
-      numberOfDependents: new FormControl('', [Validators.required]),
-      depositAmount: new FormControl('', [Validators.required]),
-      donationForMosque: new FormControl('', [Validators.required]),
+      socialInsuranceNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)]),
+      citizenship: new FormControl(null, [Validators.required]),
+      profession: new FormControl(null, [Validators.required]),
+      employer: new FormControl(null, [Validators.required]),
+      employerPhoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
+      numberOfDependents: new FormControl(null, [Validators.required]),
+      depositAmount: new FormControl(null, [Validators.required]),
+      donationForMosque: new FormControl(null, [Validators.required]),
       membershipFee: new FormControl(environment.inputs.membershipFee.defaultAmount),
       totalAmount: new FormControl(environment.inputs.membershipFee.defaultAmount),
     });
 
     this.registrationFormStep4 = new FormGroup({
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('', [Validators.required]),
-      address: new FormControl('', [Validators.required]),
-      city: new FormControl('', [Validators.required]),
-      country: new FormControl('', [Validators.required]),
-      province: new FormControl({ value: '', disabled: true }, [Validators.required]),
-      postalCode: new FormControl({ value: '', disabled: true }, [Validators.required]),
-      socialInsuranceNumber: new FormControl('', [Validators.required, Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)]),
-      citizenship: new FormControl('', [Validators.required]),
-      profession: new FormControl('', [Validators.required]),
-      relationship: new FormControl('', [Validators.required]),
+      firstName: new FormControl(null, [Validators.required]),
+      lastName: new FormControl(null, [Validators.required]),
+      address: new FormControl(null, [Validators.required]),
+      city: new FormControl(null, [Validators.required]),
+      country: new FormControl(null, [Validators.required]),
+      province: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      socialInsuranceNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)]),
+      citizenship: new FormControl(null, [Validators.required]),
+      profession: new FormControl(null, [Validators.required]),
+      relationship: new FormControl(null, [Validators.required]),
     });
 
     this.registrationFormStep5 = new FormGroup({
-      userAgreementStepDone: new FormControl('', [Validators.required]),
+      userAgreementStepDone: new FormControl(null, [Validators.required]),
     });
   }
 
