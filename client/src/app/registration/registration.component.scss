@@ -78,6 +78,7 @@
   border: 1px solid #e2e2e2;
   padding: 15px;
   font-size: 14px;
+  border-radius: 5px;
 }
 
 .registration-form-container
@@ -124,6 +125,19 @@
   display: inline-block;
   width: 1em;
   margin-left: -1em;
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 h2 + div {
+  background-color: #f8f8f8;
+  border: 1px solid #e2e2e2;
+  padding: 15px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 h2 + div p {
+  margin: 0;
 }
 
 .registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 mat-form-field:nth-child(6),

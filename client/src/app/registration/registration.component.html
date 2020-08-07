@@ -53,8 +53,15 @@
           <form [formGroup]="registrationFormStep1" id="registration-form-step-1">
             <ng-template matStepLabel>Step 1</ng-template>
             <h2>Create your login</h2>
+            <div>
+              <p>
+                Please note that by providing us with your email address, you consent to receive Fonds communications and notices of
+                filings, such as your tax slips, solely by electronic means. If you wish to receive these documents by mail, you can change
+                your communication preferences in your profile at any time after your enrollment is complete.
+              </p>
+            </div>
             <mat-form-field appearance="outline">
-              <mat-label>Enter your email</mat-label>
+              <mat-label>Email address</mat-label>
               <input matInput type="email" placeholder="user@example.com" formControlName="email" required />
               <mat-error *ngIf="registrationFormStep1.get('email').invalid">
                 {{ getErrorMessage('registrationFormStep1', 'email') }}
@@ -67,7 +74,7 @@
               appearance="outline"
               hintLabel="Your password must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character."
             >
-              <mat-label>Enter your password</mat-label>
+              <mat-label>Password</mat-label>
               <input
                 matInput
                 [type]="hide ? 'password' : 'text'"
