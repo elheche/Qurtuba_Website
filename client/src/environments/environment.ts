@@ -15,8 +15,10 @@ export const environment = {
         'Your bank information.',
         "Your employer's full information (if you plan to choose to contribute by payroll deductions).",
       ],
-      checkBoxText:
-        'I consent to the Privacy Policy and confirm that I am between the ages of 18 and 70 and reside in Quebec.',
+      checkBoxText: 'I consent to the Privacy Policy and confirm that I am between the ages of 18 and 70 and reside in Quebec.',
+    },
+    reCAPTCHA: {
+      siteKey: '6LcEbbsZAAAAAFl3gESpYawtCydZyTpq5lh9_nU-',
     },
     email: {
       errorMessages: {
