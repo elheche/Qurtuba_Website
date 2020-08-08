@@ -17,8 +17,12 @@ export const environment = {
       ],
       checkBoxText: 'I consent to the Privacy Policy and confirm that I am between the ages of 18 and 70 and reside in Quebec.',
     },
-    reCAPTCHA: {
-      siteKey: '6LcEbbsZAAAAAFl3gESpYawtCydZyTpq5lh9_nU-',
+    reCaptcha: {
+      errorMessages: {
+        required: 'You must resolve the reCAPTCHA to continue.',
+      },
+      siteKey: '6LcYq7sZAAAAAAWopgcZzu0Qziuk3lSTrQPzqPzR',
+      language: 'en',
     },
     email: {
       errorMessages: {

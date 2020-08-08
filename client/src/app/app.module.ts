@@ -21,6 +21,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSelectInfiniteScrollModule } from 'ng-mat-select-infinite-scroll';
+import { RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings, RECAPTCHA_LANGUAGE, RECAPTCHA_SETTINGS } from 'ng-recaptcha';
+import { environment } from 'src/environments/environment';
 import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -28,7 +30,6 @@ import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { UserProfilComponent } from './user-profil/user-profil.component';
-
 @NgModule({
   declarations: [AppComponent, LoginComponent, RegistrationComponent, LogoutComponent, UserProfilComponent, AlertDialogComponent],
   imports: [
@@ -55,11 +56,21 @@ import { UserProfilComponent } from './user-profil/user-profil.component';
     MatSelectInfiniteScrollModule,
     MatDialogModule,
     MatListModule,
+    RecaptchaModule,
+    RecaptchaFormsModule,
   ],
   providers: [
     {
       provide: MAT_RADIO_DEFAULT_OPTIONS,
       useValue: { color: 'primary' },
+    },
+    {
+      provide: RECAPTCHA_LANGUAGE,
+      useValue: environment.inputs.reCaptcha.language,
+    },
+    {
+      provide: RECAPTCHA_SETTINGS,
+      useValue: { siteKey: environment.inputs.reCaptcha.siteKey } as RecaptchaSettings,
     },
   ],
   bootstrap: [AppComponent],

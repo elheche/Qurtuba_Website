@@ -26,6 +26,7 @@
     "file-saver": "^2.0.2",
     "libphonenumber-js": "^1.7.55",
     "ng-mat-select-infinite-scroll": "^2.0.0",
+    "ng-recaptcha": "^5.0.0",
     "rxjs": "~6.5.4",
     "zone.js": "~0.10.2"
   },

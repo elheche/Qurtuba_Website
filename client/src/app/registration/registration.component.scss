@@ -67,8 +67,7 @@
   flex-basis: 49%;
 }
 
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-0,
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-0 {
   display: flex;
   flex-flow: column wrap;
 }
@@ -122,9 +121,10 @@
   content: '\2022';
   color: #3f51b5;
   font-weight: bold;
+  font-size: 18px;
   display: inline-block;
   width: 1em;
-  margin-left: -1em;
+  text-align: center;
 }
 
 .registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 h2 + div {
@@ -138,6 +138,25 @@
 
 .registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 h2 + div p {
   margin: 0;
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 mat-form-field:nth-child(3) {
+  flex-basis: 100%;
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 div.recaptcha-container {
+  min-height: 98px;
+  margin-top: 15px;
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 div.recaptcha-container,
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 div.stepper-navigation-button-container {
+  flex-basis: 49%;
+  align-items: flex-end;
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 div.stepper-navigation-button-container button {
+  margin-bottom: 20px;
 }
 
 .registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 mat-form-field:nth-child(6),
@@ -213,7 +232,8 @@
   min-height: 44px;
 }
 
-.registration-form-container mat-card-content mat-horizontal-stepper form .user-agreement-container .mat-error {
+.registration-form-container mat-card-content mat-horizontal-stepper form .user-agreement-container .mat-error,
+.registration-form-container mat-card-content mat-horizontal-stepper form .recaptcha-container .mat-error {
   font-size: 10.5px;
   margin-left: 10.5px;
   animation: error-animation 0.5s;

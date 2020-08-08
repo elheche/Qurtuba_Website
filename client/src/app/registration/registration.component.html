@@ -50,7 +50,7 @@
         </mat-step>
         <!-- Step 1 -->
         <mat-step [stepControl]="registrationFormStep1" [editable]="isEditable">
-          <form [formGroup]="registrationFormStep1" id="registration-form-step-1">
+          <form [formGroup]="registrationFormStep1" id="registration-form-step-1" #registrationFormStep1Ref="ngForm">
             <ng-template matStepLabel>Step 1</ng-template>
             <h2>Create your login</h2>
             <div>
@@ -124,6 +124,12 @@
                 <mat-icon class="material-icons-round">{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
             </mat-form-field>
+            <div class="recaptcha-container">
+              <re-captcha formControlName="reCaptcha" (resolved)="validateRecaptcha($event)"></re-captcha>
+              <mat-error *ngIf="registrationFormStep1.get('reCaptcha').invalid && registrationFormStep1Ref.submitted">
+                {{ getErrorMessage('registrationFormStep1', 'reCaptcha') }}
+              </mat-error>
+            </div>
             <div class="stepper-navigation-button-container">
               <button class="stepper-navigation-button" mat-raised-button color="primary" matStepperPrevious>Back</button>
               <button class="stepper-navigation-button" mat-raised-button color="primary" matStepperNext>Next</button>

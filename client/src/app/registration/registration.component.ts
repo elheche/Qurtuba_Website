@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
+import { MatHorizontalStepper } from '@angular/material/stepper';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AsYouType } from 'libphonenumber-js';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -19,6 +20,8 @@ import { ICountry } from './icountry.data';
 })
 export class RegistrationComponent implements OnInit {
   @ViewChild('registrationFormStep0Ref') registrationFormStep0Ref: FormGroupDirective;
+  @ViewChild('registrationFormStep1Ref') registrationFormStep1Ref: FormGroupDirective;
+  @ViewChild('stepper') stepper: MatHorizontalStepper;
   registrationFormStep0: FormGroup;
   registrationFormStep1: FormGroup;
   registrationFormStep2: FormGroup;
@@ -100,6 +103,7 @@ export class RegistrationComponent implements OnInit {
         Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,32}$/),
       ]),
       confirmPassword: new FormControl(null, [Validators.required, CustomValidators.passwordMatchValidator('password')]),
+      reCaptcha: new FormControl(null, [Validators.required]),
     });
 
     this.registrationFormStep2 = new FormGroup({
@@ -355,11 +359,24 @@ export class RegistrationComponent implements OnInit {
       const eventTargetTagName = (eventTarget as HTMLElement).tagName;
       if (eventTargetTagName === 'MAT-STEP-HEADER') {
         const eventTargetContent = (eventTarget as HTMLElement).lastElementChild.textContent;
-        if (eventTargetContent !== 'Step 0') {
+        if (this.stepper.selectedIndex === 0 && eventTargetContent !== 'Step 0') {
           this.registrationFormStep0Ref.onSubmit(undefined);
+        }
+        if (this.stepper.selectedIndex === 1 && eventTargetContent !== 'Step 1') {
+          this.registrationFormStep1Ref.onSubmit(undefined);
         }
         break;
       }
+    }
+  }
+
+  validateRecaptcha(reCaptchaResponse: string): void {
+    if (reCaptchaResponse) {
+      console.log(reCaptchaResponse);
+      console.log(this.registrationFormStep1.get('reCaptcha').status);
+    } else {
+      console.log('Token expired!');
+      console.log(this.registrationFormStep1.get('reCaptcha').status);
     }
   }
 }
