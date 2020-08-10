@@ -392,7 +392,7 @@ export class RegistrationComponent implements OnInit {
         },
         (error: Error) => {
           this.reCaptcha.reset();
-          this.showErrorDialog(error.name);
+          this.showReCaptchaValidationError(error.name);
         },
       );
     } else {
@@ -400,7 +400,7 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  showErrorDialog(errorName: string): void {
+  showReCaptchaValidationError(errorName: string): void {
     let errorMessage: string;
     errorName === 'ClientOrNetworkError'
       ? (errorMessage = 'A client-side or network error occurred!')
