@@ -6,7 +6,7 @@
 export const environment = {
   production: false,
   inputs: {
-    userAgreementStep0: {
+    userAgreementStep1: {
       errorMessages: {
         required: 'You must agree to the terms and conditions to continue.',
       },
@@ -16,6 +16,7 @@ export const environment = {
         "Your employer's full information (if you plan to choose to contribute by payroll deductions).",
       ],
       checkBoxText: 'I consent to the Privacy Policy and confirm that I am between the ages of 18 and 70 and reside in Quebec.',
+      readonly: true,
     },
     reCaptcha: {
       errorMessages: {
@@ -23,6 +24,7 @@ export const environment = {
       },
       siteKey: '6LebULwZAAAAAMnP3RJz59YQCgFJ6QxXrteQInpj',
       language: 'en',
+      readonly: true,
     },
     email: {
       errorMessages: {
@@ -58,6 +60,13 @@ export const environment = {
         required: 'You must choose the type of the account.',
       },
       types: ['Individual', 'Joint'],
+      readonly: true,
+    },
+    title: {
+      errorMessages: {
+        required: 'Invalid title.',
+      },
+      titles: ['Mr.', 'Ms.', 'Mrs.', 'Miss'],
       readonly: true,
     },
     firstName: {
@@ -125,8 +134,8 @@ export const environment = {
     },
     socialInsuranceNumber: {
       errorMessages: {
-        required: 'You must enter a social insurance number (SIN).',
-        pattern: 'Invalid social insurance number (SIN).',
+        required: 'You must enter a social insurance number.',
+        pattern: 'Invalid social insurance number.',
       },
       readonly: true,
     },

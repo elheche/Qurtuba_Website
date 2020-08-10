@@ -23,11 +23,10 @@ import { ICountry } from './icountry.data';
   styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit {
-  @ViewChild('registrationFormStep0Ref') registrationFormStep0Ref: FormGroupDirective;
   @ViewChild('registrationFormStep1Ref') registrationFormStep1Ref: FormGroupDirective;
+  @ViewChild('registrationFormStep2Ref') registrationFormStep2Ref: FormGroupDirective;
   @ViewChild('stepper') stepper: MatHorizontalStepper;
   @ViewChild('reCaptcha') reCaptcha: RecaptchaComponent;
-  registrationFormStep0: FormGroup;
   registrationFormStep1: FormGroup;
   registrationFormStep2: FormGroup;
   registrationFormStep3: FormGroup;
@@ -98,11 +97,11 @@ export class RegistrationComponent implements OnInit {
 
     this.userAgreementStepDoneText = '';
 
-    this.registrationFormStep0 = new FormGroup({
-      userAgreementStep0: new FormControl(null, [Validators.required]),
+    this.registrationFormStep1 = new FormGroup({
+      userAgreementStep1: new FormControl(null, [Validators.required]),
     });
 
-    this.registrationFormStep1 = new FormGroup({
+    this.registrationFormStep2 = new FormGroup({
       email: new FormControl(null, [
         Validators.required,
         Validators.pattern(
@@ -118,9 +117,10 @@ export class RegistrationComponent implements OnInit {
       reCaptchaValidation: new FormControl(null, [Validators.required]),
     });
 
-    this.registrationFormStep2 = new FormGroup({
+    this.registrationFormStep3 = new FormGroup({
       membershipType: new FormControl(null, [Validators.required]),
       accountType: new FormControl(null, [Validators.required]),
+      title: new FormControl(null, [Validators.required]),
       firstName: new FormControl(null, [Validators.required]),
       lastName: new FormControl(null, [Validators.required]),
       birthDay: new FormControl(null, [
@@ -136,19 +136,10 @@ export class RegistrationComponent implements OnInit {
       country: new FormControl(null, [Validators.required]),
       province: new FormControl({ value: null, disabled: true }, [Validators.required]),
       postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
-    });
-
-    this.registrationFormStep3 = new FormGroup({
       socialInsuranceNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)]),
-      citizenship: new FormControl(null, [Validators.required]),
       profession: new FormControl(null, [Validators.required]),
       employer: new FormControl(null, [Validators.required]),
       employerPhoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
-      numberOfDependents: new FormControl(null, [Validators.required]),
-      depositAmount: new FormControl(null, [Validators.required]),
-      donationForMosque: new FormControl(null, [Validators.required]),
-      membershipFee: new FormControl(environment.inputs.membershipFee.defaultAmount),
-      totalAmount: new FormControl(environment.inputs.membershipFee.defaultAmount),
     });
 
     this.registrationFormStep4 = new FormGroup({
@@ -160,7 +151,6 @@ export class RegistrationComponent implements OnInit {
       province: new FormControl({ value: null, disabled: true }, [Validators.required]),
       postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
       socialInsuranceNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)]),
-      citizenship: new FormControl(null, [Validators.required]),
       profession: new FormControl(null, [Validators.required]),
       relationship: new FormControl(null, [Validators.required]),
     });
@@ -188,7 +178,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   onPasswordValueChange(): void {
-    this.registrationFormStep1.get('confirmPassword').reset();
+    this.registrationFormStep2.get('confirmPassword').reset();
   }
 
   formatPhoneNumber(inputEvent: InputEvent, formGroup: string, input: string): void {
@@ -278,16 +268,6 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  updateTotalAmount(): void {
-    const depositAmount = this.registrationFormStep3.get('depositAmount').value ? this.registrationFormStep3.get('depositAmount').value : 0;
-    const donationForMosque = this.registrationFormStep3.get('donationForMosque').value
-      ? this.registrationFormStep3.get('donationForMosque').value
-      : 0;
-    const membershipFee = this.registrationFormStep3.get('membershipFee').value ? this.registrationFormStep3.get('membershipFee').value : 0;
-    const totalAmount = depositAmount + donationForMosque + membershipFee;
-    this.registrationFormStep3.get('totalAmount').setValue(totalAmount);
-  }
-
   onAccountTypeSelectionChange(): void {
     let isEmpty = true;
     if (this.isActive) {
@@ -299,7 +279,7 @@ export class RegistrationComponent implements OnInit {
         }
       }
     }
-    const accountType = this.registrationFormStep2.get('accountType').value;
+    const accountType = this.registrationFormStep3.get('accountType').value;
     switch (accountType) {
       case 'Individual':
         if (isEmpty) {
@@ -356,11 +336,11 @@ export class RegistrationComponent implements OnInit {
       if (result === 'OK') {
         this.isActive = false;
         this.registrationFormStep5.reset();
-        this.registrationFormStep2.get('accountType').value === 'Individual'
+        this.registrationFormStep3.get('accountType').value === 'Individual'
           ? (this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.checkBoxText.individual)
           : (this.userAgreementStepDoneText = '');
       } else {
-        this.registrationFormStep2.get('accountType').setValue('Joint');
+        this.registrationFormStep3.get('accountType').setValue('Joint');
       }
     });
   }
@@ -372,10 +352,10 @@ export class RegistrationComponent implements OnInit {
       if (eventTargetTagName === 'MAT-STEP-HEADER') {
         const eventTargetContent = (eventTarget as HTMLElement).lastElementChild.textContent;
         if (this.stepper.selectedIndex === 0 && eventTargetContent !== 'Step 0') {
-          this.registrationFormStep0Ref.onSubmit(undefined);
+          this.registrationFormStep1Ref.onSubmit(undefined);
         }
         if (this.stepper.selectedIndex === 1 && eventTargetContent !== 'Step 1') {
-          this.registrationFormStep1Ref.onSubmit(undefined);
+          this.registrationFormStep2Ref.onSubmit(undefined);
         }
         break;
       }
@@ -387,7 +367,7 @@ export class RegistrationComponent implements OnInit {
       this.registrationService.sendToken(reCaptchaResponse).subscribe(
         (res: RecaptchaValidation) => {
           if (res.success) {
-            this.registrationFormStep1.get('reCaptchaValidation').setValue(true);
+            this.registrationFormStep2.get('reCaptchaValidation').setValue(true);
           }
         },
         (error: Error) => {
@@ -396,7 +376,7 @@ export class RegistrationComponent implements OnInit {
         },
       );
     } else {
-      this.registrationFormStep1.get('reCaptchaValidation').setValue(null); // When recaptcha token expire.
+      this.registrationFormStep2.get('reCaptchaValidation').setValue(null); // When recaptcha token expire.
     }
   }
 
@@ -413,15 +393,15 @@ export class RegistrationComponent implements OnInit {
 
   setRecaptchaValidators(): void {
     if (this.stepper.selectedIndex === 1) {
-      this.registrationFormStep1.get('reCaptchaValidation').setValidators([Validators.required]);
-      this.registrationFormStep1.get('reCaptcha').setValidators([Validators.required]);
-      this.registrationFormStep1.get('reCaptchaValidation').updateValueAndValidity();
-      this.registrationFormStep1.get('reCaptcha').updateValueAndValidity();
+      this.registrationFormStep2.get('reCaptchaValidation').setValidators([Validators.required]);
+      this.registrationFormStep2.get('reCaptcha').setValidators([Validators.required]);
+      this.registrationFormStep2.get('reCaptchaValidation').updateValueAndValidity();
+      this.registrationFormStep2.get('reCaptcha').updateValueAndValidity();
     } else {
-      this.registrationFormStep1.get('reCaptchaValidation').clearValidators();
-      this.registrationFormStep1.get('reCaptcha').clearValidators();
-      this.registrationFormStep1.get('reCaptchaValidation').updateValueAndValidity();
-      this.registrationFormStep1.get('reCaptcha').updateValueAndValidity();
+      this.registrationFormStep2.get('reCaptchaValidation').clearValidators();
+      this.registrationFormStep2.get('reCaptcha').clearValidators();
+      this.registrationFormStep2.get('reCaptchaValidation').updateValueAndValidity();
+      this.registrationFormStep2.get('reCaptcha').updateValueAndValidity();
     }
   }
 }

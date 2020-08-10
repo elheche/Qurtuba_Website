@@ -15,12 +15,13 @@
   display: flex;
   justify-content: space-between;
   z-index: 100;
+  height: 50px;
 }
 
 .registration-form-container {
-  margin-top: 60px;
+  margin-top: 55px;
   width: 1000px;
-  height: 535px;
+  height: 598px;
 }
 
 .registration-form-container mat-card-header {
@@ -36,6 +37,10 @@
 
 .registration-form-container mat-card-content mat-horizontal-stepper {
   height: 100%;
+}
+
+::ng-deep .registration-form-container mat-card-content mat-horizontal-stepper .mat-horizontal-content-container {
+  padding: 0px 24px;
 }
 
 .registration-form-container mat-card-content mat-horizontal-stepper form {
@@ -67,12 +72,12 @@
   flex-basis: 49%;
 }
 
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-0 {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 {
   display: flex;
   flex-flow: column wrap;
 }
 
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-0 div#opening-account-container {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 div#opening-account-container {
   background-color: #f8f8f8;
   border: 1px solid #e2e2e2;
   padding: 15px;
@@ -83,7 +88,7 @@
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
-  form#registration-form-step-0
+  form#registration-form-step-1
   div#opening-account-container
   p:nth-of-type(1) {
   font-size: 20px;
@@ -92,7 +97,7 @@
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
-  form#registration-form-step-0
+  form#registration-form-step-1
   div#opening-account-container
   p:nth-of-type(2) {
   font-size: 16px;
@@ -101,20 +106,20 @@
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
-  form#registration-form-step-0
+  form#registration-form-step-1
   div#opening-account-container
   mat-divider.mat-divider {
   margin-bottom: 12px;
 }
 
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-0 div#opening-account-container ul {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 div#opening-account-container ul {
   list-style: none;
 }
 
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
-  form#registration-form-step-0
+  form#registration-form-step-1
   div#opening-account-container
   ul
   li::before {
@@ -127,7 +132,7 @@
   text-align: center;
 }
 
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 h2 + div {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 h2 + div {
   background-color: #f8f8f8;
   border: 1px solid #e2e2e2;
   padding: 15px;
@@ -136,58 +141,34 @@
   border-radius: 5px;
 }
 
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 h2 + div p {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 h2 + div p {
   margin: 0;
 }
 
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 mat-form-field:nth-child(3) {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 mat-form-field:nth-child(3) {
   flex-basis: 100%;
 }
 
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 div.recaptcha-container {
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 div.recaptcha-container {
   min-height: 98px;
   margin-top: 15px;
+  flex-basis: 100%;
+  text-align: center;
 }
 
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 div.recaptcha-container,
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 div.stepper-navigation-button-container {
-  flex-basis: 49%;
-  align-items: flex-end;
-}
-
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-1 div.stepper-navigation-button-container button {
-  margin-bottom: 20px;
-}
-
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 mat-form-field:nth-child(6),
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 mat-form-field:nth-child(7) {
-  flex-basis: 23.5%;
-}
-
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-2 mat-form-field:nth-last-child(-n + 5) {
-  flex-basis: 23.5%;
-}
-
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-3 mat-form-field:nth-last-child(-n + 5) {
-  flex-basis: 23.5%;
-}
-
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-3 input.deposit-amount {
-  text-align: right;
-  -moz-appearance: textfield;
-}
-
-.registration-form-container
+::ng-deep
+  .registration-form-container
   mat-card-content
   mat-horizontal-stepper
-  form#registration-form-step-3
-  input.deposit-amount::-webkit-outer-spin-button,
-.registration-form-container
-  mat-card-content
-  mat-horizontal-stepper
-  form#registration-form-step-3
-  input.deposit-amount::-webkit-inner-spin-button {
-  display: none;
+  form#registration-form-step-2
+  div.recaptcha-container
+  re-captcha
+  div:first-child {
+  width: auto !important;
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-3 mat-form-field:nth-child(4) {
+  flex-basis: 10%;
 }
 
 ::ng-deep
@@ -195,18 +176,39 @@
   mat-card-content
   mat-horizontal-stepper
   form#registration-form-step-3
-  mat-form-field.mat-form-field-appearance-outline:nth-last-child(-n + 5)
-  .mat-form-field-suffix {
-  top: unset;
-  white-space: unset;
+  mat-form-field:nth-child(4)
+  .mat-form-field-infix {
+  width: 100%;
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-3 mat-form-field:nth-child(5) {
+  flex-basis: 37%;
+}
+
+::ng-deep
+  .registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-3
+  mat-form-field:nth-child(5)
+  .mat-form-field-infix {
+  width: 100%;
+}
+
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-3 mat-form-field:nth-child(n + 8) {
+  flex-basis: 23.5%;
 }
 
 .registration-form-container
   mat-card-content
   mat-horizontal-stepper
   form#registration-form-step-4
-  mat-form-field:nth-child(n + 5):nth-child(-n + 8),
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-4 mat-form-field:nth-child(n + 11) {
+  mat-form-field:nth-child(n + 5):nth-child(-n + 6),
+.registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
+  form#registration-form-step-4
+  mat-form-field:nth-child(n + 8):nth-child(-n + 9) {
   flex-basis: 23.5%;
 }
 
