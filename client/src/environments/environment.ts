@@ -21,7 +21,7 @@ export const environment = {
       errorMessages: {
         required: 'You must resolve the reCAPTCHA to continue.',
       },
-      siteKey: '6LcYq7sZAAAAAAWopgcZzu0Qziuk3lSTrQPzqPzR',
+      siteKey: '6LebULwZAAAAAMnP3RJz59YQCgFJ6QxXrteQInpj',
       language: 'en',
     },
     email: {
@@ -237,6 +237,7 @@ export const environment = {
   },
   registration: {
     batchLength: 8,
+    snackbarDuration: 4000,
   },
   userProfil: {
     tabs: {

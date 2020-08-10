@@ -9,6 +9,7 @@ import * as favicon from 'serve-favicon';
 import { DatabaseController } from './controllers/database.controller';
 import { DateController } from './controllers/date.controller';
 import { IndexController } from './controllers/index.controller';
+import { ReCaptchaController } from './controllers/recaptcha.controller';
 import Types from './types';
 
 @injectable()
@@ -20,6 +21,7 @@ export class Application {
     @inject(Types.IndexController) private indexController: IndexController,
     @inject(Types.DateController) private dateController: DateController,
     @inject(Types.DatabaseController) private databaseController: DatabaseController,
+    @inject(Types.ReCaptchaController) private reCaptchaController: ReCaptchaController,
   ) {
     this.app = express();
 
@@ -45,6 +47,7 @@ export class Application {
     this.app.use('/api/index', this.indexController.router);
     this.app.use('/api/date', this.dateController.router);
     this.app.use('/api/database', this.databaseController.router);
+    this.app.use('/api/recaptcha', this.reCaptchaController.router);
     this.errorHandling();
   }
 

@@ -12,7 +12,7 @@
       <mat-card-title>Open an account</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-horizontal-stepper linear="true" #stepper>
+      <mat-horizontal-stepper linear="true" #stepper (animationDone)="setRecaptchaValidators()">
         <!-- Step 0 -->
         <mat-step [stepControl]="registrationFormStep0" [editable]="isEditable">
           <form [formGroup]="registrationFormStep0" id="registration-form-step-0" #registrationFormStep0Ref="ngForm">
@@ -125,7 +125,7 @@
               </button>
             </mat-form-field>
             <div class="recaptcha-container">
-              <re-captcha formControlName="reCaptcha" (resolved)="validateRecaptcha($event)"></re-captcha>
+              <re-captcha formControlName="reCaptcha" (resolved)="validateRecaptcha($event)" #reCaptcha></re-captcha>
               <mat-error *ngIf="registrationFormStep1.get('reCaptcha').invalid && registrationFormStep1Ref.submitted">
                 {{ getErrorMessage('registrationFormStep1', 'reCaptcha') }}
               </mat-error>

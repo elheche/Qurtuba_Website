@@ -2,11 +2,15 @@ import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AsYouType } from 'libphonenumber-js';
+import { RecaptchaComponent } from 'ng-recaptcha';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, scan, startWith } from 'rxjs/operators';
+import { RegistrationService } from 'src/services/registration.service';
+import { RecaptchaValidation } from '../../../../common/communication/recaptcha-validation';
 import data from '../../assets/countries-data.json';
 import { environment } from '../../environments/environment';
 import { AlertDialogComponent } from '../alert-dialog/alert-dialog.component';
@@ -22,6 +26,7 @@ export class RegistrationComponent implements OnInit {
   @ViewChild('registrationFormStep0Ref') registrationFormStep0Ref: FormGroupDirective;
   @ViewChild('registrationFormStep1Ref') registrationFormStep1Ref: FormGroupDirective;
   @ViewChild('stepper') stepper: MatHorizontalStepper;
+  @ViewChild('reCaptcha') reCaptcha: RecaptchaComponent;
   registrationFormStep0: FormGroup;
   registrationFormStep1: FormGroup;
   registrationFormStep2: FormGroup;
@@ -40,7 +45,13 @@ export class RegistrationComponent implements OnInit {
   countriesSources: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', BehaviorSubject<ICountry[]>>;
   countries: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', Observable<ICountry[]>>;
 
-  constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer, protected alertDialog: MatDialog) {
+  constructor(
+    private iconRegistry: MatIconRegistry,
+    private sanitizer: DomSanitizer,
+    private registrationService: RegistrationService,
+    protected alertDialog: MatDialog,
+    protected snackBar: MatSnackBar,
+  ) {
     this.hide = true;
     this.isEditable = true;
     this.isActive = false;
@@ -104,6 +115,7 @@ export class RegistrationComponent implements OnInit {
       ]),
       confirmPassword: new FormControl(null, [Validators.required, CustomValidators.passwordMatchValidator('password')]),
       reCaptcha: new FormControl(null, [Validators.required]),
+      reCaptchaValidation: new FormControl(null, [Validators.required]),
     });
 
     this.registrationFormStep2 = new FormGroup({
@@ -372,11 +384,44 @@ export class RegistrationComponent implements OnInit {
 
   validateRecaptcha(reCaptchaResponse: string): void {
     if (reCaptchaResponse) {
-      console.log(reCaptchaResponse);
-      console.log(this.registrationFormStep1.get('reCaptcha').status);
+      this.registrationService.sendToken(reCaptchaResponse).subscribe(
+        (res: RecaptchaValidation) => {
+          if (res.success) {
+            this.registrationFormStep1.get('reCaptchaValidation').setValue(true);
+          }
+        },
+        (error: Error) => {
+          this.reCaptcha.reset();
+          this.showErrorDialog(error.name);
+        },
+      );
     } else {
-      console.log('Token expired!');
-      console.log(this.registrationFormStep1.get('reCaptcha').status);
+      this.registrationFormStep1.get('reCaptchaValidation').setValue(null); // When recaptcha token expire.
+    }
+  }
+
+  showErrorDialog(errorName: string): void {
+    let errorMessage: string;
+    errorName === 'ClientOrNetworkError'
+      ? (errorMessage = 'A client-side or network error occurred!')
+      : (errorMessage = 'A server error occured! Please try again later.');
+    this.snackBar.open(errorMessage, undefined, {
+      duration: environment.registration.snackbarDuration,
+      panelClass: 'snackbar',
+    });
+  }
+
+  setRecaptchaValidators(): void {
+    if (this.stepper.selectedIndex === 1) {
+      this.registrationFormStep1.get('reCaptchaValidation').setValidators([Validators.required]);
+      this.registrationFormStep1.get('reCaptcha').setValidators([Validators.required]);
+      this.registrationFormStep1.get('reCaptchaValidation').updateValueAndValidity();
+      this.registrationFormStep1.get('reCaptcha').updateValueAndValidity();
+    } else {
+      this.registrationFormStep1.get('reCaptchaValidation').clearValidators();
+      this.registrationFormStep1.get('reCaptcha').clearValidators();
+      this.registrationFormStep1.get('reCaptchaValidation').updateValueAndValidity();
+      this.registrationFormStep1.get('reCaptcha').updateValueAndValidity();
     }
   }
 }
