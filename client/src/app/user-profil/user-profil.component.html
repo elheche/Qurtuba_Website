@@ -321,44 +321,6 @@
                   {{ getErrorMessage('registrationFormStep3', 'socialInsuranceNumber') }}
                 </mat-error>
               </mat-form-field>
-              <mat-form-field appearance="outline" *ngIf="!environment.inputs.citizenship.readonly">
-                <mat-label>Citizenship</mat-label>
-                <mat-select
-                  formControlName="citizenship"
-                  required
-                  msInfiniteScroll
-                  (infiniteScroll)="getNextBatch('citizenship')"
-                  [complete]="offsets.get('citizenship') === data.length"
-                >
-                  <mat-option
-                    *ngIf="registrationFormStep3.get('citizenship').value"
-                    [value]="registrationFormStep3.get('citizenship').value"
-                    disabled
-                  >
-                    <mat-icon
-                      class="flag-icon"
-                      svgIcon="{{
-                        'flag-'.concat(
-                          data[findSelectedCountryIndex('registrationFormStep3', 'citizenship')].countryShortCode.toLowerCase()
-                        )
-                      }}"
-                    ></mat-icon>
-                    {{ registrationFormStep3.get('citizenship').value }} (Selected)
-                  </mat-option>
-                  <mat-option>-- Clear --</mat-option>
-                  <mat-option *ngFor="let country of countries.get('citizenship') | async" [value]="country.countryName">
-                    <mat-icon class="flag-icon" svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
-                    {{ country.countryName }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="registrationFormStep3.get('citizenship').invalid">
-                  {{ getErrorMessage('registrationFormStep3', 'citizenship') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline" *ngIf="environment.inputs.citizenship.readonly">
-                <mat-label>Citizenship</mat-label>
-                <input matInput formControlName="citizenship" required readonly />
-              </mat-form-field>
               <mat-form-field appearance="outline">
                 <mat-label>Profession</mat-label>
                 <input
@@ -400,76 +362,6 @@
                 <mat-error *ngIf="registrationFormStep3.get('employerPhoneNumber').invalid">
                   {{ getErrorMessage('registrationFormStep3', 'employerPhoneNumber') }}
                 </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Number of dependents</mat-label>
-                <input
-                  matInput
-                  type="number"
-                  formControlName="numberOfDependents"
-                  required
-                  step="1"
-                  min="0"
-                  max="15"
-                  oninput="validity.valid||(value='');"
-                  [readonly]="environment.inputs.numberOfDependents.readonly"
-                />
-                <mat-error *ngIf="registrationFormStep3.get('numberOfDependents').invalid">
-                  {{ getErrorMessage('registrationFormStep3', 'numberOfDependents') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Deposit amount</mat-label>
-                <input
-                  matInput
-                  type="number"
-                  formControlName="depositAmount"
-                  required
-                  step="1"
-                  min="0"
-                  oninput="validity.valid||(value='')"
-                  class="deposit-amount"
-                  readonly
-                />
-                <span matSuffix class="deposit-amount-suffix">.00 </span>
-                <span matSuffix class="deposit-amount-suffix">$&nbsp;</span>
-                <mat-error *ngIf="registrationFormStep3.get('depositAmount').invalid">
-                  {{ getErrorMessage('registrationFormStep3', 'depositAmount') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Donation for mosque</mat-label>
-                <input
-                  matInput
-                  type="number"
-                  formControlName="donationForMosque"
-                  required
-                  step="1"
-                  min="0"
-                  oninput="validity.valid||(value='')"
-                  class="deposit-amount"
-                  readonly
-                />
-                <span matSuffix class="deposit-amount-suffix">.00 </span>
-                <span matSuffix class="deposit-amount-suffix">$&nbsp;</span>
-                <mat-error *ngIf="registrationFormStep3.get('donationForMosque').invalid">
-                  {{ getErrorMessage('registrationFormStep3', 'donationForMosque') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field
-                appearance="outline"
-                hintLabel="{{ environment.inputs.membershipFee.readonly ? '' : '$75.00 non-refundable.' }}"
-              >
-                <mat-label>Membership Fee</mat-label>
-                <input matInput type="number" formControlName="membershipFee" step="1" min="0" class="deposit-amount" readonly />
-                <span matSuffix class="deposit-amount-suffix">.00 </span>
-                <span matSuffix class="deposit-amount-suffix">$&nbsp;</span>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Total amount</mat-label>
-                <input matInput type="number" formControlName="totalAmount" step="1" min="0" class="deposit-amount" readonly />
-                <span matSuffix class="deposit-amount-suffix">.00 </span>
-                <span matSuffix class="deposit-amount-suffix">$&nbsp;</span>
               </mat-form-field>
             </form>
           </ng-template>
@@ -623,44 +515,6 @@
                 <mat-error *ngIf="registrationFormStep4.get('socialInsuranceNumber').invalid">
                   {{ getErrorMessage('registrationFormStep4', 'socialInsuranceNumber') }}
                 </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline" *ngIf="!environment.inputs.citizenship.readonly">
-                <mat-label>Citizenship</mat-label>
-                <mat-select
-                  formControlName="citizenship"
-                  required
-                  msInfiniteScroll
-                  (infiniteScroll)="getNextBatch('jointMemberCitizenship')"
-                  [complete]="offsets.get('jointMemberCitizenship') === data.length"
-                >
-                  <mat-option
-                    *ngIf="registrationFormStep4.get('citizenship').value"
-                    [value]="registrationFormStep4.get('citizenship').value"
-                    disabled
-                  >
-                    <mat-icon
-                      class="flag-icon"
-                      svgIcon="{{
-                        'flag-'.concat(
-                          data[findSelectedCountryIndex('registrationFormStep4', 'citizenship')].countryShortCode.toLowerCase()
-                        )
-                      }}"
-                    ></mat-icon>
-                    {{ registrationFormStep4.get('citizenship').value }} (Selected)
-                  </mat-option>
-                  <mat-option>-- Clear --</mat-option>
-                  <mat-option *ngFor="let country of countries.get('jointMemberCitizenship') | async" [value]="country.countryName">
-                    <mat-icon class="flag-icon" svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
-                    {{ country.countryName }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="registrationFormStep4.get('citizenship').invalid">
-                  {{ getErrorMessage('registrationFormStep4', 'citizenship') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline" *ngIf="environment.inputs.citizenship.readonly">
-                <mat-label>Citizenship</mat-label>
-                <input matInput formControlName="citizenship" required readonly />
               </mat-form-field>
               <mat-form-field appearance="outline">
                 <mat-label>Profession</mat-label>

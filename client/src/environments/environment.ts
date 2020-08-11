@@ -94,28 +94,21 @@ export const environment = {
       },
       readonly: true,
     },
-    phoneNumber: {
-      errorMessages: {
-        required: 'You must enter a phone number.',
-        pattern: 'Invalid phone number.',
-      },
-      readonly: true,
-    },
     address: {
       errorMessages: {
         required: 'You must enter an address.',
       },
       readonly: true,
     },
-    city: {
-      errorMessages: {
-        required: 'You must enter a city.',
-      },
-      readonly: true,
-    },
     country: {
       errorMessages: {
         required: 'You must choose a country.',
+      },
+      readonly: true,
+    },
+    city: {
+      errorMessages: {
+        required: 'You must enter a city.',
       },
       readonly: true,
     },
@@ -132,16 +125,17 @@ export const environment = {
       },
       readonly: true,
     },
-    socialInsuranceNumber: {
+    phoneNumber: {
       errorMessages: {
-        required: 'You must enter a social insurance number.',
-        pattern: 'Invalid social insurance number.',
+        required: 'You must enter a phone number.',
+        pattern: 'Invalid phone number.',
       },
       readonly: true,
     },
-    citizenship: {
+    socialInsuranceNumber: {
       errorMessages: {
-        required: 'You must choose a citizenship.',
+        required: 'You must enter a social insurance number.',
+        invalidSocialInsuranceNumber: 'Invalid social insurance number.',
       },
       readonly: true,
     },
@@ -162,31 +156,6 @@ export const environment = {
         required: 'You must enter an employer phone number.',
         pattern: 'Invalid phone number.',
       },
-      readonly: true,
-    },
-    numberOfDependents: {
-      errorMessages: {
-        required: 'You must enter the number of your dependents.',
-      },
-      readonly: true,
-    },
-    depositAmount: {
-      errorMessages: {
-        required: 'You must enter your deposit amount.',
-      },
-      readonly: true,
-    },
-    donationForMosque: {
-      errorMessages: {
-        required: 'You must enter your donation amount for mosque.',
-      },
-      readonly: true,
-    },
-    membershipFee: {
-      defaultAmount: 75,
-      readonly: true,
-    },
-    totalAmount: {
       readonly: true,
     },
     relationship: {

@@ -136,7 +136,7 @@ export class RegistrationComponent implements OnInit {
       province: new FormControl({ value: null, disabled: true }, [Validators.required]),
       postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
       phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
-      socialInsuranceNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)]),
+      socialInsuranceNumber: new FormControl(null, [Validators.required, CustomValidators.socialInsuranceNumberValidator()]),
       profession: new FormControl(null, [Validators.required]),
       employer: new FormControl(null, [Validators.required]),
       employerPhoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
@@ -151,7 +151,7 @@ export class RegistrationComponent implements OnInit {
       city: new FormControl({ value: null, disabled: true }, [Validators.required]),
       province: new FormControl({ value: null, disabled: true }, [Validators.required]),
       postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
-      socialInsuranceNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)]),
+      socialInsuranceNumber: new FormControl(null, [Validators.required, CustomValidators.socialInsuranceNumberValidator()]),
       profession: new FormControl(null, [Validators.required]),
       relationship: new FormControl(null, [Validators.required]),
     });

@@ -29,4 +29,45 @@ export class CustomValidators {
       }
     };
   }
+
+  static socialInsuranceNumberValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null;
+      }
+
+      const socialInsuranceNumber = control.value as string;
+      const socialInsuranceNumberPattern = /^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/;
+      const maxNumber = 9;
+      const divider = 10;
+      let isValid = false;
+      let sum = 0;
+      let offset = 0;
+
+      for (let i = 0; i < socialInsuranceNumber.length; i++) {
+        if (!/^[\d]$/.test(socialInsuranceNumber[i])) {
+          offset++;
+          continue;
+        }
+        if ((i - offset) % 2 === 0) {
+          sum += parseInt(socialInsuranceNumber[i], 10);
+        } else {
+          const oddIndexNumber = parseInt(socialInsuranceNumber[i], 10) * 2;
+          if (oddIndexNumber > maxNumber) {
+            sum += parseInt(oddIndexNumber.toString()[0], 10) + parseInt(oddIndexNumber.toString()[1], 10);
+          } else {
+            sum += parseInt(socialInsuranceNumber[i], 10) * 2;
+          }
+        }
+      }
+
+      isValid = sum % divider === 0;
+
+      if (!isValid || !socialInsuranceNumberPattern.test(socialInsuranceNumber)) {
+        return { invalidSocialInsuranceNumber: true };
+      } else {
+        return null;
+      }
+    };
+  }
 }
