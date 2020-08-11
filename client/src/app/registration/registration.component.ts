@@ -130,12 +130,12 @@ export class RegistrationComponent implements OnInit {
           environment.inputs.birthDay.acceptedRange.maxDate,
         ),
       ]),
-      phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
       address: new FormControl(null, [Validators.required]),
-      city: new FormControl(null, [Validators.required]),
       country: new FormControl(null, [Validators.required]),
+      city: new FormControl({ value: null, disabled: true }, [Validators.required]),
       province: new FormControl({ value: null, disabled: true }, [Validators.required]),
       postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
       socialInsuranceNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)]),
       profession: new FormControl(null, [Validators.required]),
       employer: new FormControl(null, [Validators.required]),
@@ -143,11 +143,12 @@ export class RegistrationComponent implements OnInit {
     });
 
     this.registrationFormStep4 = new FormGroup({
+      title: new FormControl(null, [Validators.required]),
       firstName: new FormControl(null, [Validators.required]),
       lastName: new FormControl(null, [Validators.required]),
       address: new FormControl(null, [Validators.required]),
-      city: new FormControl(null, [Validators.required]),
       country: new FormControl(null, [Validators.required]),
+      city: new FormControl({ value: null, disabled: true }, [Validators.required]),
       province: new FormControl({ value: null, disabled: true }, [Validators.required]),
       postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
       socialInsuranceNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\d{3}[\- ]?\d{3}[\- ]?\d{3}$/)]),
@@ -221,6 +222,9 @@ export class RegistrationComponent implements OnInit {
 
   onCountryValueChange(formGroup: string): void {
     if (this[formGroup].get('country').value) {
+      this[formGroup].get('city').reset();
+      this[formGroup].get('city').enable({ onlySelf: true });
+      this[formGroup].get('city').updateValueAndValidity({ onlySelf: true });
       this[formGroup].get('province').reset();
       this[formGroup].get('province').enable({ onlySelf: true });
       this[formGroup].get('province').updateValueAndValidity({ onlySelf: true });
@@ -234,6 +238,8 @@ export class RegistrationComponent implements OnInit {
         ]);
       this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
     } else {
+      this[formGroup].get('city').reset();
+      this[formGroup].get('city').disable({ onlySelf: true });
       this[formGroup].get('province').reset();
       this[formGroup].get('province').disable({ onlySelf: true });
       this[formGroup].get('postalCode').reset();
@@ -351,10 +357,10 @@ export class RegistrationComponent implements OnInit {
       const eventTargetTagName = (eventTarget as HTMLElement).tagName;
       if (eventTargetTagName === 'MAT-STEP-HEADER') {
         const eventTargetContent = (eventTarget as HTMLElement).lastElementChild.textContent;
-        if (this.stepper.selectedIndex === 0 && eventTargetContent !== 'Step 0') {
+        if (this.stepper.selectedIndex === 0 && eventTargetContent !== 'Step 1') {
           this.registrationFormStep1Ref.onSubmit(undefined);
         }
-        if (this.stepper.selectedIndex === 1 && eventTargetContent !== 'Step 1') {
+        if (this.stepper.selectedIndex === 1 && eventTargetContent !== 'Step 2') {
           this.registrationFormStep2Ref.onSubmit(undefined);
         }
         break;

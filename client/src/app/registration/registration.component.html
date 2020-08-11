@@ -294,7 +294,7 @@
                 required
                 [value]="registrationFormStep3.get('postalCode').value | uppercase"
                 (input)="formatCanadianPostalCode($event, 'registrationFormStep3')"
-                placeholder="Ex. J4K 5G7"
+                placeholder="Ex. J4K 5G7 (for Canada)"
               />
               <mat-error *ngIf="registrationFormStep3.get('postalCode').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'postalCode') }}
@@ -355,6 +355,18 @@
           <form [formGroup]="registrationFormStep4" id="registration-form-step-4">
             <ng-template matStepLabel>Step 4</ng-template>
             <h2>Joint member information</h2>
+            <mat-form-field appearance="outline">
+              <mat-label>Title</mat-label>
+              <mat-select formControlName="title" required>
+                <mat-option>-- Clear --</mat-option>
+                <mat-option *ngFor="let title of environment.inputs.title.titles" [value]="title">
+                  {{ title }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="registrationFormStep4.get('title').invalid">
+                {{ getErrorMessage('registrationFormStep4', 'title') }}
+              </mat-error>
+            </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>First name</mat-label>
               <input matInput formControlName="firstName" required [value]="registrationFormStep4.get('firstName').value | titlecase" />
@@ -458,7 +470,7 @@
                 required
                 [value]="registrationFormStep4.get('postalCode').value | uppercase"
                 (input)="formatCanadianPostalCode($event, 'registrationFormStep4')"
-                placeholder="Ex. J4K 5G7"
+                placeholder="Ex. J4K 5G7 (for Canada)"
               />
               <mat-error *ngIf="registrationFormStep4.get('postalCode').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'postalCode') }}
@@ -501,7 +513,7 @@
         <mat-step [stepControl]="registrationFormStep5" [editable]="isEditable">
           <ng-template matStepLabel>Done</ng-template>
           <h2>Information review</h2>
-          <!--           <div
+          <div
             id="form-information-verification"
             [ngClass]="{
               'form-information-verification-individual': registrationFormStep3.get('accountType').value === 'Individual',
@@ -513,45 +525,40 @@
               <strong>Email:</strong>&nbsp;{{ registrationFormStep2.get('email').value }}<br />
               <strong>Membership type:</strong>&nbsp;{{ registrationFormStep3.get('membershipType').value }}<br />
               <strong>Account type:</strong>&nbsp;{{ registrationFormStep3.get('accountType').value }}<br />
+              <strong>Title:</strong>&nbsp;{{ registrationFormStep3.get('title').value }}<br />
               <strong>First name:</strong>&nbsp;{{ registrationFormStep3.get('firstName').value }}<br />
               <strong>Last name:</strong>&nbsp;{{ registrationFormStep3.get('lastName').value }}<br />
               <strong>Birthday:</strong>&nbsp;{{ registrationFormStep3.get('birthDay').value }}<br />
-              <strong>Phone number:</strong>&nbsp;{{ registrationFormStep3.get('phoneNumber').value }}<br />
               <strong>Address:</strong>&nbsp;{{ registrationFormStep3.get('address').value }}<br />
-              <strong>City:</strong>&nbsp;{{ registrationFormStep3.get('city').value }}<br />
               <strong>Country:</strong>&nbsp;{{ registrationFormStep3.get('country').value }}<br />
+              <strong>City:</strong>&nbsp;{{ registrationFormStep3.get('city').value }}<br />
               <strong>Province:</strong>&nbsp;{{ registrationFormStep3.get('province').value }}<br />
             </p>
             <mat-divider [vertical]="true" [inset]="true"></mat-divider>
             <p>
               <strong>Postal code:</strong>&nbsp;{{ registrationFormStep3.get('postalCode').value }}<br />
+              <strong>Phone number:</strong>&nbsp;{{ registrationFormStep3.get('phoneNumber').value }}<br />
               <strong>Social insurance number (SIN):</strong>&nbsp;{{ registrationFormStep3.get('socialInsuranceNumber').value }}<br />
-              <strong>Citizenship:</strong>&nbsp;{{ registrationFormStep3.get('citizenship').value }}<br />
               <strong>Profession:</strong>&nbsp;{{ registrationFormStep3.get('profession').value }}<br />
               <strong>Employer:</strong>&nbsp;{{ registrationFormStep3.get('employer').value }}<br />
               <strong>Employer phone number:</strong>&nbsp;{{ registrationFormStep3.get('employerPhoneNumber').value }}<br />
-              <strong>Number Of dependents:</strong>&nbsp;{{ registrationFormStep3.get('numberOfDependents').value }}<br />
-              <strong>Deposit amount:</strong>&nbsp;{{ registrationFormStep3.get('depositAmount').value }}&nbsp;$<br />
-              <strong>Donation for mosque:</strong>&nbsp;{{ registrationFormStep3.get('donationForMosque').value }}&nbsp;$<br />
-              <strong>Membership fee:</strong>&nbsp;{{ registrationFormStep3.get('membershipFee').value }}&nbsp;$<br />
-              <strong>Total amount:</strong>&nbsp;{{ registrationFormStep3.get('totalAmount').value }}&nbsp;$<br />
             </p>
             <mat-divider [vertical]="true" [inset]="true" *ngIf="registrationFormStep3.get('accountType').value === 'Joint'"></mat-divider>
             <p *ngIf="registrationFormStep3.get('accountType').value === 'Joint'">
               <strong style="color: #3f51b5;">2- Joint member</strong><br />
+              <strong>Title:</strong>&nbsp;{{ registrationFormStep4.get('title').value }}<br />
               <strong>First name:</strong>&nbsp;{{ registrationFormStep4.get('firstName').value }}<br />
               <strong>Last name:</strong>&nbsp;{{ registrationFormStep4.get('lastName').value }}<br />
               <strong>Address:</strong>&nbsp;{{ registrationFormStep4.get('address').value }}<br />
-              <strong>City:</strong>&nbsp;{{ registrationFormStep4.get('city').value }}<br />
               <strong>Country:</strong>&nbsp;{{ registrationFormStep4.get('country').value }}<br />
+              <strong>City:</strong>&nbsp;{{ registrationFormStep4.get('city').value }}<br />
               <strong>Province:</strong>&nbsp;{{ registrationFormStep4.get('province').value }}<br />
               <strong>Postal code:</strong>&nbsp;{{ registrationFormStep4.get('postalCode').value }}<br />
               <strong>Social insurance number (SIN):</strong>&nbsp;{{ registrationFormStep4.get('socialInsuranceNumber').value }}<br />
-              <strong>Citizenship:</strong>&nbsp;{{ registrationFormStep4.get('citizenship').value }}<br />
               <strong>Profession:</strong>&nbsp;{{ registrationFormStep4.get('profession').value }}<br />
               <strong>Relationship:</strong>&nbsp;{{ registrationFormStep4.get('relationship').value }}<br />
             </p>
-          </div> -->
+          </div>
           <form [formGroup]="registrationFormStep5" id="registration-form-step-5" #registrationFormStep5Ref="ngForm">
             <div
               class="user-agreement-container"
