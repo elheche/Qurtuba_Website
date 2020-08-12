@@ -137,6 +137,9 @@ export const environment = {
         required: 'You must enter a social insurance number.',
         invalidSocialInsuranceNumber: 'Invalid social insurance number.',
       },
+      tooltip: `Do I need to provide my social insurance number?
+         The Canada Revenue Agency requires that you provide your SIN to anyone who issues a tax slip in your name.
+         Visit the Service Canada site for more information on how to use your social insurance number.`,
       readonly: true,
     },
     profession: {

@@ -314,6 +314,17 @@
               <mat-error *ngIf="registrationFormStep3.get('socialInsuranceNumber').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'socialInsuranceNumber') }}
               </mat-error>
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                [matTooltip]="environment.inputs.socialInsuranceNumber.tooltip"
+                matTooltipPosition="above"
+                matTooltipClass="social-insurance-number-tooltip"
+                class="social-insurance-number-tooltip-button"
+              >
+                <mat-icon class="material-icons-round">info</mat-icon>
+              </button>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Profession</mat-label>
@@ -441,6 +452,17 @@
               <mat-error *ngIf="registrationFormStep4.get('socialInsuranceNumber').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'socialInsuranceNumber') }}
               </mat-error>
+              <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                [matTooltip]="environment.inputs.socialInsuranceNumber.tooltip"
+                matTooltipPosition="above"
+                matTooltipClass="social-insurance-number-tooltip"
+                class="social-insurance-number-tooltip-button"
+              >
+                <mat-icon class="material-icons-round">info</mat-icon>
+              </button>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>State/Province/Region</mat-label>
