@@ -74,10 +74,7 @@ export class RegistrationComponent implements OnInit {
       lastName: new FormControl(null, [Validators.required]),
       birthDay: new FormControl(null, [
         Validators.required,
-        CustomValidators.dateRangeValidator(
-          environment.inputs.birthDay.acceptedRange.minDate,
-          environment.inputs.birthDay.acceptedRange.maxDate,
-        ),
+        CustomValidators.dateRangeValidator(environment.inputs.birthDay.acceptedRange.minDate),
       ]),
       address: new FormControl(null, [Validators.required]),
       country: new FormControl(null, [Validators.required]),

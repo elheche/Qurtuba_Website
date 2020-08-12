@@ -12,17 +12,17 @@ export class CustomValidators {
     };
   }
 
-  static dateRangeValidator(minDate: string, maxDate: string): ValidatorFn {
+  static dateRangeValidator(minDate: string, maxDate?: string): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) {
         return null;
       }
       const inputDate = new Date(control.value).getTime();
       const minDateToNumber = new Date(minDate).getTime();
-      const maxDateToNumber = new Date(maxDate).getTime();
+      const maxDateToNumber = maxDate ? new Date(maxDate).getTime() : undefined;
       if (inputDate < minDateToNumber) {
         return { belowMinimumDateLimit: true };
-      } else if (inputDate > maxDateToNumber) {
+      } else if (maxDateToNumber && inputDate > maxDateToNumber) {
         return { aboveMaximumDateLimit: true };
       } else {
         return null;

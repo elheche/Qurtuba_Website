@@ -252,7 +252,6 @@
                 formControlName="birthDay"
                 required
                 [min]="environment.inputs.birthDay.acceptedRange.minDate"
-                [max]="environment.inputs.birthDay.acceptedRange.maxDate"
               />
               <mat-error *ngIf="registrationFormStep3.get('birthDay').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'birthDay') }}

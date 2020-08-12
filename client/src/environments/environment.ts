@@ -85,12 +85,9 @@ export const environment = {
       errorMessages: {
         required: 'Invalid date.',
         belowMinimumDateLimit: 'The minimum date allowed is 01/01/1900.',
-        aboveMaximumDateLimit: 'You must be at least 18 years old!',
       },
       acceptedRange: {
         minDate: '1900-01-01',
-        // User must be at least 18 years old
-        maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()).toISOString().slice(0, 10),
       },
       readonly: true,
     },
@@ -217,7 +214,6 @@ export const environment = {
     },
   },
   registration: {
-    batchLength: 8,
     snackbarDuration: 4000,
   },
   userProfil: {
