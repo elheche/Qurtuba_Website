@@ -206,17 +206,24 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <mat-select
-                formControlName="country"
-                required
-                (selectionChange)="onCountryValueChange('registrationFormStep3')"
-                msInfiniteScroll
-                (infiniteScroll)="getNextBatch('country')"
-                [complete]="offsets.get('country') === data.length"
-              >
+              <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('registrationFormStep3')">
                 <mat-option>-- Clear --</mat-option>
-                <mat-option *ngFor="let country of countries.get('country') | async" [value]="country.countryName">
-                  <mat-icon class="flag-icon" svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
+                <mat-option value="Canada">
+                  <img class="flag-icon" src="../../assets/countries-flags-png/ca.png" />
+                  Canada
+                </mat-option>
+                <mat-option value="United States">
+                  <img class="flag-icon" src="../../assets/countries-flags-png/us.png" />
+                  United States
+                </mat-option>
+                <mat-option disabled>
+                  <mat-divider></mat-divider>
+                </mat-option>
+                <mat-option *ngFor="let country of countries" [value]="country.countryName">
+                  <img
+                    class="flag-icon"
+                    src="{{ '../../assets/countries-flags-png/'.concat(country.countryShortCode.toLowerCase()).concat('.png') }}"
+                  />
                   {{ country.countryName }}
                 </mat-option>
               </mat-select>
@@ -272,8 +279,8 @@
                 <mat-option>-- Clear --</mat-option>
                 <mat-option
                   *ngFor="
-                    let province of data[findSelectedCountryIndex('registrationFormStep3', 'country')]
-                      ? data[findSelectedCountryIndex('registrationFormStep3', 'country')].regions
+                    let province of countries[findSelectedCountryIndex('registrationFormStep3', 'country')]
+                      ? countries[findSelectedCountryIndex('registrationFormStep3', 'country')].regions
                       : []
                   "
                   [value]="province.name + ' (' + province.shortCode + ')'"
@@ -407,17 +414,24 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <mat-select
-                formControlName="country"
-                required
-                (selectionChange)="onCountryValueChange('registrationFormStep4')"
-                msInfiniteScroll
-                (infiniteScroll)="getNextBatch('jointMemberCountry')"
-                [complete]="offsets.get('jointMemberCountry') === data.length"
-              >
+              <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('registrationFormStep4')">
                 <mat-option>-- Clear --</mat-option>
-                <mat-option *ngFor="let country of countries.get('jointMemberCountry') | async" [value]="country.countryName">
-                  <mat-icon class="flag-icon" svgIcon="{{ 'flag-'.concat(country.countryShortCode.toLowerCase()) }}"></mat-icon>
+                <mat-option value="Canada">
+                  <img class="flag-icon" src="../../assets/countries-flags-png/ca.png" />
+                  Canada
+                </mat-option>
+                <mat-option value="United States">
+                  <img class="flag-icon" src="../../assets/countries-flags-png/us.png" />
+                  United States
+                </mat-option>
+                <mat-option disabled>
+                  <mat-divider></mat-divider>
+                </mat-option>
+                <mat-option *ngFor="let country of countries" [value]="country.countryName">
+                  <img
+                    class="flag-icon"
+                    src="{{ '../../assets/countries-flags-png/'.concat(country.countryShortCode.toLowerCase()).concat('.png') }}"
+                  />
                   {{ country.countryName }}
                 </mat-option>
               </mat-select>
@@ -470,8 +484,8 @@
                 <mat-option>-- Clear --</mat-option>
                 <mat-option
                   *ngFor="
-                    let province of data[findSelectedCountryIndex('registrationFormStep4', 'country')]
-                      ? data[findSelectedCountryIndex('registrationFormStep4', 'country')].regions
+                    let province of countries[findSelectedCountryIndex('registrationFormStep4', 'country')]
+                      ? countries[findSelectedCountryIndex('registrationFormStep4', 'country')].regions
                       : []
                   "
                   [value]="province.name + ' (' + province.shortCode + ')'"

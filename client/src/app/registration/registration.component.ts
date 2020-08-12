@@ -1,14 +1,12 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconRegistry } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatHorizontalStepper } from '@angular/material/stepper';
-import { DomSanitizer } from '@angular/platform-browser';
 import { AsYouType } from 'libphonenumber-js';
 import { RecaptchaComponent } from 'ng-recaptcha';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, scan, startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { RegistrationService } from 'src/services/registration.service';
 import { RecaptchaValidation } from '../../../../common/communication/recaptcha-validation';
 import data from '../../assets/countries-data.json';
@@ -36,65 +34,16 @@ export class RegistrationComponent implements OnInit {
   isEditable: boolean;
   isActive: boolean;
   environment: typeof environment;
-  data: ICountry[];
+  countries: ICountry[];
   filteredRelationshipTypes: Observable<string[]>;
   userAgreementStepDoneText: string;
-  limit: number;
-  offsets: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', number>;
-  countriesSources: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', BehaviorSubject<ICountry[]>>;
-  countries: Map<'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship', Observable<ICountry[]>>;
 
-  constructor(
-    private iconRegistry: MatIconRegistry,
-    private sanitizer: DomSanitizer,
-    private registrationService: RegistrationService,
-    protected alertDialog: MatDialog,
-    protected snackBar: MatSnackBar,
-  ) {
+  constructor(private registrationService: RegistrationService, protected alertDialog: MatDialog, protected snackBar: MatSnackBar) {
     this.hide = true;
     this.isEditable = true;
     this.isActive = false;
     this.environment = environment;
-    this.data = data as ICountry[];
-
-    this.data.forEach((country) => {
-      const iconName = `flag-${country.countryShortCode.toLowerCase()}`;
-      const iconUrl = `../../assets/countries-flags/${country.countryShortCode.toLowerCase()}.svg`;
-      this.iconRegistry.addSvgIcon(iconName, this.sanitizer.bypassSecurityTrustResourceUrl(iconUrl));
-    });
-
-    this.limit = environment.registration.batchLength;
-
-    this.offsets = new Map([
-      ['country', 0],
-      ['citizenship', 0],
-      ['jointMemberCountry', 0],
-      ['jointMemberCitizenship', 0],
-    ]);
-
-    this.countriesSources = new Map([
-      ['country', new BehaviorSubject<ICountry[]>([])],
-      ['citizenship', new BehaviorSubject<ICountry[]>([])],
-      ['jointMemberCountry', new BehaviorSubject<ICountry[]>([])],
-      ['jointMemberCitizenship', new BehaviorSubject<ICountry[]>([])],
-    ]);
-
-    this.countries = new Map();
-
-    for (const key of this.countriesSources.keys()) {
-      this.countries.set(
-        key,
-        this.countriesSources
-          .get(key)
-          .asObservable()
-          .pipe(
-            scan((acc, curr) => {
-              return [...acc, ...curr];
-            }, []),
-          ),
-      );
-    }
-
+    this.countries = data as ICountry[];
     this.userAgreementStepDoneText = '';
 
     this.registrationFormStep1 = new FormGroup({
@@ -168,10 +117,6 @@ export class RegistrationComponent implements OnInit {
         return relationshipType ? this.filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
       }),
     );
-
-    for (const key of this.countries.keys()) {
-      this.getNextBatch(key);
-    }
   }
 
   getErrorMessage(formGroup: string, input: string): string {
@@ -217,7 +162,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   findSelectedCountryIndex(formGroup: string, input: 'country' | 'citizenship'): number {
-    return this.data.findIndex((country) => country.countryName === this[formGroup].get(input).value);
+    return this.countries.findIndex((country) => country.countryName === this[formGroup].get(input).value);
   }
 
   onCountryValueChange(formGroup: string): void {
@@ -234,7 +179,7 @@ export class RegistrationComponent implements OnInit {
         .get('postalCode')
         .setValidators([
           Validators.required,
-          Validators.pattern(new RegExp(this.data[this.findSelectedCountryIndex(formGroup, 'country')].postalCodeRegEx)),
+          Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex(formGroup, 'country')].postalCodeRegEx)),
         ]);
       this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
     } else {
@@ -298,10 +243,6 @@ export class RegistrationComponent implements OnInit {
         break;
       case 'Joint':
         this.registrationFormStep4.reset();
-        this.offsets.set('jointMemberCountry', 0);
-        this.offsets.set('jointMemberCitizenship', 0);
-        this.getNextBatch('jointMemberCountry');
-        this.getNextBatch('jointMemberCitizenship');
         this.registrationFormStep5.reset();
         this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.checkBoxText.joint;
         this.isActive = true;
@@ -315,13 +256,6 @@ export class RegistrationComponent implements OnInit {
           this.openAlertDialog();
         }
     }
-  }
-
-  getNextBatch(input: 'country' | 'citizenship' | 'jointMemberCountry' | 'jointMemberCitizenship'): void {
-    const result = this.data.slice(this.offsets.get(input), this.offsets.get(input) + this.limit);
-    this.countriesSources.get(input).next(result);
-    const offset = this.offsets.get(input) + this.limit;
-    this.offsets.set(input, offset);
   }
 
   protected filterRelationshipTypes(filterValue: string): string[] {

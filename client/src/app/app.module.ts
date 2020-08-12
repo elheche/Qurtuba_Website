@@ -1,3 +1,4 @@
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -30,6 +31,7 @@ import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { UserProfilComponent } from './user-profil/user-profil.component';
+
 @NgModule({
   declarations: [AppComponent, LoginComponent, RegistrationComponent, LogoutComponent, UserProfilComponent, AlertDialogComponent],
   imports: [
@@ -58,6 +60,7 @@ import { UserProfilComponent } from './user-profil/user-profil.component';
     MatListModule,
     RecaptchaModule,
     RecaptchaFormsModule,
+    ScrollingModule,
   ],
   providers: [
     {

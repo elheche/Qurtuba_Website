@@ -1,5 +1,5 @@
 # ignore assets
-assets
+assets/countries-flags-png
 # ignore icons
 *.ico
 # Ignore artifacts:

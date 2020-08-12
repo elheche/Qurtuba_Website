@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconRegistry } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { DomSanitizer } from '@angular/platform-browser';
 import { RegistrationService } from 'src/services/registration.service';
 import { environment } from '../../environments/environment';
 import { RegistrationComponent } from '../registration/registration.component';
@@ -63,14 +61,8 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
   tabsDisabled: boolean[];
   formValuesChanged: boolean[];
 
-  constructor(
-    iconRegistry: MatIconRegistry,
-    sanitizer: DomSanitizer,
-    registrationService: RegistrationService,
-    alertDialog: MatDialog,
-    snackBar: MatSnackBar,
-  ) {
-    super(iconRegistry, sanitizer, registrationService, alertDialog, snackBar);
+  constructor(registrationService: RegistrationService, alertDialog: MatDialog, snackBar: MatSnackBar) {
+    super(registrationService, alertDialog, snackBar);
     this.readonly = true;
     this.activeTabIndex = 0;
     this.tabsDisabled = [false, false, false];
@@ -118,7 +110,6 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
         }
         this.toggleReadOnlyFormAttribute(['registrationFormStep2', 'registrationFormStep3']);
         this.onSave(['registrationFormStep2', 'registrationFormStep3']);
-        this.resetCountryInputScroll();
         break;
       case 2:
         if (!this.checkFormsValidity(['registrationFormStep4'])) {
@@ -126,7 +117,6 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
         }
         this.toggleReadOnlyFormAttribute(['registrationFormStep4']);
         this.onSave(['registrationFormStep4']);
-        this.resetCountryInputScroll();
         break;
       default:
         return;
@@ -217,33 +207,9 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
         .get('postalCode')
         .setValidators([
           Validators.required,
-          Validators.pattern(new RegExp(this.data[this.findSelectedCountryIndex(formGroup, 'country')].postalCodeRegEx)),
+          Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex(formGroup, 'country')].postalCodeRegEx)),
         ]);
       this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
-    }
-  }
-
-  private resetCountryInputScroll(): void {
-    if (!this.readonly) {
-      return;
-    }
-    switch (this.activeTabIndex) {
-      case 0:
-        break;
-      case 1:
-        this.offsets.set('country', 0);
-        this.offsets.set('citizenship', 0);
-        this.getNextBatch('country');
-        this.getNextBatch('citizenship');
-        break;
-      case 2:
-        this.offsets.set('jointMemberCountry', 0);
-        this.offsets.set('jointMemberCitizenship', 0);
-        this.getNextBatch('jointMemberCountry');
-        this.getNextBatch('jointMemberCitizenship');
-        break;
-      default:
-        return;
     }
   }
 }
