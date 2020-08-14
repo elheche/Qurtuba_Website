@@ -12,7 +12,7 @@
       <mat-card-title>Open an account</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-horizontal-stepper linear="false" #stepper (animationDone)="setRecaptchaValidators()">
+      <mat-horizontal-stepper linear="true" #stepper (animationDone)="setRecaptchaValidators()">
         <!-- Step 1 -->
         <mat-step [stepControl]="registrationFormStep1" [editable]="isEditable">
           <form [formGroup]="registrationFormStep1" id="registration-form-step-1" #registrationFormStep1Ref="ngForm">
@@ -246,13 +246,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Birth day</mat-label>
-              <input
-                matInput
-                type="date"
-                formControlName="birthDay"
-                required
-                [min]="environment.inputs.birthDay.acceptedRange.minDate"
-              />
+              <input matInput type="date" formControlName="birthDay" required [min]="environment.inputs.birthDay.acceptedRange.minDate" />
               <mat-error *ngIf="registrationFormStep3.get('birthDay').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'birthDay') }}
               </mat-error>
@@ -263,10 +257,11 @@
                 matInput
                 type="tel"
                 formControlName="phoneNumber"
-                maxlength="14"
+                [maxlength]="environment.inputs.phoneNumber.maxLength"
                 required
+                placeholder="Ex. (555) 555-1234 (for Canada)"
                 (input)="formatPhoneNumber($event, 'registrationFormStep3', 'phoneNumber')"
-                placeholder="Ex. (555) 555-1234"
+                (blur)="formatPhoneNumber($event, 'registrationFormStep3', 'phoneNumber')"
               />
               <mat-error *ngIf="registrationFormStep3.get('phoneNumber').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'phoneNumber') }}
@@ -278,8 +273,8 @@
                 <mat-option>-- Clear --</mat-option>
                 <mat-option
                   *ngFor="
-                    let province of countries[findSelectedCountryIndex('registrationFormStep3', 'country')]
-                      ? countries[findSelectedCountryIndex('registrationFormStep3', 'country')].regions
+                    let province of countries[findSelectedCountryIndex('registrationFormStep3')]
+                      ? countries[findSelectedCountryIndex('registrationFormStep3')].regions
                       : []
                   "
                   [value]="province.name + ' (' + province.shortCode + ')'"
@@ -334,14 +329,14 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Profession</mat-label>
-              <input matInput formControlName="profession" required [value]="registrationFormStep3.get('profession').value | titlecase" />
+              <input matInput formControlName="profession" [value]="registrationFormStep3.get('profession').value | titlecase" />
               <mat-error *ngIf="registrationFormStep3.get('profession').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'profession') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Employer</mat-label>
-              <input matInput formControlName="employer" required [value]="registrationFormStep3.get('employer').value | titlecase" />
+              <input matInput formControlName="employer" [value]="registrationFormStep3.get('employer').value | titlecase" />
               <mat-error *ngIf="registrationFormStep3.get('employer').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'employer') }}
               </mat-error>
@@ -352,10 +347,10 @@
                 matInput
                 type="tel"
                 formControlName="employerPhoneNumber"
-                maxlength="14"
-                required
+                [maxlength]="environment.inputs.phoneNumber.maxLength"
+                placeholder="Ex. (555) 555-1234 (for Canada)"
                 (input)="formatPhoneNumber($event, 'registrationFormStep3', 'employerPhoneNumber')"
-                placeholder="Ex. (555) 555-1234"
+                (blur)="formatPhoneNumber($event, 'registrationFormStep3', 'employerPhoneNumber')"
               />
               <mat-error *ngIf="registrationFormStep3.get('employerPhoneNumber').invalid">
                 {{ getErrorMessage('registrationFormStep3', 'employerPhoneNumber') }}
@@ -483,8 +478,8 @@
                 <mat-option>-- Clear --</mat-option>
                 <mat-option
                   *ngFor="
-                    let province of countries[findSelectedCountryIndex('registrationFormStep4', 'country')]
-                      ? countries[findSelectedCountryIndex('registrationFormStep4', 'country')].regions
+                    let province of countries[findSelectedCountryIndex('registrationFormStep4')]
+                      ? countries[findSelectedCountryIndex('registrationFormStep4')].regions
                       : []
                   "
                   [value]="province.name + ' (' + province.shortCode + ')'"
@@ -513,7 +508,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Profession</mat-label>
-              <input matInput formControlName="profession" required [value]="registrationFormStep4.get('profession').value | titlecase" />
+              <input matInput formControlName="profession" [value]="registrationFormStep4.get('profession').value | titlecase" />
               <mat-error *ngIf="registrationFormStep4.get('profession').invalid">
                 {{ getErrorMessage('registrationFormStep4', 'profession') }}
               </mat-error>

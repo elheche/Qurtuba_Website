@@ -1,4 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { PhoneNumberUtil } from 'google-libphonenumber';
 
 export class CustomValidators {
   static passwordMatchValidator(comparingPassword: string): ValidatorFn {
@@ -26,6 +27,24 @@ export class CustomValidators {
         return { aboveMaximumDateLimit: true };
       } else {
         return null;
+      }
+    };
+  }
+
+  static phoneNumberValidator(regionCode: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null;
+      }
+
+      let isValidNumber = false;
+      const phoneNumberUtil = PhoneNumberUtil.getInstance();
+      try {
+        const phoneNumber = phoneNumberUtil.parseAndKeepRawInput(control.value, regionCode);
+        isValidNumber = phoneNumberUtil.isValidNumber(phoneNumber);
+        return isValidNumber ? null : { invalidPhoneNumber: true };
+      } catch (e) {
+        return { invalidPhoneNumber: true };
       }
     };
   }

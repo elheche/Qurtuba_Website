@@ -125,8 +125,9 @@ export const environment = {
     phoneNumber: {
       errorMessages: {
         required: 'You must enter a phone number.',
-        pattern: 'Invalid phone number.',
+        invalidPhoneNumber: 'Invalid phone number.',
       },
+      maxLength: 17,
       readonly: true,
     },
     socialInsuranceNumber: {
@@ -154,8 +155,9 @@ export const environment = {
     employerPhoneNumber: {
       errorMessages: {
         required: 'You must enter an employer phone number.',
-        pattern: 'Invalid phone number.',
+        invalidPhoneNumber: 'Invalid phone number.',
       },
+      maxLength: 17,
       readonly: true,
     },
     relationship: {

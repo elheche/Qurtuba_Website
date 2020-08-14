@@ -1,9 +1,9 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatHorizontalStepper } from '@angular/material/stepper';
-import { AsYouType } from 'libphonenumber-js';
+import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -81,11 +81,11 @@ export class RegistrationComponent implements OnInit {
       city: new FormControl({ value: null, disabled: true }, [Validators.required]),
       province: new FormControl({ value: null, disabled: true }, [Validators.required]),
       postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
-      phoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
+      phoneNumber: new FormControl({ value: null, disabled: true }, [Validators.required]),
       socialInsuranceNumber: new FormControl(null, [Validators.required, CustomValidators.socialInsuranceNumberValidator()]),
-      profession: new FormControl(null, [Validators.required]),
-      employer: new FormControl(null, [Validators.required]),
-      employerPhoneNumber: new FormControl(null, [Validators.required, Validators.pattern(/^\(\d{3}\)\s\d{3}-\d{4}$/)]),
+      profession: new FormControl(null),
+      employer: new FormControl(null),
+      employerPhoneNumber: new FormControl({ value: null, disabled: true }),
     });
 
     this.registrationFormStep4 = new FormGroup({
@@ -98,7 +98,7 @@ export class RegistrationComponent implements OnInit {
       province: new FormControl({ value: null, disabled: true }, [Validators.required]),
       postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
       socialInsuranceNumber: new FormControl(null, [Validators.required, CustomValidators.socialInsuranceNumberValidator()]),
-      profession: new FormControl(null, [Validators.required]),
+      profession: new FormControl(null),
       relationship: new FormControl(null, [Validators.required]),
     });
 
@@ -124,21 +124,60 @@ export class RegistrationComponent implements OnInit {
     this.registrationFormStep2.get('confirmPassword').reset();
   }
 
-  formatPhoneNumber(inputEvent: InputEvent, formGroup: string, input: string): void {
-    let inputValue = this[formGroup].get(input).value as string;
-    if (/[/^¨`]/.test(inputEvent.data)) {
+  formatPhoneNumber(event: InputEvent | FocusEvent, formGroup: string, input: string): void {
+    if (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') {
       return;
     }
-    if (!/[\d]/.test(inputValue[inputValue.length - 1])) {
-      inputValue = inputValue.slice(0, inputValue.length - 1);
-      this[formGroup].get(input).setValue(inputValue);
+
+    const control: AbstractControl = this[formGroup].get(input);
+    const countryIndex = this.findSelectedCountryIndex(formGroup);
+    const regionCode = this.countries[countryIndex].countryShortCode;
+    const regEx1 = /[^\d\(\)\-+ ]+/g;
+    const inputValue = control.value as string;
+
+    if (inputValue && regEx1.test(inputValue)) {
+      control.setValue(inputValue.replace(regEx1, ''));
+    }
+
+    if (control.valid) {
+      const phoneNumberUtil = PhoneNumberUtil.getInstance();
+      try {
+        const phoneNumber = phoneNumberUtil.parseAndKeepRawInput(control.value, regionCode);
+        regionCode === 'CA'
+          ? control.setValue(phoneNumberUtil.format(phoneNumber, PhoneNumberFormat.NATIONAL))
+          : control.setValue(phoneNumberUtil.format(phoneNumber, PhoneNumberFormat.INTERNATIONAL));
+      } catch (e) {
+        return;
+      }
+    }
+    /* if (inputEvent.inputType === 'insertCompositionText') {
       return;
     }
-    const phoneNumber = new AsYouType('CA');
-    phoneNumber.input(inputValue);
-    if (phoneNumber.getNumber()) {
-      this[formGroup].get(input).setValue(phoneNumber.getNumber().formatNational());
+
+    const control: AbstractControl = this[formGroup].get(input);
+    let inputValue = control.value as string;
+    const country = this[formGroup].get('country').value;
+    const isNorthAmerican = country === 'Canada' || country === 'United States';
+    const regEx1 = /[^\d]+/g;
+    const regEx2 = /^(\d{1,3})(\d{0,3})(\d{0,4})$/;
+
+    if (regEx1.test(inputValue)) {
+      inputValue = inputValue.replace(regEx1, '');
+      control.setValue(inputValue);
     }
+
+    if (isNorthAmerican && regEx2.test(inputValue)) {
+      inputValue = inputValue.replace(regEx2, (correspondance, p1, p2, p3) => {
+        if (p1 && !p2 && !p3) {
+          return `${p1}`;
+        } else if (p1 && p2 && !p3) {
+          return `(${p1}) ${p2}`;
+        } else if (p1 && p2 && p3) {
+          return `(${p1}) ${p2}-${p3}`;
+        }
+      });
+      control.setValue(inputValue);
+    } */
   }
 
   formatCanadianPostalCode(inputEvent: InputEvent, formGroup: string): void {
@@ -158,34 +197,42 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  findSelectedCountryIndex(formGroup: string, input: 'country' | 'citizenship'): number {
-    return this.countries.findIndex((country) => country.countryName === this[formGroup].get(input).value);
+  findSelectedCountryIndex(formGroup: string): number {
+    return this.countries.findIndex((country) => country.countryName === this[formGroup].get('country').value);
   }
 
   onCountryValueChange(formGroup: string): void {
+    let inputsTochange: string[];
+    formGroup === 'registrationFormStep3'
+      ? (inputsTochange = ['city', 'province', 'postalCode', 'phoneNumber', 'employerPhoneNumber'])
+      : (inputsTochange = ['city', 'province', 'postalCode']);
+
     if (this[formGroup].get('country').value) {
-      this[formGroup].get('city').reset();
-      this[formGroup].get('city').enable({ onlySelf: true });
-      this[formGroup].get('city').updateValueAndValidity({ onlySelf: true });
-      this[formGroup].get('province').reset();
-      this[formGroup].get('province').enable({ onlySelf: true });
-      this[formGroup].get('province').updateValueAndValidity({ onlySelf: true });
-      this[formGroup].get('postalCode').reset();
-      this[formGroup].get('postalCode').enable({ onlySelf: true });
-      this[formGroup]
-        .get('postalCode')
-        .setValidators([
-          Validators.required,
-          Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex(formGroup, 'country')].postalCodeRegEx)),
-        ]);
-      this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
+      const countryIndex = this.findSelectedCountryIndex(formGroup);
+      const regionCode = this.countries[countryIndex].countryShortCode;
+      const postalCodeRegEx = this.countries[countryIndex].postalCodeRegEx;
+
+      inputsTochange.forEach((input) => {
+        this[formGroup].get(input).reset();
+        this[formGroup].get(input).enable({ onlySelf: true });
+        switch (input) {
+          case 'postalCode':
+            this[formGroup].get('postalCode').setValidators([Validators.required, Validators.pattern(new RegExp(postalCodeRegEx))]);
+            break;
+          case 'phoneNumber':
+            this[formGroup].get('phoneNumber').setValidators([Validators.required, CustomValidators.phoneNumberValidator(regionCode)]);
+            break;
+          case 'employerPhoneNumber':
+            this[formGroup].get('employerPhoneNumber').setValidators([CustomValidators.phoneNumberValidator(regionCode)]);
+            break;
+        }
+        this[formGroup].get(input).updateValueAndValidity({ onlySelf: true });
+      });
     } else {
-      this[formGroup].get('city').reset();
-      this[formGroup].get('city').disable({ onlySelf: true });
-      this[formGroup].get('province').reset();
-      this[formGroup].get('province').disable({ onlySelf: true });
-      this[formGroup].get('postalCode').reset();
-      this[formGroup].get('postalCode').disable({ onlySelf: true });
+      inputsTochange.forEach((input) => {
+        this[formGroup].get(input).reset();
+        this[formGroup].get(input).disable({ onlySelf: true });
+      });
     }
   }
 

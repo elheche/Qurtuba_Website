@@ -238,7 +238,7 @@
                       class="flag-icon"
                       svgIcon="{{
                         'flag-'.concat(
-                          countries[findSelectedCountryIndex('registrationFormStep2', 'country')].countryShortCode.toLowerCase()
+                          countries[findSelectedCountryIndex('registrationFormStep2')].countryShortCode.toLowerCase()
                         )
                       }}"
                     ></mat-icon>
@@ -264,8 +264,8 @@
                   <mat-option>-- Clear --</mat-option>
                   <mat-option
                     *ngFor="
-                      let province of countries[findSelectedCountryIndex('registrationFormStep2', 'country')]
-                        ? countries[findSelectedCountryIndex('registrationFormStep2', 'country')].regions
+                      let province of countries[findSelectedCountryIndex('registrationFormStep2')]
+                        ? countries[findSelectedCountryIndex('registrationFormStep2')].regions
                         : []
                     "
                     [value]="province.name + ' (' + province.shortCode + ')'"
@@ -430,7 +430,7 @@
                       class="flag-icon"
                       svgIcon="{{
                         'flag-'.concat(
-                          countries[findSelectedCountryIndex('registrationFormStep4', 'country')].countryShortCode.toLowerCase()
+                          countries[findSelectedCountryIndex('registrationFormStep4')].countryShortCode.toLowerCase()
                         )
                       }}"
                     ></mat-icon>
@@ -456,8 +456,8 @@
                   <mat-option>-- Clear --</mat-option>
                   <mat-option
                     *ngFor="
-                      let province of countries[findSelectedCountryIndex('registrationFormStep4', 'country')]
-                        ? countries[findSelectedCountryIndex('registrationFormStep4', 'country')].regions
+                      let province of countries[findSelectedCountryIndex('registrationFormStep4')]
+                        ? countries[findSelectedCountryIndex('registrationFormStep4')].regions
                         : []
                     "
                     [value]="province.name + ' (' + province.shortCode + ')'"

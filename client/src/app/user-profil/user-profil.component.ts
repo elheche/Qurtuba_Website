@@ -207,7 +207,7 @@ export class UserProfilComponent extends RegistrationComponent implements OnInit
         .get('postalCode')
         .setValidators([
           Validators.required,
-          Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex(formGroup, 'country')].postalCodeRegEx)),
+          Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex(formGroup)].postalCodeRegEx)),
         ]);
       this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
     }
