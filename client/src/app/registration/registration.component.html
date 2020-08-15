@@ -576,9 +576,9 @@
               <strong>Postal code:</strong>&nbsp;{{ registrationFormStep3.get('postalCode').value }}<br />
               <strong>Phone number:</strong>&nbsp;{{ registrationFormStep3.get('phoneNumber').value }}<br />
               <strong>Social insurance number (SIN):</strong>&nbsp;{{ registrationFormStep3.get('socialInsuranceNumber').value }}<br />
-              <strong>Profession:</strong>&nbsp;{{ registrationFormStep3.get('profession').value }}<br />
-              <strong>Employer:</strong>&nbsp;{{ registrationFormStep3.get('employer').value }}<br />
-              <strong>Employer phone number:</strong>&nbsp;{{ registrationFormStep3.get('employerPhoneNumber').value }}<br />
+              <strong>Profession:</strong>&nbsp;{{ registrationFormStep3.get('profession').value || 'N/A' }}<br />
+              <strong>Employer:</strong>&nbsp;{{ registrationFormStep3.get('employer').value || 'N/A' }}<br />
+              <strong>Employer phone number:</strong>&nbsp;{{ registrationFormStep3.get('employerPhoneNumber').value || 'N/A' }}<br />
             </p>
             <mat-divider [vertical]="true" [inset]="true" *ngIf="registrationFormStep3.get('accountType').value === 'Joint'"></mat-divider>
             <p *ngIf="registrationFormStep3.get('accountType').value === 'Joint'">
@@ -592,7 +592,7 @@
               <strong>Province:</strong>&nbsp;{{ registrationFormStep4.get('province').value }}<br />
               <strong>Postal code:</strong>&nbsp;{{ registrationFormStep4.get('postalCode').value }}<br />
               <strong>Social insurance number (SIN):</strong>&nbsp;{{ registrationFormStep4.get('socialInsuranceNumber').value }}<br />
-              <strong>Profession:</strong>&nbsp;{{ registrationFormStep4.get('profession').value }}<br />
+              <strong>Profession:</strong>&nbsp;{{ registrationFormStep4.get('profession').value || 'N/A' }}<br />
               <strong>Relationship:</strong>&nbsp;{{ registrationFormStep4.get('relationship').value }}<br />
             </p>
           </div>
