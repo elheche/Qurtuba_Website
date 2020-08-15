@@ -295,6 +295,7 @@
                 required
                 [value]="registrationFormStep3.get('postalCode').value | uppercase"
                 (input)="formatCanadianPostalCode($event, 'registrationFormStep3')"
+                (blur)="formatCanadianPostalCode($event, 'registrationFormStep3')"
                 placeholder="Ex. J4K 5G7 (for Canada)"
               />
               <mat-error *ngIf="registrationFormStep3.get('postalCode').invalid">
@@ -500,6 +501,7 @@
                 required
                 [value]="registrationFormStep4.get('postalCode').value | uppercase"
                 (input)="formatCanadianPostalCode($event, 'registrationFormStep4')"
+                (blur)="formatCanadianPostalCode($event, 'registrationFormStep4')"
                 placeholder="Ex. J4K 5G7 (for Canada)"
               />
               <mat-error *ngIf="registrationFormStep4.get('postalCode').invalid">

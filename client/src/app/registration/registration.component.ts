@@ -150,50 +150,35 @@ export class RegistrationComponent implements OnInit {
         return;
       }
     }
-    /* if (inputEvent.inputType === 'insertCompositionText') {
-      return;
-    }
-
-    const control: AbstractControl = this[formGroup].get(input);
-    let inputValue = control.value as string;
-    const country = this[formGroup].get('country').value;
-    const isNorthAmerican = country === 'Canada' || country === 'United States';
-    const regEx1 = /[^\d]+/g;
-    const regEx2 = /^(\d{1,3})(\d{0,3})(\d{0,4})$/;
-
-    if (regEx1.test(inputValue)) {
-      inputValue = inputValue.replace(regEx1, '');
-      control.setValue(inputValue);
-    }
-
-    if (isNorthAmerican && regEx2.test(inputValue)) {
-      inputValue = inputValue.replace(regEx2, (correspondance, p1, p2, p3) => {
-        if (p1 && !p2 && !p3) {
-          return `${p1}`;
-        } else if (p1 && p2 && !p3) {
-          return `(${p1}) ${p2}`;
-        } else if (p1 && p2 && p3) {
-          return `(${p1}) ${p2}-${p3}`;
-        }
-      });
-      control.setValue(inputValue);
-    } */
   }
 
-  formatCanadianPostalCode(inputEvent: InputEvent, formGroup: string): void {
-    if (!inputEvent.data || /[/^¨`]/.test(inputEvent.data) || this[formGroup].get('country').value !== 'Canada') {
+  formatCanadianPostalCode(event: InputEvent | FocusEvent, formGroup: string): void {
+    if (
+      (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') ||
+      this[formGroup].get('country').value !== 'Canada'
+    ) {
       return;
     }
-    const postalCode = this[formGroup].get('postalCode').value as string;
-    const postalCodeBlockLength = 3;
-    const firstBlockIndex = 0;
-    const secondBlockIndex = 4;
-    if (postalCode.length >= postalCodeBlockLength) {
-      this[formGroup]
-        .get('postalCode')
-        .setValue(
-          `${postalCode.substr(firstBlockIndex, postalCodeBlockLength)} ${postalCode.substr(secondBlockIndex, postalCodeBlockLength)}`,
-        );
+
+    const control: AbstractControl = this[formGroup].get('postalCode');
+    const regExTests = [
+      /[^A-Za-z0-9 ]+/g,
+      /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z])[\- ]?(\d)$/i,
+      /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z])[\- ]?(\d[ABCEGHJ-NPRSTV-Z])$/i,
+      /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z])[\- ]?(\d[ABCEGHJ-NPRSTV-Z]\d)(.*)$/i,
+    ];
+
+    let postalCode = control.value as string;
+
+    if (postalCode) {
+      regExTests.forEach((regEx, index) => {
+        if (index === 0) {
+          postalCode = postalCode.replace(regEx, '');
+        } else {
+          postalCode = postalCode.replace(regEx, '$1 $2');
+        }
+      });
+      control.setValue(postalCode.toUpperCase());
     }
   }
 
