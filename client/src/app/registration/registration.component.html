@@ -12,7 +12,7 @@
       <mat-card-title>Open an account</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-horizontal-stepper linear="true" #stepper (animationDone)="setRecaptchaValidators()">
+      <mat-horizontal-stepper linear="false" #stepper (animationDone)="setRecaptchaValidators()">
         <!-- Step 1 -->
         <mat-step [stepControl]="registrationFormStep1" [editable]="isEditable">
           <form [formGroup]="registrationFormStep1" id="registration-form-step-1" #registrationFormStep1Ref="ngForm">
@@ -309,8 +309,8 @@
                 formControlName="socialInsuranceNumber"
                 maxlength="11"
                 required
-                (input)="formatSocialInsuranceNumber($event, 'registrationFormStep3')"
                 placeholder="Ex. 111-111-111"
+                (input)="formatSocialInsuranceNumber($event, 'registrationFormStep3')"
                 (blur)="formatSocialInsuranceNumber($event, 'registrationFormStep3')"
               />
               <mat-error *ngIf="registrationFormStep3.get('socialInsuranceNumber').invalid">
@@ -454,8 +454,8 @@
                 formControlName="socialInsuranceNumber"
                 maxlength="11"
                 required
-                (input)="formatSocialInsuranceNumber($event, 'registrationFormStep4')"
                 placeholder="Ex. 111-111-111"
+                (input)="formatSocialInsuranceNumber($event, 'registrationFormStep4')"
                 (blur)="formatSocialInsuranceNumber($event, 'registrationFormStep4')"
               />
               <mat-error *ngIf="registrationFormStep4.get('socialInsuranceNumber').invalid">

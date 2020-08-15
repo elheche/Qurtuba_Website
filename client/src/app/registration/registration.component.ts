@@ -221,30 +221,32 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  formatSocialInsuranceNumber(event: unknown, formGroup: string): void {
-    let inputValue = this[formGroup].get('socialInsuranceNumber').value as string;
-    const regEx1 = /^(\d{3})[\- ]?(\d{0,2})$/;
-    const regEx2 = /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{0,3})$/;
-    const regEx3 = /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{3})(.*)$/;
-    if (event instanceof InputEvent && (!event.data || /[/^¨`]/.test(event.data))) {
+  formatSocialInsuranceNumber(event: InputEvent | FocusEvent, formGroup: string): void {
+    if (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') {
       return;
     }
-    if (event instanceof InputEvent && !/[\d]/.test(inputValue[inputValue.length - 1])) {
-      inputValue = inputValue.slice(0, inputValue.length - 1);
-      this[formGroup].get('socialInsuranceNumber').setValue(inputValue);
-      return;
-    }
-    if (regEx1.test(inputValue)) {
-      const inputValueFormatted = inputValue.replace(regEx1, '$1-$2');
-      this[formGroup].get('socialInsuranceNumber').setValue(inputValueFormatted);
-    } else if (regEx2.test(inputValue)) {
-      const inputValueFormatted = inputValue.replace(regEx2, '$1-$2-$3');
-      this[formGroup].get('socialInsuranceNumber').setValue(inputValueFormatted);
-    } else if (regEx3.test(inputValue)) {
-      const inputValueFormatted = inputValue.replace(regEx3, '$1-$2-$3');
-      this[formGroup].get('socialInsuranceNumber').setValue(inputValueFormatted);
-    } else {
-      return;
+
+    const control: AbstractControl = this[formGroup].get('socialInsuranceNumber');
+    const regExTests = [
+      /[^\d\-]+/g,
+      /^(\d{3})[\- ]?(\d{1,3})$/,
+      /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{1,3})$/,
+      /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{3})(.*)$/,
+    ];
+
+    let socialInsuranceNumber = control.value as string;
+
+    if (socialInsuranceNumber) {
+      regExTests.forEach((regEx, index) => {
+        if (index === 0) {
+          socialInsuranceNumber = socialInsuranceNumber.replace(regEx, '');
+        } else if (index === 1) {
+          socialInsuranceNumber = socialInsuranceNumber.replace(regEx, '$1-$2');
+        } else {
+          socialInsuranceNumber = socialInsuranceNumber.replace(regEx, '$1-$2-$3');
+        }
+      });
+      control.setValue(socialInsuranceNumber);
     }
   }
 
