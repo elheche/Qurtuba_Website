@@ -178,6 +178,13 @@
   .registration-form-container
   mat-card-content
   mat-horizontal-stepper
+  form#registration-form-step-3
+  mat-form-field:nth-child(14)
+  .mat-form-field-infix,
+::ng-deep
+  .registration-form-container
+  mat-card-content
+  mat-horizontal-stepper
   form#registration-form-step-4
   mat-form-field:nth-child(2)
   .mat-form-field-infix {
