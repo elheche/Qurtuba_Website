@@ -204,6 +204,10 @@ export const environment = {
       ],
       readonly: true,
     },
+    sameAddressCheckBox: {
+      checkBoxText: 'Same as the main holder address.',
+      readonly: true,
+    },
     userAgreementStepDone: {
       errorMessages: {
         required: 'You must accept the regulation.',
@@ -217,6 +221,13 @@ export const environment = {
   },
   registration: {
     snackbarDuration: 4000,
+    stepsIndex: {
+      step1: 0,
+      step2: 1,
+      step3: 2,
+      step4: 3,
+      step5: 4,
+    },
   },
   userProfil: {
     tabs: {
