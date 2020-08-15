@@ -363,16 +363,17 @@ export class RegistrationComponent implements OnInit {
   }
 
   setRecaptchaValidators(): void {
+    const recaptchaInputs = ['reCaptchaValidation', 'reCaptcha'];
     if (this.stepper.selectedIndex === 1) {
-      this.registrationFormStep2.get('reCaptchaValidation').setValidators([Validators.required]);
-      this.registrationFormStep2.get('reCaptcha').setValidators([Validators.required]);
-      this.registrationFormStep2.get('reCaptchaValidation').updateValueAndValidity();
-      this.registrationFormStep2.get('reCaptcha').updateValueAndValidity();
+      recaptchaInputs.forEach((recaptchaInput) => {
+        this.registrationFormStep2.get(recaptchaInput).setValidators([Validators.required]);
+        this.registrationFormStep2.get(recaptchaInput).updateValueAndValidity();
+      });
     } else {
-      this.registrationFormStep2.get('reCaptchaValidation').clearValidators();
-      this.registrationFormStep2.get('reCaptcha').clearValidators();
-      this.registrationFormStep2.get('reCaptchaValidation').updateValueAndValidity();
-      this.registrationFormStep2.get('reCaptcha').updateValueAndValidity();
+      recaptchaInputs.forEach((recaptchaInput) => {
+        this.registrationFormStep2.get(recaptchaInput).clearValidators();
+        this.registrationFormStep2.get(recaptchaInput).updateValueAndValidity();
+      });
     }
   }
 }

@@ -26,7 +26,6 @@ export class RegistrationService {
   }
 
   protected handleError(error: HttpErrorResponse): Observable<never> {
-    console.log(error);
     const errorToThrow = new Error();
     if (error.error instanceof ErrorEvent) {
       errorToThrow.name = 'ClientOrNetworkError';
