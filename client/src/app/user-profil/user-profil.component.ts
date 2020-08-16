@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTabChangeEvent } from '@angular/material/tabs';
-import { RegistrationService } from 'src/services/registration.service';
-import { environment } from '../../environments/environment';
-import { RegistrationComponent } from '../registration/registration.component';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
+import data from '../../assets/countries-data.json';
+import { CustomValidators } from '../registration/custom-validators';
+import { ICountry } from '../registration/icountry';
 
 const inputs1 = {
   email: 'hichem.lamraoui@yahoo.ca',
@@ -55,161 +56,222 @@ const inputs4 = {
   templateUrl: './user-profil.component.html',
   styleUrls: ['./user-profil.component.scss'],
 })
-export class UserProfilComponent extends RegistrationComponent implements OnInit {
+export class UserProfilComponent implements OnInit {
   readonly: boolean;
-  activeTabIndex: number;
-  tabsDisabled: boolean[];
-  formValuesChanged: boolean[];
+  hide: boolean;
+  environment: typeof environment;
+  countries: ICountry[];
+  filteredRelationships: Observable<string[]>;
+  loginForm: FormGroup;
+  mainHolderForm: FormGroup;
+  jointMemberForm: FormGroup;
 
-  constructor(registrationService: RegistrationService, alertDialog: MatDialog, snackBar: MatSnackBar) {
-    super(registrationService, alertDialog, snackBar);
+  constructor() {
     this.readonly = true;
-    this.activeTabIndex = 0;
-    this.tabsDisabled = [false, false, false];
-    this.formValuesChanged = [false, false, false, false];
+    this.hide = true;
+    this.environment = environment;
+    this.countries = data as ICountry[];
+    this.loginForm = new FormGroup({
+      email: new FormControl(null, [
+        Validators.required,
+        Validators.pattern(
+          /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/,
+        ),
+      ]),
+      password: new FormControl(null, [
+        Validators.required,
+        Validators.pattern(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,32}$/),
+      ]),
+      confirmPassword: new FormControl(null, [Validators.required, CustomValidators.passwordMatchValidator('password')]),
+    });
+    this.mainHolderForm = new FormGroup({
+      membershipType: new FormControl(null, [Validators.required]),
+      accountType: new FormControl(null, [Validators.required]),
+      title: new FormControl(null, [Validators.required]),
+      firstName: new FormControl(null, [Validators.required]),
+      lastName: new FormControl(null, [Validators.required]),
+      birthDay: new FormControl(null, [
+        Validators.required,
+        CustomValidators.dateRangeValidator(environment.inputs.birthDay.acceptedRange.minDate),
+      ]),
+      address: new FormControl(null, [Validators.required]),
+      country: new FormControl(null, [Validators.required]),
+      city: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      province: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      phoneNumber: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      socialInsuranceNumber: new FormControl(null, [Validators.required, CustomValidators.socialInsuranceNumberValidator()]),
+      profession: new FormControl(null),
+      employer: new FormControl(null),
+      employerPhoneNumber: new FormControl({ value: null, disabled: true }),
+    });
+    this.jointMemberForm = new FormGroup({
+      title: new FormControl(null, [Validators.required]),
+      firstName: new FormControl(null, [Validators.required]),
+      lastName: new FormControl(null, [Validators.required]),
+      address: new FormControl(null, [Validators.required]),
+      country: new FormControl(null, [Validators.required]),
+      city: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      province: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      socialInsuranceNumber: new FormControl(null, [Validators.required, CustomValidators.socialInsuranceNumberValidator()]),
+      profession: new FormControl(null),
+      relationship: new FormControl(null, [Validators.required]),
+    });
   }
 
   ngOnInit(): void {
-    super.ngOnInit();
-
-    Object.keys(inputs1).forEach((input: string) => {
-      this.registrationFormStep1.get(input).setValue(inputs1[input]);
-    });
-    Object.keys(inputs2).forEach((input: string) => {
-      this.registrationFormStep2.get(input).setValue(inputs2[input]);
-    });
-    Object.keys(inputs3).forEach((input: string) => {
-      this.registrationFormStep3.get(input).setValue(inputs3[input]);
-    });
-    Object.keys(inputs4).forEach((input: string) => {
-      this.registrationFormStep4.get(input).setValue(inputs4[input]);
-    });
-
-    this.enableProvinceAndPostalCodeInput('registrationFormStep2');
-    this.enableProvinceAndPostalCodeInput('registrationFormStep4');
-
-    this.registrationFormStep3.get('totalAmount').setValue(+inputs3.depositAmount + +inputs3.donationForMosque + +inputs3.membershipFee);
-
-    if (inputs2.accountType === 'Joint') {
-      this.isActive = true;
-    }
+    this.filteredRelationships = this.jointMemberForm.get('relationship').valueChanges.pipe(
+      startWith(''),
+      map((relationshipType) => {
+        return relationshipType ? this.filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
+      }),
+    );
   }
 
   onEdit(): void {
-    switch (this.activeTabIndex) {
-      case 0:
-        if (!this.checkFormsValidity(['registrationFormStep1'])) {
-          return;
-        }
-        this.toggleReadOnlyFormAttribute(['registrationFormStep1']);
-        this.onSave(['registrationFormStep1']);
-        break;
-      case 1:
-        if (!this.checkFormsValidity(['registrationFormStep2', 'registrationFormStep3'])) {
-          return;
-        }
-        this.toggleReadOnlyFormAttribute(['registrationFormStep2', 'registrationFormStep3']);
-        this.onSave(['registrationFormStep2', 'registrationFormStep3']);
-        break;
-      case 2:
-        if (!this.checkFormsValidity(['registrationFormStep4'])) {
-          return;
-        }
-        this.toggleReadOnlyFormAttribute(['registrationFormStep4']);
-        this.onSave(['registrationFormStep4']);
-        break;
-      default:
-        return;
-    }
-  }
-
-  onTabChange(tabChangeEvent: MatTabChangeEvent): void {
-    this.activeTabIndex = tabChangeEvent.index;
-  }
-
-  onFormChange(formGroup: string): void {
-    this.formValuesChanged[environment.userProfil.forms[formGroup]] = true;
-  }
-
-  private checkFormsValidity(forms: string[]): boolean {
-    let formsValidity = true;
-    for (const form of forms) {
-      if (this[form].invalid) {
-        formsValidity = false;
-        break;
-      }
-    }
-    if (!this.readonly && !formsValidity) {
-      forms.forEach((form: string) => {
-        formsValidity = this[form].markAllAsTouched();
-      });
-      this.snackBar.open('Error: Some fields are invalid!', undefined, {
-        duration: environment.userProfil.snackbarDuration,
-        panelClass: 'snackbar',
-      });
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  private toggleReadOnlyFormAttribute(forms: string[]): void {
     this.readonly = !this.readonly;
-    switch (this.activeTabIndex) {
-      case 0:
-        this.tabsDisabled[environment.userProfil.tabs.personalTab] = !this.tabsDisabled[environment.userProfil.tabs.personalTab];
-        this.tabsDisabled[environment.userProfil.tabs.jointMemberTab] = !this.tabsDisabled[environment.userProfil.tabs.jointMemberTab];
-        break;
-      case 1:
-        this.tabsDisabled[environment.userProfil.tabs.loginTab] = !this.tabsDisabled[environment.userProfil.tabs.loginTab];
-        this.tabsDisabled[environment.userProfil.tabs.jointMemberTab] = !this.tabsDisabled[environment.userProfil.tabs.jointMemberTab];
-        break;
-      case 2:
-        this.tabsDisabled[environment.userProfil.tabs.loginTab] = !this.tabsDisabled[environment.userProfil.tabs.loginTab];
-        this.tabsDisabled[environment.userProfil.tabs.personalTab] = !this.tabsDisabled[environment.userProfil.tabs.personalTab];
-        break;
-      default:
+  }
+
+  getErrorMessage(formGroup: string, input: string): string {
+    return environment.inputs[input].errorMessages[Object.keys(this[formGroup].get(input).errors)[0]];
+  }
+
+  onPasswordValueChange(): void {
+    this.mainHolderForm.get('confirmPassword').reset();
+  }
+
+  formatPhoneNumber(event: InputEvent | FocusEvent, formGroup: string, input: string): void {
+    if (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') {
+      return;
+    }
+
+    const control: AbstractControl = this[formGroup].get(input);
+    const countryIndex = this.findSelectedCountryIndex(formGroup);
+    const regionCode = this.countries[countryIndex].countryShortCode;
+    const regEx1 = /[^\d\(\)\-+ ]+/g;
+    const inputValue = control.value as string;
+
+    if (inputValue && regEx1.test(inputValue)) {
+      control.setValue(inputValue.replace(regEx1, ''));
+    }
+
+    if (control.valid) {
+      const phoneNumberUtil = PhoneNumberUtil.getInstance();
+      try {
+        const phoneNumber = phoneNumberUtil.parseAndKeepRawInput(control.value, regionCode);
+        regionCode === 'CA'
+          ? control.setValue(phoneNumberUtil.format(phoneNumber, PhoneNumberFormat.NATIONAL))
+          : control.setValue(phoneNumberUtil.format(phoneNumber, PhoneNumberFormat.INTERNATIONAL));
+      } catch (e) {
         return;
-    }
-    forms.forEach((form: string) => {
-      Object.keys(this[form].controls).forEach((input: string) => {
-        this.environment.inputs[input].readonly = !this.environment.inputs[input].readonly;
-      });
-    });
-  }
-
-  private onSave(forms: string[]): void {
-    let formsAreChanged = false;
-    for (const form of forms) {
-      if (this.formValuesChanged[environment.userProfil.forms[form]]) {
-        formsAreChanged = true;
-        break;
-      }
-    }
-
-    if (this.readonly && formsAreChanged) {
-      this.snackBar.open('Success: Changes have been saved.', undefined, {
-        duration: environment.userProfil.snackbarDuration,
-        panelClass: 'snackbar',
-      });
-      for (const form of forms) {
-        this.formValuesChanged[environment.userProfil.forms[form]] = false;
       }
     }
   }
 
-  private enableProvinceAndPostalCodeInput(formGroup: string): void {
+  formatCanadianPostalCode(event: InputEvent | FocusEvent, formGroup: string): void {
+    if (
+      (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') ||
+      this[formGroup].get('country').value !== 'Canada'
+    ) {
+      return;
+    }
+
+    const control: AbstractControl = this[formGroup].get('postalCode');
+    const regExTests = [
+      /[^A-Za-z0-9 ]+/g,
+      /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z])[\- ]?(\d)$/i,
+      /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z])[\- ]?(\d[ABCEGHJ-NPRSTV-Z])$/i,
+      /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z])[\- ]?(\d[ABCEGHJ-NPRSTV-Z]\d)(.*)$/i,
+    ];
+
+    let postalCode = control.value as string;
+
+    if (postalCode) {
+      regExTests.forEach((regEx, index) => {
+        if (index === 0) {
+          postalCode = postalCode.replace(regEx, '');
+        } else {
+          postalCode = postalCode.replace(regEx, '$1 $2');
+        }
+      });
+      control.setValue(postalCode.toUpperCase());
+    }
+  }
+
+  findSelectedCountryIndex(formGroup: string): number {
+    return this.countries.findIndex((country) => country.countryName === this[formGroup].get('country').value);
+  }
+
+  onCountryValueChange(formGroup: string): void {
+    let inputsTochange: string[];
+    formGroup === 'registrationFormStep3'
+      ? (inputsTochange = ['city', 'province', 'postalCode', 'phoneNumber', 'employerPhoneNumber'])
+      : (inputsTochange = ['city', 'province', 'postalCode']);
+
     if (this[formGroup].get('country').value) {
-      this[formGroup].get('province').enable({ onlySelf: true });
-      this[formGroup].get('province').updateValueAndValidity({ onlySelf: true });
-      this[formGroup].get('postalCode').enable({ onlySelf: true });
-      this[formGroup]
-        .get('postalCode')
-        .setValidators([
-          Validators.required,
-          Validators.pattern(new RegExp(this.countries[this.findSelectedCountryIndex(formGroup)].postalCodeRegEx)),
-        ]);
-      this[formGroup].get('postalCode').updateValueAndValidity({ onlySelf: true });
+      const countryIndex = this.findSelectedCountryIndex(formGroup);
+      const regionCode = this.countries[countryIndex].countryShortCode;
+      const postalCodeRegEx = this.countries[countryIndex].postalCodeRegEx;
+
+      inputsTochange.forEach((input) => {
+        this[formGroup].get(input).reset();
+        this[formGroup].get(input).enable({ onlySelf: true });
+        switch (input) {
+          case 'postalCode':
+            this[formGroup].get('postalCode').setValidators([Validators.required, Validators.pattern(new RegExp(postalCodeRegEx))]);
+            break;
+          case 'phoneNumber':
+            this[formGroup].get('phoneNumber').setValidators([Validators.required, CustomValidators.phoneNumberValidator(regionCode)]);
+            break;
+          case 'employerPhoneNumber':
+            this[formGroup].get('employerPhoneNumber').setValidators([CustomValidators.phoneNumberValidator(regionCode)]);
+            break;
+        }
+        this[formGroup].get(input).updateValueAndValidity({ onlySelf: true });
+      });
+    } else {
+      inputsTochange.forEach((input) => {
+        this[formGroup].get(input).reset();
+        this[formGroup].get(input).disable({ onlySelf: true });
+      });
     }
+  }
+
+  formatSocialInsuranceNumber(event: InputEvent | FocusEvent, formGroup: string): void {
+    if (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') {
+      return;
+    }
+
+    const control: AbstractControl = this[formGroup].get('socialInsuranceNumber');
+    const regExTests = [
+      /[^\d\-]+/g,
+      /^(\d{3})[\- ]?(\d{1,3})$/,
+      /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{1,3})$/,
+      /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{3})(.*)$/,
+    ];
+
+    let socialInsuranceNumber = control.value as string;
+
+    if (socialInsuranceNumber) {
+      regExTests.forEach((regEx, index) => {
+        if (index === 0) {
+          socialInsuranceNumber = socialInsuranceNumber.replace(regEx, '');
+        } else if (index === 1) {
+          socialInsuranceNumber = socialInsuranceNumber.replace(regEx, '$1-$2');
+        } else {
+          socialInsuranceNumber = socialInsuranceNumber.replace(regEx, '$1-$2-$3');
+        }
+      });
+      control.setValue(socialInsuranceNumber);
+    }
+  }
+
+  onAccountTypeSelectionChange(): void {/*  */}
+
+  protected filterRelationshipTypes(filterValue: string): string[] {
+    return environment.inputs.relationship.types.filter(
+      (relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0,
+    );
   }
 }

@@ -532,8 +532,8 @@
                 placeholder="Ex. Wife"
               />
               <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let relationshipType of filteredRelationshipTypes | async" [value]="relationshipType">
-                  {{ relationshipType }}
+                <mat-option *ngFor="let relationship of filteredRelationships | async" [value]="relationship">
+                  {{ relationship }}
                 </mat-option>
               </mat-autocomplete>
               <mat-error *ngIf="registrationFormStep4.get('relationship').invalid">

@@ -14,7 +14,7 @@ import data from '../../assets/countries-data.json';
 import { environment } from '../../environments/environment';
 import { AlertDialogComponent } from '../alert-dialog/alert-dialog.component';
 import { CustomValidators } from './custom-validators';
-import { ICountry } from './icountry.data';
+import { ICountry } from './icountry';
 
 @Component({
   selector: 'app-registration',
@@ -36,7 +36,7 @@ export class RegistrationComponent implements OnInit {
   isActive: boolean;
   environment: typeof environment;
   countries: ICountry[];
-  filteredRelationshipTypes: Observable<string[]>;
+  filteredRelationships: Observable<string[]>;
   userAgreementStepDoneText: string;
 
   constructor(private registrationService: RegistrationService, protected alertDialog: MatDialog, protected snackBar: MatSnackBar) {
@@ -110,7 +110,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.filteredRelationshipTypes = this.registrationFormStep4.get('relationship').valueChanges.pipe(
+    this.filteredRelationships = this.registrationFormStep4.get('relationship').valueChanges.pipe(
       startWith(''),
       map((relationshipType) => {
         return relationshipType ? this.filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();

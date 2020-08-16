@@ -208,6 +208,11 @@
   flex-basis: 10%;
 }
 
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-3 mat-form-field:nth-child(5),
+.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-4 mat-form-field:nth-child(4) {
+  flex-basis: 37%;
+}
+
 ::ng-deep
   .registration-form-container
   mat-card-content
@@ -236,11 +241,6 @@
   mat-form-field:nth-child(9)
   .mat-form-field-infix {
   width: 100%;
-}
-
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-3 mat-form-field:nth-child(5),
-.registration-form-container mat-card-content mat-horizontal-stepper form#registration-form-step-4 mat-form-field:nth-child(4) {
-  flex-basis: 37%;
 }
 
 .registration-form-container
