@@ -17,476 +17,493 @@
       </a>
     </div>
   </mat-toolbar>
-  <mat-card class="user-profil-form-container">
-    <mat-card-header>
-      <mat-card-title>My account</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <mat-tab-group>
-        <mat-tab label="Personal information">
-          <ng-template matTabContent>
-            <!-- Login information -->
-            <form [formGroup]="loginForm" id="login-form" #loginFormRef="ngForm">
-              <h4>1- Login information</h4>
-              <mat-form-field appearance="outline">
-                <mat-label>Email address</mat-label>
-                <input matInput type="email" placeholder="user@example.com" formControlName="email" required />
-                <mat-error *ngIf="loginForm.get('email').invalid">
-                  {{ getErrorMessage('loginForm', 'email') }}
-                </mat-error>
-                <button mat-icon-button matPrefix disabled>
-                  <mat-icon class="material-icons-round">email</mat-icon>
-                </button>
-              </mat-form-field>
-              <mat-form-field
-                appearance="outline"
-                hintLabel="Your password must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character."
+  <div class="user-profil-form-container">
+    <div class="my-account-title">
+      <span>My account</span>
+    </div>
+    <div class="my-account-expand-buttons">
+      <button mat-button>Expand All</button>
+      <button mat-button>Collapse All</button>
+    </div>
+    <mat-accordion class="my-account-forms" multi>
+      <!-- Login information -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>1- Login information</mat-panel-title>
+          <mat-panel-description>
+            <mat-icon class="material-icons-round">vpn_key</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <form [formGroup]="loginForm" id="login-form" #loginFormRef="ngForm">
+          <mat-form-field appearance="outline">
+            <mat-label>Email address</mat-label>
+            <input matInput type="email" placeholder="user@example.com" formControlName="email" required />
+            <mat-error *ngIf="loginForm.get('email').invalid">
+              {{ getErrorMessage('loginForm', 'email') }}
+            </mat-error>
+            <button mat-icon-button matPrefix disabled>
+              <mat-icon class="material-icons-round">email</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            hintLabel="Your password must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character."
+          >
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [type]="hide ? 'password' : 'text'"
+              formControlName="password"
+              required
+              (input)="onPasswordValueChange()"
+              #passwordInput
+              maxlength="32"
+            />
+            <mat-hint align="end">{{ passwordInput.value?.length || 0 }}/32</mat-hint>
+            <mat-error *ngIf="loginForm.get('password').invalid">
+              {{ getErrorMessage('loginForm', 'password') }}
+            </mat-error>
+            <button mat-icon-button matPrefix disabled>
+              <mat-icon class="material-icons-round">lock</mat-icon>
+            </button>
+            <button
+              type="button"
+              mat-icon-button
+              matSuffix
+              (click)="hide = !hide"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide"
+              matTooltip="{{ hide ? 'Show password' : 'Hide password' }}"
+            >
+              <mat-icon class="material-icons-round">{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Confirm your password</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmPassword" required />
+            <mat-error *ngIf="loginForm.get('confirmPassword').invalid"> {{ getErrorMessage('loginForm', 'confirmPassword') }}</mat-error>
+            <button mat-icon-button matPrefix disabled>
+              <mat-icon class="material-icons-round">lock</mat-icon>
+            </button>
+            <button
+              type="button"
+              mat-icon-button
+              matSuffix
+              (click)="hide = !hide"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide"
+              matTooltip="{{ hide ? 'Show password' : 'Hide password' }}"
+            >
+              <mat-icon class="material-icons-round">{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+        </form>
+      </mat-expansion-panel>
+      <!-- Main holder information -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>2- Main holder information</mat-panel-title>
+          <mat-panel-description>
+            <mat-icon class="material-icons-round">person</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <form [formGroup]="mainHolderForm" id="main-holder-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Indicate the type of membership</mat-label>
+            <mat-select formControlName="membershipType" required>
+              <mat-option>-- Clear --</mat-option>
+              <mat-option *ngFor="let membershipType of environment.inputs.membershipType.types" [value]="membershipType">
+                {{ membershipType }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="mainHolderForm.get('membershipType').invalid">
+              {{ getErrorMessage('mainHolderForm', 'membershipType') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Indicate the type of account</mat-label>
+            <mat-select formControlName="accountType" required (selectionChange)="onAccountTypeSelectionChange()">
+              <mat-option>-- Clear --</mat-option>
+              <mat-option *ngFor="let accountType of environment.inputs.accountType.types" [value]="accountType">
+                {{ accountType }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="mainHolderForm.get('accountType').invalid">
+              {{ getErrorMessage('mainHolderForm', 'accountType') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Title</mat-label>
+            <mat-select formControlName="title" required>
+              <mat-option>-- Clear --</mat-option>
+              <mat-option *ngFor="let title of environment.inputs.title.titles" [value]="title">
+                {{ title }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="mainHolderForm.get('title').invalid">
+              {{ getErrorMessage('mainHolderForm', 'title') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>First name</mat-label>
+            <input matInput formControlName="firstName" required [value]="mainHolderForm.get('firstName').value | titlecase" />
+            <mat-error *ngIf="mainHolderForm.get('firstName').invalid">
+              {{ getErrorMessage('mainHolderForm', 'firstName') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Address</mat-label>
+            <input
+              matInput
+              formControlName="address"
+              required
+              placeholder="Ex. 123 Main St Apt 10"
+              [value]="mainHolderForm.get('address').value | titlecase"
+            />
+            <mat-error *ngIf="mainHolderForm.get('address').invalid">
+              {{ getErrorMessage('mainHolderForm', 'address') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Last name</mat-label>
+            <input matInput formControlName="lastName" required [value]="mainHolderForm.get('lastName').value | titlecase" />
+            <mat-error *ngIf="mainHolderForm.get('lastName').invalid">
+              {{ getErrorMessage('mainHolderForm', 'lastName') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Country</mat-label>
+            <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('mainHolderForm')">
+              <mat-option>-- Clear --</mat-option>
+              <mat-option value="Canada">
+                <img class="flag-icon" src="../../assets/countries-flags-png/ca.png" />
+                Canada
+              </mat-option>
+              <mat-option value="United States">
+                <img class="flag-icon" src="../../assets/countries-flags-png/us.png" />
+                United States
+              </mat-option>
+              <mat-option disabled>
+                <mat-divider></mat-divider>
+              </mat-option>
+              <mat-option *ngFor="let country of countries" [value]="country.countryName">
+                <img
+                  class="flag-icon"
+                  src="{{ '../../assets/countries-flags-png/'.concat(country.countryShortCode.toLowerCase()).concat('.png') }}"
+                />
+                {{ country.countryName }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="mainHolderForm.get('country').invalid">
+              {{ getErrorMessage('mainHolderForm', 'country') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>City</mat-label>
+            <input
+              matInput
+              formControlName="city"
+              required
+              placeholder="Ex. Montreal"
+              [value]="mainHolderForm.get('city').value | titlecase"
+            />
+            <mat-error *ngIf="mainHolderForm.get('city').invalid">
+              {{ getErrorMessage('mainHolderForm', 'city') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Birth day</mat-label>
+            <input matInput type="date" formControlName="birthDay" required [min]="environment.inputs.birthDay.acceptedRange.minDate" />
+            <mat-error *ngIf="mainHolderForm.get('birthDay').invalid">
+              {{ getErrorMessage('mainHolderForm', 'birthDay') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Phone number</mat-label>
+            <input
+              matInput
+              type="tel"
+              formControlName="phoneNumber"
+              [maxlength]="environment.inputs.phoneNumber.maxLength"
+              required
+              placeholder="Ex. (555) 555-1234 (for Canada)"
+              (input)="formatPhoneNumber($event, 'mainHolderForm', 'phoneNumber')"
+              (blur)="formatPhoneNumber($event, 'mainHolderForm', 'phoneNumber')"
+            />
+            <mat-error *ngIf="mainHolderForm.get('phoneNumber').invalid">
+              {{ getErrorMessage('mainHolderForm', 'phoneNumber') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>State/Province/Region</mat-label>
+            <mat-select formControlName="province" required>
+              <mat-option>-- Clear --</mat-option>
+              <mat-option
+                *ngFor="
+                  let province of countries[findSelectedCountryIndex('mainHolderForm')]
+                    ? countries[findSelectedCountryIndex('mainHolderForm')].regions
+                    : []
+                "
+                [value]="province.name + ' (' + province.shortCode + ')'"
               >
-                <mat-label>Password</mat-label>
-                <input
-                  matInput
-                  [type]="hide ? 'password' : 'text'"
-                  formControlName="password"
-                  required
-                  (input)="onPasswordValueChange()"
-                  #passwordInput
-                  maxlength="32"
+                {{ province.name }} ({{ province.shortCode }})
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="mainHolderForm.get('province').invalid">
+              {{ getErrorMessage('mainHolderForm', 'province') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Zip/Postal code</mat-label>
+            <input
+              matInput
+              formControlName="postalCode"
+              maxlength="14"
+              required
+              [value]="mainHolderForm.get('postalCode').value | uppercase"
+              (input)="formatCanadianPostalCode($event, 'mainHolderForm')"
+              (blur)="formatCanadianPostalCode($event, 'mainHolderForm')"
+              placeholder="Ex. J4K 5G7 (for Canada)"
+            />
+            <mat-error *ngIf="mainHolderForm.get('postalCode').invalid">
+              {{ getErrorMessage('mainHolderForm', 'postalCode') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Social Insurance Number</mat-label>
+            <input
+              matInput
+              formControlName="socialInsuranceNumber"
+              maxlength="11"
+              required
+              placeholder="Ex. 111-111-111"
+              (input)="formatSocialInsuranceNumber($event, 'mainHolderForm')"
+              (blur)="formatSocialInsuranceNumber($event, 'mainHolderForm')"
+            />
+            <mat-error *ngIf="mainHolderForm.get('socialInsuranceNumber').invalid">
+              {{ getErrorMessage('mainHolderForm', 'socialInsuranceNumber') }}
+            </mat-error>
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              [matTooltip]="environment.inputs.socialInsuranceNumber.tooltip"
+              matTooltipPosition="above"
+              matTooltipClass="social-insurance-number-tooltip"
+              class="social-insurance-number-tooltip-button"
+            >
+              <mat-icon class="material-icons-round">info</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Profession</mat-label>
+            <input matInput formControlName="profession" [value]="mainHolderForm.get('profession').value | titlecase" />
+            <mat-error *ngIf="mainHolderForm.get('profession').invalid">
+              {{ getErrorMessage('mainHolderForm', 'profession') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Employer</mat-label>
+            <input matInput formControlName="employer" [value]="mainHolderForm.get('employer').value | titlecase" />
+            <mat-error *ngIf="mainHolderForm.get('employer').invalid">
+              {{ getErrorMessage('mainHolderForm', 'employer') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Employer phone number</mat-label>
+            <input
+              matInput
+              type="tel"
+              formControlName="employerPhoneNumber"
+              [maxlength]="environment.inputs.phoneNumber.maxLength"
+              placeholder="Ex. (555) 555-1234 (for Canada)"
+              (input)="formatPhoneNumber($event, 'mainHolderForm', 'employerPhoneNumber')"
+              (blur)="formatPhoneNumber($event, 'mainHolderForm', 'employerPhoneNumber')"
+            />
+            <mat-error *ngIf="mainHolderForm.get('employerPhoneNumber').invalid">
+              {{ getErrorMessage('mainHolderForm', 'employerPhoneNumber') }}
+            </mat-error>
+          </mat-form-field>
+        </form>
+      </mat-expansion-panel>
+      <!-- Joint member information -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>3- Joint member information</mat-panel-title>
+          <mat-panel-description>
+            <mat-icon class="material-icons-round">group</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <form [formGroup]="jointMemberForm" id="joint-member-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Title</mat-label>
+            <mat-select formControlName="title" required>
+              <mat-option>-- Clear --</mat-option>
+              <mat-option *ngFor="let title of environment.inputs.title.titles" [value]="title">
+                {{ title }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="jointMemberForm.get('title').invalid">
+              {{ getErrorMessage('jointMemberForm', 'title') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>First name</mat-label>
+            <input matInput formControlName="firstName" required [value]="jointMemberForm.get('firstName').value | titlecase" />
+            <mat-error *ngIf="jointMemberForm.get('firstName').invalid">
+              {{ getErrorMessage('jointMemberForm', 'firstName') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Address</mat-label>
+            <input
+              matInput
+              formControlName="address"
+              required
+              placeholder="Ex. 123 Main St Apt 10"
+              [value]="jointMemberForm.get('address').value | titlecase"
+            />
+            <mat-error *ngIf="jointMemberForm.get('address').invalid">
+              {{ getErrorMessage('jointMemberForm', 'address') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Last name</mat-label>
+            <input matInput formControlName="lastName" required [value]="jointMemberForm.get('lastName').value | titlecase" />
+            <mat-error *ngIf="jointMemberForm.get('lastName').invalid">
+              {{ getErrorMessage('jointMemberForm', 'lastName') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Country</mat-label>
+            <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('jointMemberForm')">
+              <mat-option>-- Clear --</mat-option>
+              <mat-option value="Canada">
+                <img class="flag-icon" src="../../assets/countries-flags-png/ca.png" />
+                Canada
+              </mat-option>
+              <mat-option value="United States">
+                <img class="flag-icon" src="../../assets/countries-flags-png/us.png" />
+                United States
+              </mat-option>
+              <mat-option disabled>
+                <mat-divider></mat-divider>
+              </mat-option>
+              <mat-option *ngFor="let country of countries" [value]="country.countryName">
+                <img
+                  class="flag-icon"
+                  src="{{ '../../assets/countries-flags-png/'.concat(country.countryShortCode.toLowerCase()).concat('.png') }}"
                 />
-                <mat-hint align="end">{{ passwordInput.value?.length || 0 }}/32</mat-hint>
-                <mat-error *ngIf="loginForm.get('password').invalid">
-                  {{ getErrorMessage('loginForm', 'password') }}
-                </mat-error>
-                <button mat-icon-button matPrefix disabled>
-                  <mat-icon class="material-icons-round">lock</mat-icon>
-                </button>
-                <button
-                  type="button"
-                  mat-icon-button
-                  matSuffix
-                  (click)="hide = !hide"
-                  [attr.aria-label]="'Hide password'"
-                  [attr.aria-pressed]="hide"
-                  matTooltip="{{ hide ? 'Show password' : 'Hide password' }}"
-                >
-                  <mat-icon class="material-icons-round">{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
-                </button>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Confirm your password</mat-label>
-                <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmPassword" required />
-                <mat-error *ngIf="loginForm.get('confirmPassword').invalid">
-                  {{ getErrorMessage('loginForm', 'confirmPassword') }}</mat-error
-                >
-                <button mat-icon-button matPrefix disabled>
-                  <mat-icon class="material-icons-round">lock</mat-icon>
-                </button>
-                <button
-                  type="button"
-                  mat-icon-button
-                  matSuffix
-                  (click)="hide = !hide"
-                  [attr.aria-label]="'Hide password'"
-                  [attr.aria-pressed]="hide"
-                  matTooltip="{{ hide ? 'Show password' : 'Hide password' }}"
-                >
-                  <mat-icon class="material-icons-round">{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
-                </button>
-              </mat-form-field>
-            </form>
-            <!-- Main holder information -->
-            <form [formGroup]="mainHolderForm" id="main-holder-form">
-              <h4>2- Main holder information</h4>
-              <mat-form-field appearance="outline">
-                <mat-label>Indicate the type of membership</mat-label>
-                <mat-select formControlName="membershipType" required>
-                  <mat-option>-- Clear --</mat-option>
-                  <mat-option *ngFor="let membershipType of environment.inputs.membershipType.types" [value]="membershipType">
-                    {{ membershipType }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="mainHolderForm.get('membershipType').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'membershipType') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Indicate the type of account</mat-label>
-                <mat-select formControlName="accountType" required (selectionChange)="onAccountTypeSelectionChange()">
-                  <mat-option>-- Clear --</mat-option>
-                  <mat-option *ngFor="let accountType of environment.inputs.accountType.types" [value]="accountType">
-                    {{ accountType }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="mainHolderForm.get('accountType').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'accountType') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Title</mat-label>
-                <mat-select formControlName="title" required>
-                  <mat-option>-- Clear --</mat-option>
-                  <mat-option *ngFor="let title of environment.inputs.title.titles" [value]="title">
-                    {{ title }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="mainHolderForm.get('title').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'title') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>First name</mat-label>
-                <input matInput formControlName="firstName" required [value]="mainHolderForm.get('firstName').value | titlecase" />
-                <mat-error *ngIf="mainHolderForm.get('firstName').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'firstName') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Address</mat-label>
-                <input
-                  matInput
-                  formControlName="address"
-                  required
-                  placeholder="Ex. 123 Main St Apt 10"
-                  [value]="mainHolderForm.get('address').value | titlecase"
-                />
-                <mat-error *ngIf="mainHolderForm.get('address').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'address') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Last name</mat-label>
-                <input matInput formControlName="lastName" required [value]="mainHolderForm.get('lastName').value | titlecase" />
-                <mat-error *ngIf="mainHolderForm.get('lastName').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'lastName') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Country</mat-label>
-                <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('mainHolderForm')">
-                  <mat-option>-- Clear --</mat-option>
-                  <mat-option value="Canada">
-                    <img class="flag-icon" src="../../assets/countries-flags-png/ca.png" />
-                    Canada
-                  </mat-option>
-                  <mat-option value="United States">
-                    <img class="flag-icon" src="../../assets/countries-flags-png/us.png" />
-                    United States
-                  </mat-option>
-                  <mat-option disabled>
-                    <mat-divider></mat-divider>
-                  </mat-option>
-                  <mat-option *ngFor="let country of countries" [value]="country.countryName">
-                    <img
-                      class="flag-icon"
-                      src="{{ '../../assets/countries-flags-png/'.concat(country.countryShortCode.toLowerCase()).concat('.png') }}"
-                    />
-                    {{ country.countryName }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="mainHolderForm.get('country').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'country') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>City</mat-label>
-                <input
-                  matInput
-                  formControlName="city"
-                  required
-                  placeholder="Ex. Montreal"
-                  [value]="mainHolderForm.get('city').value | titlecase"
-                />
-                <mat-error *ngIf="mainHolderForm.get('city').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'city') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Birth day</mat-label>
-                <input matInput type="date" formControlName="birthDay" required [min]="environment.inputs.birthDay.acceptedRange.minDate" />
-                <mat-error *ngIf="mainHolderForm.get('birthDay').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'birthDay') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Phone number</mat-label>
-                <input
-                  matInput
-                  type="tel"
-                  formControlName="phoneNumber"
-                  [maxlength]="environment.inputs.phoneNumber.maxLength"
-                  required
-                  placeholder="Ex. (555) 555-1234 (for Canada)"
-                  (input)="formatPhoneNumber($event, 'mainHolderForm', 'phoneNumber')"
-                  (blur)="formatPhoneNumber($event, 'mainHolderForm', 'phoneNumber')"
-                />
-                <mat-error *ngIf="mainHolderForm.get('phoneNumber').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'phoneNumber') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>State/Province/Region</mat-label>
-                <mat-select formControlName="province" required>
-                  <mat-option>-- Clear --</mat-option>
-                  <mat-option
-                    *ngFor="
-                      let province of countries[findSelectedCountryIndex('mainHolderForm')]
-                        ? countries[findSelectedCountryIndex('mainHolderForm')].regions
-                        : []
-                    "
-                    [value]="province.name + ' (' + province.shortCode + ')'"
-                  >
-                    {{ province.name }} ({{ province.shortCode }})
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="mainHolderForm.get('province').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'province') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Zip/Postal code</mat-label>
-                <input
-                  matInput
-                  formControlName="postalCode"
-                  maxlength="14"
-                  required
-                  [value]="mainHolderForm.get('postalCode').value | uppercase"
-                  (input)="formatCanadianPostalCode($event, 'mainHolderForm')"
-                  (blur)="formatCanadianPostalCode($event, 'mainHolderForm')"
-                  placeholder="Ex. J4K 5G7 (for Canada)"
-                />
-                <mat-error *ngIf="mainHolderForm.get('postalCode').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'postalCode') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Social Insurance Number</mat-label>
-                <input
-                  matInput
-                  formControlName="socialInsuranceNumber"
-                  maxlength="11"
-                  required
-                  placeholder="Ex. 111-111-111"
-                  (input)="formatSocialInsuranceNumber($event, 'mainHolderForm')"
-                  (blur)="formatSocialInsuranceNumber($event, 'mainHolderForm')"
-                />
-                <mat-error *ngIf="mainHolderForm.get('socialInsuranceNumber').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'socialInsuranceNumber') }}
-                </mat-error>
-                <button
-                  mat-icon-button
-                  matSuffix
-                  type="button"
-                  [matTooltip]="environment.inputs.socialInsuranceNumber.tooltip"
-                  matTooltipPosition="above"
-                  matTooltipClass="social-insurance-number-tooltip"
-                  class="social-insurance-number-tooltip-button"
-                >
-                  <mat-icon class="material-icons-round">info</mat-icon>
-                </button>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Profession</mat-label>
-                <input matInput formControlName="profession" [value]="mainHolderForm.get('profession').value | titlecase" />
-                <mat-error *ngIf="mainHolderForm.get('profession').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'profession') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Employer</mat-label>
-                <input matInput formControlName="employer" [value]="mainHolderForm.get('employer').value | titlecase" />
-                <mat-error *ngIf="mainHolderForm.get('employer').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'employer') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Employer phone number</mat-label>
-                <input
-                  matInput
-                  type="tel"
-                  formControlName="employerPhoneNumber"
-                  [maxlength]="environment.inputs.phoneNumber.maxLength"
-                  placeholder="Ex. (555) 555-1234 (for Canada)"
-                  (input)="formatPhoneNumber($event, 'mainHolderForm', 'employerPhoneNumber')"
-                  (blur)="formatPhoneNumber($event, 'mainHolderForm', 'employerPhoneNumber')"
-                />
-                <mat-error *ngIf="mainHolderForm.get('employerPhoneNumber').invalid">
-                  {{ getErrorMessage('mainHolderForm', 'employerPhoneNumber') }}
-                </mat-error>
-              </mat-form-field>
-            </form>
-            <!-- Joint member information -->
-            <form [formGroup]="jointMemberForm" id="joint-member-form">
-              <h4>3- Joint member information</h4>
-              <mat-form-field appearance="outline">
-                <mat-label>Title</mat-label>
-                <mat-select formControlName="title" required>
-                  <mat-option>-- Clear --</mat-option>
-                  <mat-option *ngFor="let title of environment.inputs.title.titles" [value]="title">
-                    {{ title }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="jointMemberForm.get('title').invalid">
-                  {{ getErrorMessage('jointMemberForm', 'title') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>First name</mat-label>
-                <input matInput formControlName="firstName" required [value]="jointMemberForm.get('firstName').value | titlecase" />
-                <mat-error *ngIf="jointMemberForm.get('firstName').invalid">
-                  {{ getErrorMessage('jointMemberForm', 'firstName') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Address</mat-label>
-                <input
-                  matInput
-                  formControlName="address"
-                  required
-                  placeholder="Ex. 123 Main St Apt 10"
-                  [value]="jointMemberForm.get('address').value | titlecase"
-                />
-                <mat-error *ngIf="jointMemberForm.get('address').invalid">
-                  {{ getErrorMessage('jointMemberForm', 'address') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Last name</mat-label>
-                <input matInput formControlName="lastName" required [value]="jointMemberForm.get('lastName').value | titlecase" />
-                <mat-error *ngIf="jointMemberForm.get('lastName').invalid">
-                  {{ getErrorMessage('jointMemberForm', 'lastName') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Country</mat-label>
-                <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('jointMemberForm')">
-                  <mat-option>-- Clear --</mat-option>
-                  <mat-option value="Canada">
-                    <img class="flag-icon" src="../../assets/countries-flags-png/ca.png" />
-                    Canada
-                  </mat-option>
-                  <mat-option value="United States">
-                    <img class="flag-icon" src="../../assets/countries-flags-png/us.png" />
-                    United States
-                  </mat-option>
-                  <mat-option disabled>
-                    <mat-divider></mat-divider>
-                  </mat-option>
-                  <mat-option *ngFor="let country of countries" [value]="country.countryName">
-                    <img
-                      class="flag-icon"
-                      src="{{ '../../assets/countries-flags-png/'.concat(country.countryShortCode.toLowerCase()).concat('.png') }}"
-                    />
-                    {{ country.countryName }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="jointMemberForm.get('country').invalid">
-                  {{ getErrorMessage('jointMemberForm', 'country') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>City</mat-label>
-                <input
-                  matInput
-                  formControlName="city"
-                  required
-                  placeholder="Ex. Montreal"
-                  [value]="jointMemberForm.get('city').value | titlecase"
-                />
-                <mat-error *ngIf="jointMemberForm.get('city').invalid">
-                  {{ getErrorMessage('jointMemberForm', 'city') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Social Insurance Number</mat-label>
-                <input
-                  matInput
-                  formControlName="socialInsuranceNumber"
-                  maxlength="11"
-                  required
-                  placeholder="Ex. 111-111-111"
-                  (input)="formatSocialInsuranceNumber($event, 'jointMemberForm')"
-                  (blur)="formatSocialInsuranceNumber($event, 'jointMemberForm')"
-                />
-                <mat-error *ngIf="jointMemberForm.get('socialInsuranceNumber').invalid">
-                  {{ getErrorMessage('jointMemberForm', 'socialInsuranceNumber') }}
-                </mat-error>
-                <button
-                  mat-icon-button
-                  matSuffix
-                  type="button"
-                  [matTooltip]="environment.inputs.socialInsuranceNumber.tooltip"
-                  matTooltipPosition="above"
-                  matTooltipClass="social-insurance-number-tooltip"
-                  class="social-insurance-number-tooltip-button"
-                >
-                  <mat-icon class="material-icons-round">info</mat-icon>
-                </button>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>State/Province/Region</mat-label>
-                <mat-select formControlName="province" required>
-                  <mat-option>-- Clear --</mat-option>
-                  <mat-option
-                    *ngFor="
-                      let province of countries[findSelectedCountryIndex('jointMemberForm')]
-                        ? countries[findSelectedCountryIndex('jointMemberForm')].regions
-                        : []
-                    "
-                    [value]="province.name + ' (' + province.shortCode + ')'"
-                  >
-                    {{ province.name }} ({{ province.shortCode }})
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="jointMemberForm.get('province').invalid">
-                  {{ getErrorMessage('jointMemberForm', 'province') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Zip/Postal code</mat-label>
-                <input
-                  matInput
-                  formControlName="postalCode"
-                  maxlength="14"
-                  required
-                  [value]="jointMemberForm.get('postalCode').value | uppercase"
-                  (input)="formatCanadianPostalCode($event, 'jointMemberForm')"
-                  (blur)="formatCanadianPostalCode($event, 'jointMemberForm')"
-                  placeholder="Ex. J4K 5G7 (for Canada)"
-                />
-                <mat-error *ngIf="jointMemberForm.get('postalCode').invalid">
-                  {{ getErrorMessage('jointMemberForm', 'postalCode') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Profession</mat-label>
-                <input matInput formControlName="profession" [value]="jointMemberForm.get('profession').value | titlecase" />
-                <mat-error *ngIf="jointMemberForm.get('profession').invalid">
-                  {{ getErrorMessage('jointMemberForm', 'profession') }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Relationship</mat-label>
-                <input
-                  matInput
-                  type="text"
-                  formControlName="relationship"
-                  required
-                  [matAutocomplete]="auto"
-                  [value]="jointMemberForm.get('relationship').value | titlecase"
-                  placeholder="Ex. Wife"
-                />
-                <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let relationship of filteredRelationships | async" [value]="relationship">
-                    {{ relationship }}
-                  </mat-option>
-                </mat-autocomplete>
-                <mat-error *ngIf="jointMemberForm.get('relationship').invalid">
-                  {{ getErrorMessage('jointMemberForm', 'relationship') }}
-                </mat-error>
-              </mat-form-field>
-            </form>
-          </ng-template>
-        </mat-tab>
-      </mat-tab-group>
-    </mat-card-content>
-  </mat-card>
+                {{ country.countryName }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="jointMemberForm.get('country').invalid">
+              {{ getErrorMessage('jointMemberForm', 'country') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>City</mat-label>
+            <input
+              matInput
+              formControlName="city"
+              required
+              placeholder="Ex. Montreal"
+              [value]="jointMemberForm.get('city').value | titlecase"
+            />
+            <mat-error *ngIf="jointMemberForm.get('city').invalid">
+              {{ getErrorMessage('jointMemberForm', 'city') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Social Insurance Number</mat-label>
+            <input
+              matInput
+              formControlName="socialInsuranceNumber"
+              maxlength="11"
+              required
+              placeholder="Ex. 111-111-111"
+              (input)="formatSocialInsuranceNumber($event, 'jointMemberForm')"
+              (blur)="formatSocialInsuranceNumber($event, 'jointMemberForm')"
+            />
+            <mat-error *ngIf="jointMemberForm.get('socialInsuranceNumber').invalid">
+              {{ getErrorMessage('jointMemberForm', 'socialInsuranceNumber') }}
+            </mat-error>
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              [matTooltip]="environment.inputs.socialInsuranceNumber.tooltip"
+              matTooltipPosition="above"
+              matTooltipClass="social-insurance-number-tooltip"
+              class="social-insurance-number-tooltip-button"
+            >
+              <mat-icon class="material-icons-round">info</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>State/Province/Region</mat-label>
+            <mat-select formControlName="province" required>
+              <mat-option>-- Clear --</mat-option>
+              <mat-option
+                *ngFor="
+                  let province of countries[findSelectedCountryIndex('jointMemberForm')]
+                    ? countries[findSelectedCountryIndex('jointMemberForm')].regions
+                    : []
+                "
+                [value]="province.name + ' (' + province.shortCode + ')'"
+              >
+                {{ province.name }} ({{ province.shortCode }})
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="jointMemberForm.get('province').invalid">
+              {{ getErrorMessage('jointMemberForm', 'province') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Zip/Postal code</mat-label>
+            <input
+              matInput
+              formControlName="postalCode"
+              maxlength="14"
+              required
+              [value]="jointMemberForm.get('postalCode').value | uppercase"
+              (input)="formatCanadianPostalCode($event, 'jointMemberForm')"
+              (blur)="formatCanadianPostalCode($event, 'jointMemberForm')"
+              placeholder="Ex. J4K 5G7 (for Canada)"
+            />
+            <mat-error *ngIf="jointMemberForm.get('postalCode').invalid">
+              {{ getErrorMessage('jointMemberForm', 'postalCode') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Profession</mat-label>
+            <input matInput formControlName="profession" [value]="jointMemberForm.get('profession').value | titlecase" />
+            <mat-error *ngIf="jointMemberForm.get('profession').invalid">
+              {{ getErrorMessage('jointMemberForm', 'profession') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Relationship</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="relationship"
+              required
+              [matAutocomplete]="auto"
+              [value]="jointMemberForm.get('relationship').value | titlecase"
+              placeholder="Ex. Wife"
+            />
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let relationship of filteredRelationships | async" [value]="relationship">
+                {{ relationship }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="jointMemberForm.get('relationship').invalid">
+              {{ getErrorMessage('jointMemberForm', 'relationship') }}
+            </mat-error>
+          </mat-form-field>
+        </form>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
 </div>

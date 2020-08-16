@@ -4,10 +4,8 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background-color: rgb(245, 245, 245);
+  overflow-y: auto;
 }
 
 .user-profil-container mat-toolbar {
@@ -20,31 +18,46 @@
 }
 
 .user-profil-form-container {
-  margin-top: 55px;
+  position: relative;
+  top: 70px;
   width: 1000px;
-  height: 598px;
+  margin: 0 auto 15px;
+  border: 1px solid rgb(145, 145, 145);
+  border-radius: 5px;
+  padding: 30px;
 }
 
-.user-profil-form-container mat-card-header {
+.user-profil-form-container .my-account-title {
   display: flex;
   justify-content: center;
+  align-items: center;
   color: rgb(70, 70, 70);
   height: 40px;
+  font-size: 22px;
+  font-weight: bold;
 }
 
-.user-profil-form-container mat-card-content {
-  height: calc(100% - 40px);
+.user-profil-form-container .my-account-expand-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
-.user-profil-form-container mat-card-content mat-tab-group {
-  height: 100%;
+.user-profil-form-container .my-account-forms  .mat-expansion-panel-header-title,
+.user-profil-form-container .my-account-forms  .mat-expansion-panel-header-description {
+  flex-basis: 0;
 }
 
-.user-profil-form-container mat-card-content mat-tab-group form {
+.user-profil-form-container .my-account-forms  .mat-expansion-panel-header-description {
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.user-profil-form-container .my-account-forms form {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
-  margin-right: 10px;
 }
 
 .flag-icon {
@@ -54,69 +67,36 @@
   vertical-align: middle;
 }
 
-.user-profil-form-container mat-card-content mat-tab-group form mat-form-field {
+.user-profil-form-container .my-account-forms form mat-form-field {
   flex-basis: 49%;
-}
-
-.user-profil-form-container mat-card-content mat-tab-group form h4 {
-  flex-basis: 100%;
-  color: #3f51b5;
-  font-size: 14px;
-  font-weight: bold;
-  margin-top: 10px;
-  margin-bottom: 10px;
 }
 /* End global user-profil css */
 
 /* Login form css */
-.user-profil-form-container mat-card-content mat-tab-group form#login-form mat-form-field:nth-child(2) {
+.user-profil-form-container .my-account-forms form#login-form mat-form-field:nth-child(1) {
   flex-basis: 100%;
 }
 /* End login form css */
 
 /* Common to main holder & joint member forms */
-.user-profil-form-container mat-card-content mat-tab-group form#main-holder-form mat-form-field:nth-child(4),
-.user-profil-form-container mat-card-content mat-tab-group form#joint-member-form mat-form-field:nth-child(2) {
+.user-profil-form-container .my-account-forms form#main-holder-form mat-form-field:nth-child(3),
+.user-profil-form-container .my-account-forms form#joint-member-form mat-form-field:nth-child(1) {
   flex-basis: 10%;
 }
 
-.user-profil-form-container mat-card-content mat-tab-group form#main-holder-form mat-form-field:nth-child(5),
-.user-profil-form-container mat-card-content mat-tab-group form#joint-member-form mat-form-field:nth-child(3) {
+.user-profil-form-container .my-account-forms form#main-holder-form mat-form-field:nth-child(4),
+.user-profil-form-container .my-account-forms form#joint-member-form mat-form-field:nth-child(2) {
   flex-basis: 37%;
 }
 
-::ng-deep
-  .user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#main-holder-form
-  mat-form-field:nth-child(4)
-  .mat-form-field-infix,
-::ng-deep
-  .user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#main-holder-form
-  mat-form-field:nth-child(14)
-  .mat-form-field-infix,
-::ng-deep
-  .user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#joint-member-form
-  mat-form-field:nth-child(2)
-  .mat-form-field-infix,
-::ng-deep
-  .user-profil-form-container
-  mat-card-content
-  mat-tab-group
-  form#joint-member-form
-  mat-form-field:nth-child(8)
-  .mat-form-field-infix {
+::ng-deep .user-profil-form-container .my-account-forms form#main-holder-form mat-form-field:nth-child(3) .mat-form-field-infix,
+::ng-deep .user-profil-form-container .my-account-forms form#main-holder-form mat-form-field:nth-child(13) .mat-form-field-infix,
+::ng-deep .user-profil-form-container .my-account-forms form#joint-member-form mat-form-field:nth-child(1) .mat-form-field-infix,
+::ng-deep .user-profil-form-container .my-account-forms form#joint-member-form mat-form-field:nth-child(7) .mat-form-field-infix {
   width: 100%;
 }
 
-.user-profil-form-container mat-card-content mat-tab-group form .social-insurance-number-tooltip-button:hover {
+.user-profil-form-container .my-account-forms form .social-insurance-number-tooltip-button:hover {
   color: #3f51b5;
 }
 
@@ -126,14 +106,14 @@
 /* End of Common to main holder & joint member forms */
 
 /* Main holder form css */
-.user-profil-form-container mat-card-content mat-tab-group form#main-holder-form mat-form-field:nth-child(n + 8) {
+.user-profil-form-container .my-account-forms form#main-holder-form mat-form-field:nth-child(n + 7) {
   flex-basis: 23.5%;
 }
 /* End main holder form css */
 
 /* Joint member form css */
-.user-profil-form-container mat-card-content mat-tab-group form#joint-member-form mat-form-field:nth-child(n + 6):nth-child(-n + 7),
-.user-profil-form-container mat-card-content mat-tab-group form#joint-member-form mat-form-field:nth-child(n + 9):nth-child(-n + 10) {
+.user-profil-form-container .my-account-forms form#joint-member-form mat-form-field:nth-child(n + 5):nth-child(-n + 6),
+.user-profil-form-container .my-account-forms form#joint-member-form mat-form-field:nth-child(n + 8):nth-child(-n + 9) {
   flex-basis: 23.5%;
 }
 /* End joint member form css */
