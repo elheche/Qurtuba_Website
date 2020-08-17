@@ -39,6 +39,8 @@ export const environment = {
         pattern:
           'Invalid password. It must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character.',
       },
+      hintLabel:
+        'Your password must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character.',
       readonly: true,
     },
     confirmPassword: {

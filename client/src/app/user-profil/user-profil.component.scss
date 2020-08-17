@@ -73,8 +73,9 @@
 /* End global user-profil css */
 
 /* Login form css */
-.user-profil-form-container .my-account-forms form#login-form mat-form-field:nth-child(1) {
+.user-profil-form-container .my-account-forms form#login-form mat-form-field:nth-child(3) {
   flex-basis: 100%;
+  margin-top: 5px;
 }
 /* End login form css */
 

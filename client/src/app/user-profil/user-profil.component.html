@@ -22,8 +22,8 @@
       <span>My account</span>
     </div>
     <div class="my-account-expand-buttons">
-      <button mat-button>Expand All</button>
-      <button mat-button>Collapse All</button>
+      <button mat-button color="primary" (click)="accordion.openAll()">Expand All</button>
+      <button mat-button color="primary" (click)="accordion.closeAll()">Collapse All</button>
     </div>
     <mat-accordion class="my-account-forms" multi>
       <!-- Login information -->
@@ -37,7 +37,7 @@
         <form [formGroup]="loginForm" id="login-form" #loginFormRef="ngForm">
           <mat-form-field appearance="outline">
             <mat-label>Email address</mat-label>
-            <input matInput type="email" placeholder="user@example.com" formControlName="email" required />
+            <input matInput type="email" placeholder="user@example.com" formControlName="email" required readonly />
             <mat-error *ngIf="loginForm.get('email').invalid">
               {{ getErrorMessage('loginForm', 'email') }}
             </mat-error>
@@ -45,10 +45,7 @@
               <mat-icon class="material-icons-round">email</mat-icon>
             </button>
           </mat-form-field>
-          <mat-form-field
-            appearance="outline"
-            hintLabel="Your password must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character."
-          >
+          <mat-form-field appearance="outline" hintLabel="{{ readonly ? '' : environment.inputs.password.hintLabel }}">
             <mat-label>Password</mat-label>
             <input
               matInput
@@ -58,8 +55,9 @@
               (input)="onPasswordValueChange()"
               #passwordInput
               maxlength="32"
+              [readonly]="readonly"
             />
-            <mat-hint align="end">{{ passwordInput.value?.length || 0 }}/32</mat-hint>
+            <mat-hint align="end" *ngIf="!readonly">{{ passwordInput.value?.length || 0 }}/32</mat-hint>
             <mat-error *ngIf="loginForm.get('password').invalid">
               {{ getErrorMessage('loginForm', 'password') }}
             </mat-error>
@@ -78,9 +76,9 @@
               <mat-icon class="material-icons-round">{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" *ngIf="!readonly">
             <mat-label>Confirm your password</mat-label>
-            <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmPassword" required />
+            <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmPassword" required [readonly]="readonly" />
             <mat-error *ngIf="loginForm.get('confirmPassword').invalid"> {{ getErrorMessage('loginForm', 'confirmPassword') }}</mat-error>
             <button mat-icon-button matPrefix disabled>
               <mat-icon class="material-icons-round">lock</mat-icon>
@@ -108,7 +106,20 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <form [formGroup]="mainHolderForm" id="main-holder-form">
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" *ngIf="readonly">
+            <mat-label>Indicate the type of membership</mat-label>
+            <input
+              matInput
+              formControlName="membershipType"
+              required
+              [value]="mainHolderForm.get('membershipType').value | titlecase"
+              readonly
+            />
+            <mat-error *ngIf="mainHolderForm.get('membershipType').invalid">
+              {{ getErrorMessage('mainHolderForm', 'membershipType') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="!readonly">
             <mat-label>Indicate the type of membership</mat-label>
             <mat-select formControlName="membershipType" required>
               <mat-option>-- Clear --</mat-option>
@@ -120,7 +131,14 @@
               {{ getErrorMessage('mainHolderForm', 'membershipType') }}
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" *ngIf="readonly">
+            <mat-label>Indicate the type of account</mat-label>
+            <input matInput formControlName="accountType" required [value]="mainHolderForm.get('accountType').value | titlecase" readonly />
+            <mat-error *ngIf="mainHolderForm.get('accountType').invalid">
+              {{ getErrorMessage('mainHolderForm', 'accountType') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="!readonly">
             <mat-label>Indicate the type of account</mat-label>
             <mat-select formControlName="accountType" required (selectionChange)="onAccountTypeSelectionChange()">
               <mat-option>-- Clear --</mat-option>
@@ -134,19 +152,14 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Title</mat-label>
-            <mat-select formControlName="title" required>
-              <mat-option>-- Clear --</mat-option>
-              <mat-option *ngFor="let title of environment.inputs.title.titles" [value]="title">
-                {{ title }}
-              </mat-option>
-            </mat-select>
+            <input matInput formControlName="title" required [value]="mainHolderForm.get('title').value | titlecase" readonly />
             <mat-error *ngIf="mainHolderForm.get('title').invalid">
               {{ getErrorMessage('mainHolderForm', 'title') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>First name</mat-label>
-            <input matInput formControlName="firstName" required [value]="mainHolderForm.get('firstName').value | titlecase" />
+            <input matInput formControlName="firstName" required [value]="mainHolderForm.get('firstName').value | titlecase" readonly />
             <mat-error *ngIf="mainHolderForm.get('firstName').invalid">
               {{ getErrorMessage('mainHolderForm', 'firstName') }}
             </mat-error>
@@ -159,6 +172,7 @@
               required
               placeholder="Ex. 123 Main St Apt 10"
               [value]="mainHolderForm.get('address').value | titlecase"
+              [readonly]="readonly"
             />
             <mat-error *ngIf="mainHolderForm.get('address').invalid">
               {{ getErrorMessage('mainHolderForm', 'address') }}
@@ -166,12 +180,19 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Last name</mat-label>
-            <input matInput formControlName="lastName" required [value]="mainHolderForm.get('lastName').value | titlecase" />
+            <input matInput formControlName="lastName" required [value]="mainHolderForm.get('lastName').value | titlecase" readonly />
             <mat-error *ngIf="mainHolderForm.get('lastName').invalid">
               {{ getErrorMessage('mainHolderForm', 'lastName') }}
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" *ngIf="readonly">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" required [value]="mainHolderForm.get('country').value | titlecase" readonly />
+            <mat-error *ngIf="mainHolderForm.get('country').invalid">
+              {{ getErrorMessage('mainHolderForm', 'country') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="!readonly">
             <mat-label>Country</mat-label>
             <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('mainHolderForm')">
               <mat-option>-- Clear --</mat-option>
@@ -206,6 +227,7 @@
               required
               placeholder="Ex. Montreal"
               [value]="mainHolderForm.get('city').value | titlecase"
+              [readonly]="readonly"
             />
             <mat-error *ngIf="mainHolderForm.get('city').invalid">
               {{ getErrorMessage('mainHolderForm', 'city') }}
@@ -213,7 +235,14 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Birth day</mat-label>
-            <input matInput type="date" formControlName="birthDay" required [min]="environment.inputs.birthDay.acceptedRange.minDate" />
+            <input
+              matInput
+              type="date"
+              formControlName="birthDay"
+              required
+              [min]="environment.inputs.birthDay.acceptedRange.minDate"
+              readonly
+            />
             <mat-error *ngIf="mainHolderForm.get('birthDay').invalid">
               {{ getErrorMessage('mainHolderForm', 'birthDay') }}
             </mat-error>
@@ -229,12 +258,20 @@
               placeholder="Ex. (555) 555-1234 (for Canada)"
               (input)="formatPhoneNumber($event, 'mainHolderForm', 'phoneNumber')"
               (blur)="formatPhoneNumber($event, 'mainHolderForm', 'phoneNumber')"
+              [readonly]="readonly"
             />
             <mat-error *ngIf="mainHolderForm.get('phoneNumber').invalid">
               {{ getErrorMessage('mainHolderForm', 'phoneNumber') }}
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" *ngIf="readonly">
+            <mat-label>State/Province/Region</mat-label>
+            <input matInput formControlName="province" required [value]="mainHolderForm.get('province').value | titlecase" readonly />
+            <mat-error *ngIf="mainHolderForm.get('province').invalid">
+              {{ getErrorMessage('mainHolderForm', 'province') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="!readonly">
             <mat-label>State/Province/Region</mat-label>
             <mat-select formControlName="province" required>
               <mat-option>-- Clear --</mat-option>
@@ -264,6 +301,7 @@
               (input)="formatCanadianPostalCode($event, 'mainHolderForm')"
               (blur)="formatCanadianPostalCode($event, 'mainHolderForm')"
               placeholder="Ex. J4K 5G7 (for Canada)"
+              [readonly]="readonly"
             />
             <mat-error *ngIf="mainHolderForm.get('postalCode').invalid">
               {{ getErrorMessage('mainHolderForm', 'postalCode') }}
@@ -279,6 +317,7 @@
               placeholder="Ex. 111-111-111"
               (input)="formatSocialInsuranceNumber($event, 'mainHolderForm')"
               (blur)="formatSocialInsuranceNumber($event, 'mainHolderForm')"
+              readonly
             />
             <mat-error *ngIf="mainHolderForm.get('socialInsuranceNumber').invalid">
               {{ getErrorMessage('mainHolderForm', 'socialInsuranceNumber') }}
@@ -297,14 +336,19 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Profession</mat-label>
-            <input matInput formControlName="profession" [value]="mainHolderForm.get('profession').value | titlecase" />
+            <input
+              matInput
+              formControlName="profession"
+              [value]="mainHolderForm.get('profession').value | titlecase"
+              [readonly]="readonly"
+            />
             <mat-error *ngIf="mainHolderForm.get('profession').invalid">
               {{ getErrorMessage('mainHolderForm', 'profession') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Employer</mat-label>
-            <input matInput formControlName="employer" [value]="mainHolderForm.get('employer').value | titlecase" />
+            <input matInput formControlName="employer" [value]="mainHolderForm.get('employer').value | titlecase" [readonly]="readonly" />
             <mat-error *ngIf="mainHolderForm.get('employer').invalid">
               {{ getErrorMessage('mainHolderForm', 'employer') }}
             </mat-error>
@@ -319,6 +363,7 @@
               placeholder="Ex. (555) 555-1234 (for Canada)"
               (input)="formatPhoneNumber($event, 'mainHolderForm', 'employerPhoneNumber')"
               (blur)="formatPhoneNumber($event, 'mainHolderForm', 'employerPhoneNumber')"
+              [readonly]="readonly"
             />
             <mat-error *ngIf="mainHolderForm.get('employerPhoneNumber').invalid">
               {{ getErrorMessage('mainHolderForm', 'employerPhoneNumber') }}
@@ -335,7 +380,14 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <form [formGroup]="jointMemberForm" id="joint-member-form">
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" *ngIf="readonly">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" required [value]="jointMemberForm.get('title').value | titlecase" readonly />
+            <mat-error *ngIf="jointMemberForm.get('title').invalid">
+              {{ getErrorMessage('jointMemberForm', 'title') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="!readonly">
             <mat-label>Title</mat-label>
             <mat-select formControlName="title" required>
               <mat-option>-- Clear --</mat-option>
@@ -349,7 +401,13 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>First name</mat-label>
-            <input matInput formControlName="firstName" required [value]="jointMemberForm.get('firstName').value | titlecase" />
+            <input
+              matInput
+              formControlName="firstName"
+              required
+              [value]="jointMemberForm.get('firstName').value | titlecase"
+              [readonly]="readonly"
+            />
             <mat-error *ngIf="jointMemberForm.get('firstName').invalid">
               {{ getErrorMessage('jointMemberForm', 'firstName') }}
             </mat-error>
@@ -362,6 +420,7 @@
               required
               placeholder="Ex. 123 Main St Apt 10"
               [value]="jointMemberForm.get('address').value | titlecase"
+              [readonly]="readonly"
             />
             <mat-error *ngIf="jointMemberForm.get('address').invalid">
               {{ getErrorMessage('jointMemberForm', 'address') }}
@@ -369,12 +428,25 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Last name</mat-label>
-            <input matInput formControlName="lastName" required [value]="jointMemberForm.get('lastName').value | titlecase" />
+            <input
+              matInput
+              formControlName="lastName"
+              required
+              [value]="jointMemberForm.get('lastName').value | titlecase"
+              [readonly]="readonly"
+            />
             <mat-error *ngIf="jointMemberForm.get('lastName').invalid">
               {{ getErrorMessage('jointMemberForm', 'lastName') }}
             </mat-error>
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" *ngIf="readonly">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" required [value]="jointMemberForm.get('country').value | titlecase" readonly />
+            <mat-error *ngIf="jointMemberForm.get('country').invalid">
+              {{ getErrorMessage('jointMemberForm', 'country') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="!readonly">
             <mat-label>Country</mat-label>
             <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('jointMemberForm')">
               <mat-option>-- Clear --</mat-option>
@@ -409,6 +481,7 @@
               required
               placeholder="Ex. Montreal"
               [value]="jointMemberForm.get('city').value | titlecase"
+              [readonly]="readonly"
             />
             <mat-error *ngIf="jointMemberForm.get('city').invalid">
               {{ getErrorMessage('jointMemberForm', 'city') }}
@@ -424,6 +497,7 @@
               placeholder="Ex. 111-111-111"
               (input)="formatSocialInsuranceNumber($event, 'jointMemberForm')"
               (blur)="formatSocialInsuranceNumber($event, 'jointMemberForm')"
+              [readonly]="readonly"
             />
             <mat-error *ngIf="jointMemberForm.get('socialInsuranceNumber').invalid">
               {{ getErrorMessage('jointMemberForm', 'socialInsuranceNumber') }}
@@ -440,7 +514,14 @@
               <mat-icon class="material-icons-round">info</mat-icon>
             </button>
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" *ngIf="readonly">
+            <mat-label>State/Province/Region</mat-label>
+            <input matInput formControlName="province" required [value]="jointMemberForm.get('province').value | titlecase" readonly />
+            <mat-error *ngIf="jointMemberForm.get('province').invalid">
+              {{ getErrorMessage('jointMemberForm', 'province') }}
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="!readonly">
             <mat-label>State/Province/Region</mat-label>
             <mat-select formControlName="province" required>
               <mat-option>-- Clear --</mat-option>
@@ -470,6 +551,7 @@
               (input)="formatCanadianPostalCode($event, 'jointMemberForm')"
               (blur)="formatCanadianPostalCode($event, 'jointMemberForm')"
               placeholder="Ex. J4K 5G7 (for Canada)"
+              [readonly]="readonly"
             />
             <mat-error *ngIf="jointMemberForm.get('postalCode').invalid">
               {{ getErrorMessage('jointMemberForm', 'postalCode') }}
@@ -477,7 +559,12 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Profession</mat-label>
-            <input matInput formControlName="profession" [value]="jointMemberForm.get('profession').value | titlecase" />
+            <input
+              matInput
+              formControlName="profession"
+              [value]="jointMemberForm.get('profession').value | titlecase"
+              [readonly]="readonly"
+            />
             <mat-error *ngIf="jointMemberForm.get('profession').invalid">
               {{ getErrorMessage('jointMemberForm', 'profession') }}
             </mat-error>
@@ -492,6 +579,7 @@
               [matAutocomplete]="auto"
               [value]="jointMemberForm.get('relationship').value | titlecase"
               placeholder="Ex. Wife"
+              [readonly]="readonly"
             />
             <mat-autocomplete #auto="matAutocomplete">
               <mat-option *ngFor="let relationship of filteredRelationships | async" [value]="relationship">

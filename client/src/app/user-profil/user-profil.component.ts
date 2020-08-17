@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatAccordion } from '@angular/material/expansion';
 import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -57,6 +58,7 @@ const inputs4 = {
   styleUrls: ['./user-profil.component.scss'],
 })
 export class UserProfilComponent implements OnInit {
+  @ViewChild(MatAccordion) accordion: MatAccordion;
   readonly: boolean;
   hide: boolean;
   environment: typeof environment;
@@ -96,14 +98,14 @@ export class UserProfilComponent implements OnInit {
       ]),
       address: new FormControl(null, [Validators.required]),
       country: new FormControl(null, [Validators.required]),
-      city: new FormControl({ value: null, disabled: true }, [Validators.required]),
-      province: new FormControl({ value: null, disabled: true }, [Validators.required]),
-      postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
-      phoneNumber: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      city: new FormControl(null, [Validators.required]),
+      province: new FormControl(null, [Validators.required]),
+      postalCode: new FormControl(null, [Validators.required]),
+      phoneNumber: new FormControl(null, [Validators.required]),
       socialInsuranceNumber: new FormControl(null, [Validators.required, CustomValidators.socialInsuranceNumberValidator()]),
       profession: new FormControl(null),
       employer: new FormControl(null),
-      employerPhoneNumber: new FormControl({ value: null, disabled: true }),
+      employerPhoneNumber: new FormControl(null),
     });
     this.jointMemberForm = new FormGroup({
       title: new FormControl(null, [Validators.required]),
@@ -111,9 +113,9 @@ export class UserProfilComponent implements OnInit {
       lastName: new FormControl(null, [Validators.required]),
       address: new FormControl(null, [Validators.required]),
       country: new FormControl(null, [Validators.required]),
-      city: new FormControl({ value: null, disabled: true }, [Validators.required]),
-      province: new FormControl({ value: null, disabled: true }, [Validators.required]),
-      postalCode: new FormControl({ value: null, disabled: true }, [Validators.required]),
+      city: new FormControl(null, [Validators.required]),
+      province: new FormControl(null, [Validators.required]),
+      postalCode: new FormControl(null, [Validators.required]),
       socialInsuranceNumber: new FormControl(null, [Validators.required, CustomValidators.socialInsuranceNumberValidator()]),
       profession: new FormControl(null),
       relationship: new FormControl(null, [Validators.required]),
@@ -138,7 +140,7 @@ export class UserProfilComponent implements OnInit {
   }
 
   onPasswordValueChange(): void {
-    this.mainHolderForm.get('confirmPassword').reset();
+    this.loginForm.get('confirmPassword').reset();
   }
 
   formatPhoneNumber(event: InputEvent | FocusEvent, formGroup: string, input: string): void {
@@ -205,7 +207,7 @@ export class UserProfilComponent implements OnInit {
 
   onCountryValueChange(formGroup: string): void {
     let inputsTochange: string[];
-    formGroup === 'registrationFormStep3'
+    formGroup === 'mainHolderForm'
       ? (inputsTochange = ['city', 'province', 'postalCode', 'phoneNumber', 'employerPhoneNumber'])
       : (inputsTochange = ['city', 'province', 'postalCode']);
 
@@ -267,7 +269,9 @@ export class UserProfilComponent implements OnInit {
     }
   }
 
-  onAccountTypeSelectionChange(): void {/*  */}
+  onAccountTypeSelectionChange(): void {
+    /*  */
+  }
 
   protected filterRelationshipTypes(filterValue: string): string[] {
     return environment.inputs.relationship.types.filter(
