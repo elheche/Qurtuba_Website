@@ -1,10 +1,13 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
+import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { ICountry } from 'src/app/registration/icountry';
 import { environment } from 'src/environments/environment';
 import { RecaptchaValidation } from '../../../common/communication/recaptcha-validation';
+import data from '../assets/countries-data.json';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +15,7 @@ import { RecaptchaValidation } from '../../../common/communication/recaptcha-val
 export class RegistrationService {
   private readonly RECAPTCHA_VALIDATION_URL: string;
   private httpOptions: {};
+  countries: ICountry[];
 
   constructor(private http: HttpClient) {
     this.RECAPTCHA_VALIDATION_URL = 'http://localhost:3000/api/recaptcha/token-validation';
@@ -19,6 +23,7 @@ export class RegistrationService {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       responseType: 'json',
     };
+    this.countries = data as ICountry[];
   }
 
   sendToken(reCaptchaResponse: string): Observable<RecaptchaValidation> {
@@ -29,6 +34,42 @@ export class RegistrationService {
 
   getErrorMessage(formGroup: FormGroup, input: string): string {
     return environment.inputs[input].errorMessages[Object.keys(formGroup.get(input).errors)[0]];
+  }
+
+  onPasswordValueChange(formGroup: FormGroup): void {
+    formGroup.get('confirmPassword').reset();
+  }
+
+  formatPhoneNumber(event: InputEvent | FocusEvent, formGroup: FormGroup, input: string): void {
+    if (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') {
+      return;
+    }
+
+    const control: AbstractControl = formGroup.get(input);
+    const countryIndex = this.findSelectedCountryIndex(formGroup);
+    const regionCode = this.countries[countryIndex].countryShortCode;
+    const regEx1 = /[^\d\(\)\-+ ]+/g;
+    const inputValue = control.value as string;
+
+    if (inputValue && regEx1.test(inputValue)) {
+      control.setValue(inputValue.replace(regEx1, ''));
+    }
+
+    if (control.valid) {
+      const phoneNumberUtil = PhoneNumberUtil.getInstance();
+      try {
+        const phoneNumber = phoneNumberUtil.parseAndKeepRawInput(control.value, regionCode);
+        regionCode === 'CA'
+          ? control.setValue(phoneNumberUtil.format(phoneNumber, PhoneNumberFormat.NATIONAL))
+          : control.setValue(phoneNumberUtil.format(phoneNumber, PhoneNumberFormat.INTERNATIONAL));
+      } catch (e) {
+        return;
+      }
+    }
+  }
+
+  findSelectedCountryIndex(formGroup: FormGroup): number {
+    return this.countries.findIndex((country) => country.countryName === formGroup.get('country').value);
   }
 
   protected handleError(error: HttpErrorResponse): Observable<never> {

@@ -118,38 +118,6 @@ export class RegistrationComponent implements OnInit {
     );
   }
 
-  onPasswordValueChange(): void {
-    this.registrationFormStep2.get('confirmPassword').reset();
-  }
-
-  formatPhoneNumber(event: InputEvent | FocusEvent, formGroup: string, input: string): void {
-    if (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') {
-      return;
-    }
-
-    const control: AbstractControl = this[formGroup].get(input);
-    const countryIndex = this.findSelectedCountryIndex(formGroup);
-    const regionCode = this.countries[countryIndex].countryShortCode;
-    const regEx1 = /[^\d\(\)\-+ ]+/g;
-    const inputValue = control.value as string;
-
-    if (inputValue && regEx1.test(inputValue)) {
-      control.setValue(inputValue.replace(regEx1, ''));
-    }
-
-    if (control.valid) {
-      const phoneNumberUtil = PhoneNumberUtil.getInstance();
-      try {
-        const phoneNumber = phoneNumberUtil.parseAndKeepRawInput(control.value, regionCode);
-        regionCode === 'CA'
-          ? control.setValue(phoneNumberUtil.format(phoneNumber, PhoneNumberFormat.NATIONAL))
-          : control.setValue(phoneNumberUtil.format(phoneNumber, PhoneNumberFormat.INTERNATIONAL));
-      } catch (e) {
-        return;
-      }
-    }
-  }
-
   formatCanadianPostalCode(event: InputEvent | FocusEvent, formGroup: string): void {
     if (
       (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') ||
