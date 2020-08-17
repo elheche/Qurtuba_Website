@@ -39,7 +39,7 @@ export class RegistrationComponent implements OnInit {
   filteredRelationships: Observable<string[]>;
   userAgreementStepDoneText: string;
 
-  constructor(private registrationService: RegistrationService, protected alertDialog: MatDialog, protected snackBar: MatSnackBar) {
+  constructor(public registrationService: RegistrationService, protected alertDialog: MatDialog, protected snackBar: MatSnackBar) {
     this.hide = true;
     this.isEditable = true;
     this.isActive = false;
@@ -116,10 +116,6 @@ export class RegistrationComponent implements OnInit {
         return relationshipType ? this.filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
       }),
     );
-  }
-
-  getErrorMessage(formGroup: string, input: string): string {
-    return environment.inputs[input].errorMessages[Object.keys(this[formGroup].get(input).errors)[0]];
   }
 
   onPasswordValueChange(): void {

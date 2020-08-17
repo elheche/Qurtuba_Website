@@ -1,7 +1,9 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { RecaptchaValidation } from '../../../common/communication/recaptcha-validation';
 
 @Injectable({
@@ -23,6 +25,10 @@ export class RegistrationService {
     return this.http
       .post<RecaptchaValidation>(this.RECAPTCHA_VALIDATION_URL, { token: reCaptchaResponse }, this.httpOptions)
       .pipe(catchError(this.handleError));
+  }
+
+  getErrorMessage(formGroup: FormGroup, input: string): string {
+    return environment.inputs[input].errorMessages[Object.keys(formGroup.get(input).errors)[0]];
   }
 
   protected handleError(error: HttpErrorResponse): Observable<never> {

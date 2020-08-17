@@ -39,7 +39,7 @@
                   {{ environment.inputs.userAgreementStep1.checkBoxText }}
                 </mat-checkbox>
                 <mat-error *ngIf="registrationFormStep1.get('userAgreementStep1').invalid && registrationFormStep1Ref.submitted">
-                  {{ getErrorMessage('registrationFormStep1', 'userAgreementStep1') }}
+                  {{ registrationService.getErrorMessage(registrationFormStep1, 'userAgreementStep1') }}
                 </mat-error>
               </div>
             </div>
@@ -64,7 +64,7 @@
               <mat-label>Email address</mat-label>
               <input matInput type="email" placeholder="user@example.com" formControlName="email" required />
               <mat-error *ngIf="registrationFormStep2.get('email').invalid">
-                {{ getErrorMessage('registrationFormStep2', 'email') }}
+                {{ registrationService.getErrorMessage(registrationFormStep2, 'email') }}
               </mat-error>
               <button mat-icon-button matPrefix disabled>
                 <mat-icon class="material-icons-round">email</mat-icon>
@@ -83,7 +83,7 @@
               />
               <mat-hint align="end">{{ passwordInput.value?.length || 0 }}/32</mat-hint>
               <mat-error *ngIf="registrationFormStep2.get('password').invalid">
-                {{ getErrorMessage('registrationFormStep2', 'password') }}
+                {{ registrationService.getErrorMessage(registrationFormStep2, 'password') }}
               </mat-error>
               <button mat-icon-button matPrefix disabled>
                 <mat-icon class="material-icons-round">lock</mat-icon>
@@ -104,7 +104,7 @@
               <mat-label>Confirm your password</mat-label>
               <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmPassword" required />
               <mat-error *ngIf="registrationFormStep2.get('confirmPassword').invalid">
-                {{ getErrorMessage('registrationFormStep2', 'confirmPassword') }}</mat-error
+                {{ registrationService.getErrorMessage(registrationFormStep2, 'confirmPassword') }}</mat-error
               >
               <button mat-icon-button matPrefix disabled>
                 <mat-icon class="material-icons-round">lock</mat-icon>
@@ -124,7 +124,7 @@
             <div class="recaptcha-container">
               <re-captcha formControlName="reCaptcha" (resolved)="validateRecaptcha($event)" #reCaptcha></re-captcha>
               <mat-error *ngIf="registrationFormStep2.get('reCaptcha').invalid && registrationFormStep2Ref.submitted">
-                {{ getErrorMessage('registrationFormStep2', 'reCaptcha') }}
+                {{ registrationService.getErrorMessage(registrationFormStep2, 'reCaptcha') }}
               </mat-error>
             </div>
             <div class="stepper-navigation-button-container">
@@ -147,7 +147,7 @@
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="registrationFormStep3.get('membershipType').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'membershipType') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'membershipType') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -159,7 +159,7 @@
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="registrationFormStep3.get('accountType').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'accountType') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'accountType') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -171,14 +171,14 @@
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="registrationFormStep3.get('title').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'title') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'title') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>First name</mat-label>
               <input matInput formControlName="firstName" required [value]="registrationFormStep3.get('firstName').value | titlecase" />
               <mat-error *ngIf="registrationFormStep3.get('firstName').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'firstName') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'firstName') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -191,14 +191,14 @@
                 [value]="registrationFormStep3.get('address').value | titlecase"
               />
               <mat-error *ngIf="registrationFormStep3.get('address').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'address') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'address') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Last name</mat-label>
               <input matInput formControlName="lastName" required [value]="registrationFormStep3.get('lastName').value | titlecase" />
               <mat-error *ngIf="registrationFormStep3.get('lastName').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'lastName') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'lastName') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -225,7 +225,7 @@
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="registrationFormStep3.get('country').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'country') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'country') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -238,14 +238,14 @@
                 [value]="registrationFormStep3.get('city').value | titlecase"
               />
               <mat-error *ngIf="registrationFormStep3.get('city').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'city') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'city') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Birth day</mat-label>
               <input matInput type="date" formControlName="birthDay" required [min]="environment.inputs.birthDay.acceptedRange.minDate" />
               <mat-error *ngIf="registrationFormStep3.get('birthDay').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'birthDay') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'birthDay') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -261,7 +261,7 @@
                 (blur)="formatPhoneNumber($event, 'registrationFormStep3', 'phoneNumber')"
               />
               <mat-error *ngIf="registrationFormStep3.get('phoneNumber').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'phoneNumber') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'phoneNumber') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -280,7 +280,7 @@
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="registrationFormStep3.get('province').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'province') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'province') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -296,7 +296,7 @@
                 placeholder="Ex. J4K 5G7 (for Canada)"
               />
               <mat-error *ngIf="registrationFormStep3.get('postalCode').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'postalCode') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'postalCode') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -311,7 +311,7 @@
                 (blur)="formatSocialInsuranceNumber($event, 'registrationFormStep3')"
               />
               <mat-error *ngIf="registrationFormStep3.get('socialInsuranceNumber').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'socialInsuranceNumber') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'socialInsuranceNumber') }}
               </mat-error>
               <button
                 mat-icon-button
@@ -329,14 +329,14 @@
               <mat-label>Profession</mat-label>
               <input matInput formControlName="profession" [value]="registrationFormStep3.get('profession').value | titlecase" />
               <mat-error *ngIf="registrationFormStep3.get('profession').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'profession') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'profession') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Employer</mat-label>
               <input matInput formControlName="employer" [value]="registrationFormStep3.get('employer').value | titlecase" />
               <mat-error *ngIf="registrationFormStep3.get('employer').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'employer') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'employer') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -351,7 +351,7 @@
                 (blur)="formatPhoneNumber($event, 'registrationFormStep3', 'employerPhoneNumber')"
               />
               <mat-error *ngIf="registrationFormStep3.get('employerPhoneNumber').invalid">
-                {{ getErrorMessage('registrationFormStep3', 'employerPhoneNumber') }}
+                {{ registrationService.getErrorMessage(registrationFormStep3, 'employerPhoneNumber') }}
               </mat-error>
             </mat-form-field>
             <div class="stepper-navigation-button-container">
@@ -379,14 +379,14 @@
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="registrationFormStep4.get('title').invalid">
-                {{ getErrorMessage('registrationFormStep4', 'title') }}
+                {{ registrationService.getErrorMessage(registrationFormStep4, 'title') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>First name</mat-label>
               <input matInput formControlName="firstName" required [value]="registrationFormStep4.get('firstName').value | titlecase" />
               <mat-error *ngIf="registrationFormStep4.get('firstName').invalid">
-                {{ getErrorMessage('registrationFormStep4', 'firstName') }}
+                {{ registrationService.getErrorMessage(registrationFormStep4, 'firstName') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -399,14 +399,14 @@
                 [value]="registrationFormStep4.get('address').value | titlecase"
               />
               <mat-error *ngIf="registrationFormStep4.get('address').invalid">
-                {{ getErrorMessage('registrationFormStep4', 'address') }}
+                {{ registrationService.getErrorMessage(registrationFormStep4, 'address') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Last name</mat-label>
               <input matInput formControlName="lastName" required [value]="registrationFormStep4.get('lastName').value | titlecase" />
               <mat-error *ngIf="registrationFormStep4.get('lastName').invalid">
-                {{ getErrorMessage('registrationFormStep4', 'lastName') }}
+                {{ registrationService.getErrorMessage(registrationFormStep4, 'lastName') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -433,7 +433,7 @@
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="registrationFormStep4.get('country').invalid">
-                {{ getErrorMessage('registrationFormStep4', 'country') }}
+                {{ registrationService.getErrorMessage(registrationFormStep4, 'country') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -446,7 +446,7 @@
                 [value]="registrationFormStep4.get('city').value | titlecase"
               />
               <mat-error *ngIf="registrationFormStep4.get('city').invalid">
-                {{ getErrorMessage('registrationFormStep4', 'city') }}
+                {{ registrationService.getErrorMessage(registrationFormStep4, 'city') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -461,7 +461,7 @@
                 (blur)="formatSocialInsuranceNumber($event, 'registrationFormStep4')"
               />
               <mat-error *ngIf="registrationFormStep4.get('socialInsuranceNumber').invalid">
-                {{ getErrorMessage('registrationFormStep4', 'socialInsuranceNumber') }}
+                {{ registrationService.getErrorMessage(registrationFormStep4, 'socialInsuranceNumber') }}
               </mat-error>
               <button
                 mat-icon-button
@@ -491,7 +491,7 @@
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="registrationFormStep4.get('province').invalid">
-                {{ getErrorMessage('registrationFormStep4', 'province') }}
+                {{ registrationService.getErrorMessage(registrationFormStep4, 'province') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -507,14 +507,14 @@
                 placeholder="Ex. J4K 5G7 (for Canada)"
               />
               <mat-error *ngIf="registrationFormStep4.get('postalCode').invalid">
-                {{ getErrorMessage('registrationFormStep4', 'postalCode') }}
+                {{ registrationService.getErrorMessage(registrationFormStep4, 'postalCode') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Profession</mat-label>
               <input matInput formControlName="profession" [value]="registrationFormStep4.get('profession').value | titlecase" />
               <mat-error *ngIf="registrationFormStep4.get('profession').invalid">
-                {{ getErrorMessage('registrationFormStep4', 'profession') }}
+                {{ registrationService.getErrorMessage(registrationFormStep4, 'profession') }}
               </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
@@ -534,7 +534,7 @@
                 </mat-option>
               </mat-autocomplete>
               <mat-error *ngIf="registrationFormStep4.get('relationship').invalid">
-                {{ getErrorMessage('registrationFormStep4', 'relationship') }}
+                {{ registrationService.getErrorMessage(registrationFormStep4, 'relationship') }}
               </mat-error>
             </mat-form-field>
             <div class="stepper-navigation-button-container">
@@ -605,7 +605,7 @@
                 {{ userAgreementStepDoneText }}
               </mat-checkbox>
               <mat-error *ngIf="registrationFormStep5.get('userAgreementStepDone').invalid && registrationFormStep5Ref.submitted">
-                {{ getErrorMessage('registrationFormStep5', 'userAgreementStepDone') }}
+                {{ registrationService.getErrorMessage(registrationFormStep5, 'userAgreementStepDone') }}
               </mat-error>
             </div>
             <div class="stepper-navigation-button-container">
