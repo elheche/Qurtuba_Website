@@ -12,7 +12,7 @@
       <mat-card-title>Open an account</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-horizontal-stepper linear="true" #stepper (animationDone)="setRecaptchaValidators(); copyMainHolderAddress()">
+      <mat-horizontal-stepper linear="false" #stepper (animationDone)="setRecaptchaValidators(); copyMainHolderAddress()">
         <!-- Step 1 -->
         <mat-step [stepControl]="registrationFormStep1" [editable]="isEditable">
           <form [formGroup]="registrationFormStep1" id="registration-form-step-1" #registrationFormStep1Ref="ngForm">
@@ -291,8 +291,8 @@
                 maxlength="14"
                 required
                 [value]="registrationFormStep3.get('postalCode').value | uppercase"
-                (input)="formatCanadianPostalCode($event, 'registrationFormStep3')"
-                (blur)="formatCanadianPostalCode($event, 'registrationFormStep3')"
+                (input)="registrationService.formatCanadianPostalCode($event, registrationFormStep3)"
+                (blur)="registrationService.formatCanadianPostalCode($event, registrationFormStep3)"
                 placeholder="Ex. J4K 5G7 (for Canada)"
               />
               <mat-error *ngIf="registrationFormStep3.get('postalCode').invalid">
@@ -502,8 +502,8 @@
                 maxlength="14"
                 required
                 [value]="registrationFormStep4.get('postalCode').value | uppercase"
-                (input)="formatCanadianPostalCode($event, 'registrationFormStep4')"
-                (blur)="formatCanadianPostalCode($event, 'registrationFormStep4')"
+                (input)="registrationService.formatCanadianPostalCode($event, registrationFormStep4)"
+                (blur)="registrationService.formatCanadianPostalCode($event, registrationFormStep4)"
                 placeholder="Ex. J4K 5G7 (for Canada)"
               />
               <mat-error *ngIf="registrationFormStep4.get('postalCode').invalid">

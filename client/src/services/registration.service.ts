@@ -72,6 +72,36 @@ export class RegistrationService {
     return this.countries.findIndex((country) => country.countryName === formGroup.get('country').value);
   }
 
+  formatCanadianPostalCode(event: InputEvent | FocusEvent, formGroup: FormGroup): void {
+    if (
+      (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') ||
+      formGroup.get('country').value !== 'Canada'
+    ) {
+      return;
+    }
+
+    const control: AbstractControl = formGroup.get('postalCode');
+    const regExTests = [
+      /[^A-Za-z0-9 ]+/g,
+      /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z])[\- ]?(\d)$/i,
+      /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z])[\- ]?(\d[ABCEGHJ-NPRSTV-Z])$/i,
+      /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z])[\- ]?(\d[ABCEGHJ-NPRSTV-Z]\d)(.*)$/i,
+    ];
+
+    let postalCode = control.value as string;
+
+    if (postalCode) {
+      regExTests.forEach((regEx, index) => {
+        if (index === 0) {
+          postalCode = postalCode.replace(regEx, '');
+        } else {
+          postalCode = postalCode.replace(regEx, '$1 $2');
+        }
+      });
+      control.setValue(postalCode.toUpperCase());
+    }
+  }
+
   protected handleError(error: HttpErrorResponse): Observable<never> {
     const errorToThrow = new Error();
     if (error.error instanceof ErrorEvent) {
