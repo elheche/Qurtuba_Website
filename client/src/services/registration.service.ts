@@ -1,9 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup, Validators } from '@angular/forms';
 import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { CustomValidators } from 'src/app/registration/custom-validators';
 import { ICountry } from 'src/app/registration/icountry';
 import { environment } from 'src/environments/environment';
 import { RecaptchaValidation } from '../../../common/communication/recaptcha-validation';
@@ -99,6 +100,41 @@ export class RegistrationService {
         }
       });
       control.setValue(postalCode.toUpperCase());
+    }
+  }
+
+  onCountryValueChange(formGroup: FormGroup): void {
+    let inputsTochange: string[];
+    Object.keys(formGroup.value).includes('membershipType')
+      ? (inputsTochange = ['city', 'province', 'postalCode', 'phoneNumber', 'employerPhoneNumber'])
+      : (inputsTochange = ['city', 'province', 'postalCode']);
+
+    if (formGroup.get('country').value) {
+      const countryIndex = this.findSelectedCountryIndex(formGroup);
+      const regionCode = this.countries[countryIndex].countryShortCode;
+      const postalCodeRegEx = this.countries[countryIndex].postalCodeRegEx;
+
+      inputsTochange.forEach((input) => {
+        formGroup.get(input).reset();
+        formGroup.get(input).enable({ onlySelf: true });
+        switch (input) {
+          case 'postalCode':
+            formGroup.get('postalCode').setValidators([Validators.required, Validators.pattern(new RegExp(postalCodeRegEx))]);
+            break;
+          case 'phoneNumber':
+            formGroup.get('phoneNumber').setValidators([Validators.required, CustomValidators.phoneNumberValidator(regionCode)]);
+            break;
+          case 'employerPhoneNumber':
+            formGroup.get('employerPhoneNumber').setValidators([CustomValidators.phoneNumberValidator(regionCode)]);
+            break;
+        }
+        formGroup.get(input).updateValueAndValidity({ onlySelf: true });
+      });
+    } else {
+      inputsTochange.forEach((input) => {
+        formGroup.get(input).reset();
+        formGroup.get(input).disable({ onlySelf: true });
+      });
     }
   }
 

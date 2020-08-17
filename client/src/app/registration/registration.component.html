@@ -203,7 +203,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('registrationFormStep3')">
+              <mat-select formControlName="country" required (selectionChange)="registrationService.onCountryValueChange(registrationFormStep3)">
                 <mat-option>-- Clear --</mat-option>
                 <mat-option value="Canada">
                   <img class="flag-icon" src="../../assets/countries-flags-png/ca.png" />
@@ -411,7 +411,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('registrationFormStep4')">
+              <mat-select formControlName="country" required (selectionChange)="registrationService.onCountryValueChange(registrationFormStep4)">
                 <mat-option>-- Clear --</mat-option>
                 <mat-option value="Canada">
                   <img class="flag-icon" src="../../assets/countries-flags-png/ca.png" />

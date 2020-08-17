@@ -122,41 +122,6 @@ export class RegistrationComponent implements OnInit {
     return this.countries.findIndex((country) => country.countryName === this[formGroup].get('country').value);
   }
 
-  onCountryValueChange(formGroup: string): void {
-    let inputsTochange: string[];
-    formGroup === 'registrationFormStep3'
-      ? (inputsTochange = ['city', 'province', 'postalCode', 'phoneNumber', 'employerPhoneNumber'])
-      : (inputsTochange = ['city', 'province', 'postalCode']);
-
-    if (this[formGroup].get('country').value) {
-      const countryIndex = this.findSelectedCountryIndex(formGroup);
-      const regionCode = this.countries[countryIndex].countryShortCode;
-      const postalCodeRegEx = this.countries[countryIndex].postalCodeRegEx;
-
-      inputsTochange.forEach((input) => {
-        this[formGroup].get(input).reset();
-        this[formGroup].get(input).enable({ onlySelf: true });
-        switch (input) {
-          case 'postalCode':
-            this[formGroup].get('postalCode').setValidators([Validators.required, Validators.pattern(new RegExp(postalCodeRegEx))]);
-            break;
-          case 'phoneNumber':
-            this[formGroup].get('phoneNumber').setValidators([Validators.required, CustomValidators.phoneNumberValidator(regionCode)]);
-            break;
-          case 'employerPhoneNumber':
-            this[formGroup].get('employerPhoneNumber').setValidators([CustomValidators.phoneNumberValidator(regionCode)]);
-            break;
-        }
-        this[formGroup].get(input).updateValueAndValidity({ onlySelf: true });
-      });
-    } else {
-      inputsTochange.forEach((input) => {
-        this[formGroup].get(input).reset();
-        this[formGroup].get(input).disable({ onlySelf: true });
-      });
-    }
-  }
-
   formatSocialInsuranceNumber(event: InputEvent | FocusEvent, formGroup: string): void {
     if (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') {
       return;
