@@ -118,10 +118,6 @@ export class RegistrationComponent implements OnInit {
     );
   }
 
-  findSelectedCountryIndex(formGroup: string): number {
-    return this.countries.findIndex((country) => country.countryName === this[formGroup].get('country').value);
-  }
-
   formatSocialInsuranceNumber(event: InputEvent | FocusEvent, formGroup: string): void {
     if (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') {
       return;

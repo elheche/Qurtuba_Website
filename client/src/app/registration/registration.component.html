@@ -203,7 +203,11 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <mat-select formControlName="country" required (selectionChange)="registrationService.onCountryValueChange(registrationFormStep3)">
+              <mat-select
+                formControlName="country"
+                required
+                (selectionChange)="registrationService.onCountryValueChange(registrationFormStep3)"
+              >
                 <mat-option>-- Clear --</mat-option>
                 <mat-option value="Canada">
                   <img class="flag-icon" src="../../assets/countries-flags-png/ca.png" />
@@ -270,8 +274,8 @@
                 <mat-option>-- Clear --</mat-option>
                 <mat-option
                   *ngFor="
-                    let province of countries[findSelectedCountryIndex('registrationFormStep3')]
-                      ? countries[findSelectedCountryIndex('registrationFormStep3')].regions
+                    let province of countries[registrationService.findSelectedCountryIndex(registrationFormStep3)]
+                      ? countries[registrationService.findSelectedCountryIndex(registrationFormStep3)].regions
                       : []
                   "
                   [value]="province.name + ' (' + province.shortCode + ')'"
@@ -411,7 +415,11 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Country</mat-label>
-              <mat-select formControlName="country" required (selectionChange)="registrationService.onCountryValueChange(registrationFormStep4)">
+              <mat-select
+                formControlName="country"
+                required
+                (selectionChange)="registrationService.onCountryValueChange(registrationFormStep4)"
+              >
                 <mat-option>-- Clear --</mat-option>
                 <mat-option value="Canada">
                   <img class="flag-icon" src="../../assets/countries-flags-png/ca.png" />
@@ -481,8 +489,8 @@
                 <mat-option>-- Clear --</mat-option>
                 <mat-option
                   *ngFor="
-                    let province of countries[findSelectedCountryIndex('registrationFormStep4')]
-                      ? countries[findSelectedCountryIndex('registrationFormStep4')].regions
+                    let province of countries[registrationService.findSelectedCountryIndex(registrationFormStep4)]
+                      ? countries[registrationService.findSelectedCountryIndex(registrationFormStep4)].regions
                       : []
                   "
                   [value]="province.name + ' (' + province.shortCode + ')'"
