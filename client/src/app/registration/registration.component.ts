@@ -118,35 +118,6 @@ export class RegistrationComponent implements OnInit {
     );
   }
 
-  formatSocialInsuranceNumber(event: InputEvent | FocusEvent, formGroup: string): void {
-    if (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') {
-      return;
-    }
-
-    const control: AbstractControl = this[formGroup].get('socialInsuranceNumber');
-    const regExTests = [
-      /[^\d\-]+/g,
-      /^(\d{3})[\- ]?(\d{1,3})$/,
-      /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{1,3})$/,
-      /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{3})(.*)$/,
-    ];
-
-    let socialInsuranceNumber = control.value as string;
-
-    if (socialInsuranceNumber) {
-      regExTests.forEach((regEx, index) => {
-        if (index === 0) {
-          socialInsuranceNumber = socialInsuranceNumber.replace(regEx, '');
-        } else if (index === 1) {
-          socialInsuranceNumber = socialInsuranceNumber.replace(regEx, '$1-$2');
-        } else {
-          socialInsuranceNumber = socialInsuranceNumber.replace(regEx, '$1-$2-$3');
-        }
-      });
-      control.setValue(socialInsuranceNumber);
-    }
-  }
-
   onAccountTypeSelectionChange(): void {
     let isEmpty = true;
     if (this.isActive) {

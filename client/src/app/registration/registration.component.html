@@ -311,8 +311,8 @@
                 maxlength="11"
                 required
                 placeholder="Ex. 111-111-111"
-                (input)="formatSocialInsuranceNumber($event, 'registrationFormStep3')"
-                (blur)="formatSocialInsuranceNumber($event, 'registrationFormStep3')"
+                (input)="registrationService.formatSocialInsuranceNumber($event, registrationFormStep3)"
+                (blur)="registrationService.formatSocialInsuranceNumber($event, registrationFormStep3)"
               />
               <mat-error *ngIf="registrationFormStep3.get('socialInsuranceNumber').invalid">
                 {{ registrationService.getErrorMessage(registrationFormStep3, 'socialInsuranceNumber') }}
@@ -465,8 +465,8 @@
                 maxlength="11"
                 required
                 placeholder="Ex. 111-111-111"
-                (input)="formatSocialInsuranceNumber($event, 'registrationFormStep4')"
-                (blur)="formatSocialInsuranceNumber($event, 'registrationFormStep4')"
+                (input)="registrationService.formatSocialInsuranceNumber($event, registrationFormStep4)"
+                (blur)="registrationService.formatSocialInsuranceNumber($event, registrationFormStep4)"
               />
               <mat-error *ngIf="registrationFormStep4.get('socialInsuranceNumber').invalid">
                 {{ registrationService.getErrorMessage(registrationFormStep4, 'socialInsuranceNumber') }}
