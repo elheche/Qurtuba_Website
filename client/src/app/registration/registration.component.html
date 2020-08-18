@@ -13,11 +13,11 @@
     </mat-card-header>
     <mat-card-content>
       <mat-horizontal-stepper
-        linear="true"
+        linear="false"
         #stepper
         (animationDone)="
           registrationService.setRecaptchaValidators(registrationFormStep2, stepper);
-          registrationService.copyMainHolderAddress(registrationFormStep3, registrationFormStep4, stepper)
+          registrationService.copyMainHolderAddress(registrationFormStep3, registrationFormStep4)
         "
       >
         <!-- Step 1 -->
@@ -390,7 +390,7 @@
               <mat-checkbox
                 color="primary"
                 formControlName="sameAddressCheckBox"
-                (change)="registrationService.copyMainHolderAddress(registrationFormStep3, registrationFormStep4, null, $event)"
+                (change)="registrationService.copyMainHolderAddress(registrationFormStep3, registrationFormStep4)"
               >
                 {{ environment.inputs.sameAddressCheckBox.checkBoxText }}
               </mat-checkbox>

@@ -189,7 +189,7 @@ export class RegistrationService implements OnDestroy {
     }
   }
 
-  onAccountTypeSelectionChange(mainHolderForm: FormGroup, jointMemberForm: FormGroup, doneForm: FormGroup): void {
+  onAccountTypeSelectionChange(mainHolderForm: FormGroup, jointMemberForm: FormGroup, doneForm?: FormGroup): void {
     let isEmpty = true;
     if (this.jointMemberStatusSource.getValue()) {
       const jointMemberFormValues = Object.values(jointMemberForm.value);
@@ -205,23 +205,29 @@ export class RegistrationService implements OnDestroy {
       case 'Individual':
         if (isEmpty) {
           this.jointMemberStatusSource.next(false);
-          doneForm.reset();
-          this.userAgreementTextSource.next(environment.inputs.userAgreementStepDone.checkBoxText.individual);
+          if (doneForm) {
+            doneForm.reset();
+            this.userAgreementTextSource.next(environment.inputs.userAgreementStepDone.checkBoxText.individual);
+          }
         } else {
           this.openAlertDialog(mainHolderForm, doneForm);
         }
         break;
       case 'Joint':
         jointMemberForm.reset();
-        doneForm.reset();
-        this.userAgreementTextSource.next(environment.inputs.userAgreementStepDone.checkBoxText.joint);
         this.jointMemberStatusSource.next(true);
+        if (doneForm) {
+          doneForm.reset();
+          this.userAgreementTextSource.next(environment.inputs.userAgreementStepDone.checkBoxText.joint);
+        }
         break;
       default:
         if (isEmpty) {
           this.jointMemberStatusSource.next(false);
-          doneForm.reset();
-          this.userAgreementTextSource.next('');
+          if (doneForm) {
+            doneForm.reset();
+            this.userAgreementTextSource.next('');
+          }
         } else {
           this.openAlertDialog(mainHolderForm, doneForm);
         }
@@ -241,33 +247,15 @@ export class RegistrationService implements OnDestroy {
     );
   }
 
-  copyMainHolderAddress(
-    mainHolderForm: FormGroup,
-    jointMemberForm: FormGroup,
-    stepper?: MatHorizontalStepper,
-    event?: MatCheckboxChange,
-  ): void {
+  copyMainHolderAddress(mainHolderForm: FormGroup, jointMemberForm: FormGroup): void {
     const addressInputs = ['address', 'country', 'city', 'province', 'postalCode'];
-    if (!event) {
-      if (
-        stepper &&
-        stepper.selectedIndex === environment.registration.stepsIndex.step4 &&
-        jointMemberForm.get('sameAddressCheckBox').value
-      ) {
-        addressInputs.forEach((input) => {
-          jointMemberForm.get(input).setValue(mainHolderForm.get(input).value);
-        });
-      }
-      return;
-    }
-    if (event.checked) {
+    if (jointMemberForm.get('sameAddressCheckBox').value) {
       addressInputs.forEach((input) => {
         jointMemberForm.get(input).disable({ onlySelf: true });
         jointMemberForm.get(input).setValue(mainHolderForm.get(input).value);
       });
     } else {
       addressInputs.forEach((input) => {
-        jointMemberForm.get(input).reset();
         jointMemberForm.get(input).enable({ onlySelf: true });
       });
     }
@@ -332,7 +320,7 @@ export class RegistrationService implements OnDestroy {
     }
   }
 
-  protected openAlertDialog(mainHolderForm: FormGroup, doneForm: FormGroup): void {
+  protected openAlertDialog(mainHolderForm: FormGroup, doneForm?: FormGroup): void {
     if (this.alertDialog.openDialogs.length > 0) {
       return; // To avoid selectionChange bug (triggered twice when value === undefined).
     }
@@ -344,10 +332,12 @@ export class RegistrationService implements OnDestroy {
       alertDialogRef.afterClosed().subscribe((result: 'OK' | 'Cancel') => {
         if (result === 'OK') {
           this.jointMemberStatusSource.next(false);
-          doneForm.reset();
-          mainHolderForm.get('accountType').value === 'Individual'
-            ? this.userAgreementTextSource.next(environment.inputs.userAgreementStepDone.checkBoxText.individual)
-            : this.userAgreementTextSource.next('');
+          if (doneForm) {
+            doneForm.reset();
+            mainHolderForm.get('accountType').value === 'Individual'
+              ? this.userAgreementTextSource.next(environment.inputs.userAgreementStepDone.checkBoxText.individual)
+              : this.userAgreementTextSource.next('');
+          }
         } else {
           mainHolderForm.get('accountType').setValue('Joint');
         }
