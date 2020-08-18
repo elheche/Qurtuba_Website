@@ -1,7 +1,9 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup, Validators } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
+import { MatHorizontalStepper } from '@angular/material/stepper';
 import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
 import { BehaviorSubject, Observable, Subscription, throwError } from 'rxjs';
 import { catchError, map, startWith } from 'rxjs/operators';
@@ -235,6 +237,38 @@ export class RegistrationService implements OnDestroy {
           : environment.inputs.relationship.types.slice();
       }),
     );
+  }
+
+  copyMainHolderAddress(
+    mainHolderForm: FormGroup,
+    jointMemberForm: FormGroup,
+    stepper?: MatHorizontalStepper,
+    event?: MatCheckboxChange,
+  ): void {
+    const addressInputs = ['address', 'country', 'city', 'province', 'postalCode'];
+    if (!event) {
+      if (
+        stepper &&
+        stepper.selectedIndex === environment.registration.stepsIndex.step4 &&
+        jointMemberForm.get('sameAddressCheckBox').value
+      ) {
+        addressInputs.forEach((input) => {
+          jointMemberForm.get(input).setValue(mainHolderForm.get(input).value);
+        });
+      }
+      return;
+    }
+    if (event.checked) {
+      addressInputs.forEach((input) => {
+        jointMemberForm.get(input).disable({ onlySelf: true });
+        jointMemberForm.get(input).setValue(mainHolderForm.get(input).value);
+      });
+    } else {
+      addressInputs.forEach((input) => {
+        jointMemberForm.get(input).reset();
+        jointMemberForm.get(input).enable({ onlySelf: true });
+      });
+    }
   }
 
   protected handleError(error: HttpErrorResponse): Observable<never> {

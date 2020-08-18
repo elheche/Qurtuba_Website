@@ -5,7 +5,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { RegistrationService } from 'src/services/registration.service';
 import { RecaptchaValidation } from '../../../../common/communication/recaptcha-validation';
 import data from '../../assets/countries-data.json';
@@ -187,32 +186,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       recaptchaInputs.forEach((recaptchaInput) => {
         this.registrationFormStep2.get(recaptchaInput).clearValidators();
         this.registrationFormStep2.get(recaptchaInput).updateValueAndValidity();
-      });
-    }
-  }
-
-  copyMainHolderAddress(event?: MatCheckboxChange): void {
-    const addressInputs = ['address', 'country', 'city', 'province', 'postalCode'];
-    if (!event) {
-      if (
-        this.stepper.selectedIndex === environment.registration.stepsIndex.step4 &&
-        this.registrationFormStep4.get('sameAddressCheckBox').value
-      ) {
-        addressInputs.forEach((input) => {
-          this.registrationFormStep4.get(input).setValue(this.registrationFormStep3.get(input).value);
-        });
-      }
-      return;
-    }
-    if (event.checked) {
-      addressInputs.forEach((input) => {
-        this.registrationFormStep4.get(input).disable({ onlySelf: true });
-        this.registrationFormStep4.get(input).setValue(this.registrationFormStep3.get(input).value);
-      });
-    } else {
-      addressInputs.forEach((input) => {
-        this.registrationFormStep4.get(input).reset();
-        this.registrationFormStep4.get(input).enable({ onlySelf: true });
       });
     }
   }

@@ -12,7 +12,13 @@
       <mat-card-title>Open an account</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-horizontal-stepper linear="false" #stepper (animationDone)="setRecaptchaValidators(); copyMainHolderAddress()">
+      <mat-horizontal-stepper
+        linear="false"
+        #stepper
+        (animationDone)="
+          setRecaptchaValidators(); registrationService.copyMainHolderAddress(registrationFormStep3, registrationFormStep4, stepper)
+        "
+      >
         <!-- Step 1 -->
         <mat-step [stepControl]="registrationFormStep1" [editable]="isEditable">
           <form [formGroup]="registrationFormStep1" id="registration-form-step-1" #registrationFormStep1Ref="ngForm">
@@ -376,7 +382,11 @@
             <ng-template matStepLabel>Step 4</ng-template>
             <h2>Joint member information</h2>
             <div id="same-address-checkbox-container">
-              <mat-checkbox color="primary" formControlName="sameAddressCheckBox" (change)="copyMainHolderAddress($event)">
+              <mat-checkbox
+                color="primary"
+                formControlName="sameAddressCheckBox"
+                (change)="registrationService.copyMainHolderAddress(registrationFormStep3, registrationFormStep4, null, $event)"
+              >
                 {{ environment.inputs.sameAddressCheckBox.checkBoxText }}
               </mat-checkbox>
             </div>
