@@ -3,8 +3,10 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
+import { RecaptchaComponent } from 'ng-recaptcha';
 import { BehaviorSubject, Observable, Subscription, throwError } from 'rxjs';
 import { catchError, map, startWith } from 'rxjs/operators';
 import { AlertDialogComponent } from 'src/app/alert-dialog/alert-dialog.component';
@@ -27,7 +29,7 @@ export class RegistrationService implements OnDestroy {
   jointMemberStatus: Observable<boolean>;
   userAgreementText: Observable<string>;
 
-  constructor(private http: HttpClient, private alertDialog: MatDialog) {
+  constructor(private http: HttpClient, private alertDialog: MatDialog, private snackBar: MatSnackBar) {
     this.RECAPTCHA_VALIDATION_URL = 'http://localhost:3000/api/recaptcha/token-validation';
     this.httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -267,6 +269,52 @@ export class RegistrationService implements OnDestroy {
       addressInputs.forEach((input) => {
         jointMemberForm.get(input).reset();
         jointMemberForm.get(input).enable({ onlySelf: true });
+      });
+    }
+  }
+
+  validateRecaptcha(formGroup: FormGroup, reCaptcha: RecaptchaComponent, reCaptchaResponse: string): void {
+    if (reCaptchaResponse) {
+      this.subscriptions.push(
+        this.sendToken(reCaptchaResponse).subscribe(
+          (res: RecaptchaValidation) => {
+            if (res.success) {
+              formGroup.get('reCaptchaValidation').setValue(true);
+            }
+          },
+          (error: Error) => {
+            reCaptcha.reset();
+            this.showReCaptchaValidationError(error.name);
+          },
+        ),
+      );
+    } else {
+      formGroup.get('reCaptchaValidation').setValue(null); // When recaptcha token expire.
+    }
+  }
+
+  showReCaptchaValidationError(errorName: string): void {
+    let errorMessage: string;
+    errorName === 'ClientOrNetworkError'
+      ? (errorMessage = 'A client-side or network error occurred!')
+      : (errorMessage = 'A server error occured! Please try again later.');
+    this.snackBar.open(errorMessage, undefined, {
+      duration: environment.registration.snackbarDuration,
+      panelClass: 'snackbar',
+    });
+  }
+
+  setRecaptchaValidators(formGroup: FormGroup, stepper: MatHorizontalStepper): void {
+    const recaptchaInputs = ['reCaptchaValidation', 'reCaptcha'];
+    if (stepper.selectedIndex === environment.registration.stepsIndex.step2) {
+      recaptchaInputs.forEach((recaptchaInput) => {
+        formGroup.get(recaptchaInput).setValidators([Validators.required]);
+        formGroup.get(recaptchaInput).updateValueAndValidity();
+      });
+    } else {
+      recaptchaInputs.forEach((recaptchaInput) => {
+        formGroup.get(recaptchaInput).clearValidators();
+        formGroup.get(recaptchaInput).updateValueAndValidity();
       });
     }
   }

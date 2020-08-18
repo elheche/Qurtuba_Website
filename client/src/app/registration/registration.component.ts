@@ -1,12 +1,9 @@
 import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { Observable, Subscription } from 'rxjs';
 import { RegistrationService } from 'src/services/registration.service';
-import { RecaptchaValidation } from '../../../../common/communication/recaptcha-validation';
 import data from '../../assets/countries-data.json';
 import { environment } from '../../environments/environment';
 import { CustomValidators } from './custom-validators';
@@ -36,7 +33,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   userAgreementText: string;
   private subscriptions: Subscription[];
 
-  constructor(public registrationService: RegistrationService, protected snackBar: MatSnackBar) {
+  constructor(public registrationService: RegistrationService) {
     this.hide = true;
     this.isEditable = true;
     this.environment = environment;
@@ -141,52 +138,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         }
         break;
       }
-    }
-  }
-
-  validateRecaptcha(reCaptchaResponse: string): void {
-    if (reCaptchaResponse) {
-      this.subscriptions.push(
-        this.registrationService.sendToken(reCaptchaResponse).subscribe(
-          (res: RecaptchaValidation) => {
-            if (res.success) {
-              this.registrationFormStep2.get('reCaptchaValidation').setValue(true);
-            }
-          },
-          (error: Error) => {
-            this.reCaptcha.reset();
-            this.showReCaptchaValidationError(error.name);
-          },
-        ),
-      );
-    } else {
-      this.registrationFormStep2.get('reCaptchaValidation').setValue(null); // When recaptcha token expire.
-    }
-  }
-
-  showReCaptchaValidationError(errorName: string): void {
-    let errorMessage: string;
-    errorName === 'ClientOrNetworkError'
-      ? (errorMessage = 'A client-side or network error occurred!')
-      : (errorMessage = 'A server error occured! Please try again later.');
-    this.snackBar.open(errorMessage, undefined, {
-      duration: environment.registration.snackbarDuration,
-      panelClass: 'snackbar',
-    });
-  }
-
-  setRecaptchaValidators(): void {
-    const recaptchaInputs = ['reCaptchaValidation', 'reCaptcha'];
-    if (this.stepper.selectedIndex === environment.registration.stepsIndex.step2) {
-      recaptchaInputs.forEach((recaptchaInput) => {
-        this.registrationFormStep2.get(recaptchaInput).setValidators([Validators.required]);
-        this.registrationFormStep2.get(recaptchaInput).updateValueAndValidity();
-      });
-    } else {
-      recaptchaInputs.forEach((recaptchaInput) => {
-        this.registrationFormStep2.get(recaptchaInput).clearValidators();
-        this.registrationFormStep2.get(recaptchaInput).updateValueAndValidity();
-      });
     }
   }
 }
