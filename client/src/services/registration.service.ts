@@ -4,7 +4,7 @@ import { AbstractControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
 import { BehaviorSubject, Observable, Subscription, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map, startWith } from 'rxjs/operators';
 import { AlertDialogComponent } from 'src/app/alert-dialog/alert-dialog.component';
 import { CustomValidators } from 'src/app/registration/custom-validators';
 import { ICountry } from 'src/app/registration/icountry';
@@ -222,6 +222,19 @@ export class RegistrationService implements OnDestroy {
           this.openAlertDialog(mainHolderForm, doneForm);
         }
     }
+  }
+
+  filterRelationships(formGroup: FormGroup): Observable<string[]> {
+    return formGroup.get('relationship').valueChanges.pipe(
+      startWith(''),
+      map((filterValue) => {
+        return filterValue
+          ? environment.inputs.relationship.types.filter(
+              (relationship) => relationship.toLowerCase().indexOf(filterValue.toLowerCase()) === 0,
+            )
+          : environment.inputs.relationship.types.slice();
+      }),
+    );
   }
 
   protected handleError(error: HttpErrorResponse): Observable<never> {

@@ -119,24 +119,13 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       }),
     );
 
-    this.filteredRelationships = this.registrationFormStep4.get('relationship').valueChanges.pipe(
-      startWith(''),
-      map((relationshipType) => {
-        return relationshipType ? this.filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
-      }),
-    );
+    this.filteredRelationships = this.registrationService.filterRelationships(this.registrationFormStep4);
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
-  }
-
-  protected filterRelationshipTypes(filterValue: string): string[] {
-    return environment.inputs.relationship.types.filter(
-      (relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0,
-    );
   }
 
   @HostListener('click', ['$event'])
