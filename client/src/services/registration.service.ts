@@ -1,9 +1,11 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AlertDialogComponent } from 'src/app/alert-dialog/alert-dialog.component';
 import { CustomValidators } from 'src/app/registration/custom-validators';
 import { ICountry } from 'src/app/registration/icountry';
 import { environment } from 'src/environments/environment';
@@ -13,18 +15,34 @@ import data from '../assets/countries-data.json';
 @Injectable({
   providedIn: 'root',
 })
-export class RegistrationService {
+export class RegistrationService implements OnDestroy {
   private readonly RECAPTCHA_VALIDATION_URL: string;
   private httpOptions: {};
+  private jointMemberStatusSource: BehaviorSubject<boolean>;
+  private userAgreementTextSource: BehaviorSubject<string>;
+  private subscriptions: Subscription[];
   countries: ICountry[];
+  jointMemberStatus: Observable<boolean>;
+  userAgreementText: Observable<string>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private alertDialog: MatDialog) {
     this.RECAPTCHA_VALIDATION_URL = 'http://localhost:3000/api/recaptcha/token-validation';
     this.httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       responseType: 'json',
     };
     this.countries = data as ICountry[];
+    this.subscriptions = [];
+    this.jointMemberStatusSource = new BehaviorSubject<boolean>(false);
+    this.jointMemberStatus = this.jointMemberStatusSource.asObservable();
+    this.userAgreementTextSource = new BehaviorSubject<string>('');
+    this.userAgreementText = this.userAgreementTextSource.asObservable();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
   }
 
   sendToken(reCaptchaResponse: string): Observable<RecaptchaValidation> {
@@ -167,6 +185,45 @@ export class RegistrationService {
     }
   }
 
+  onAccountTypeSelectionChange(mainHolderForm: FormGroup, jointMemberForm: FormGroup, doneForm: FormGroup): void {
+    let isEmpty = true;
+    if (this.jointMemberStatusSource.getValue()) {
+      const jointMemberFormValues = Object.values(jointMemberForm.value);
+      for (const value of jointMemberFormValues) {
+        if (value) {
+          isEmpty = false;
+          break;
+        }
+      }
+    }
+    const accountType = mainHolderForm.get('accountType').value;
+    switch (accountType) {
+      case 'Individual':
+        if (isEmpty) {
+          this.jointMemberStatusSource.next(false);
+          doneForm.reset();
+          this.userAgreementTextSource.next(environment.inputs.userAgreementStepDone.checkBoxText.individual);
+        } else {
+          this.openAlertDialog(mainHolderForm, doneForm);
+        }
+        break;
+      case 'Joint':
+        jointMemberForm.reset();
+        doneForm.reset();
+        this.userAgreementTextSource.next(environment.inputs.userAgreementStepDone.checkBoxText.joint);
+        this.jointMemberStatusSource.next(true);
+        break;
+      default:
+        if (isEmpty) {
+          this.jointMemberStatusSource.next(false);
+          doneForm.reset();
+          this.userAgreementTextSource.next('');
+        } else {
+          this.openAlertDialog(mainHolderForm, doneForm);
+        }
+    }
+  }
+
   protected handleError(error: HttpErrorResponse): Observable<never> {
     const errorToThrow = new Error();
     if (error.error instanceof ErrorEvent) {
@@ -178,5 +235,28 @@ export class RegistrationService {
       errorToThrow.message = error.error.message ? error.error.message : error.message;
       return throwError(errorToThrow);
     }
+  }
+
+  protected openAlertDialog(mainHolderForm: FormGroup, doneForm: FormGroup): void {
+    if (this.alertDialog.openDialogs.length > 0) {
+      return; // To avoid selectionChange bug (triggered twice when value === undefined).
+    }
+    const alertDialogRef = this.alertDialog.open(AlertDialogComponent, {
+      width: '400px',
+      disableClose: true,
+    });
+    this.subscriptions.push(
+      alertDialogRef.afterClosed().subscribe((result: 'OK' | 'Cancel') => {
+        if (result === 'OK') {
+          this.jointMemberStatusSource.next(false);
+          doneForm.reset();
+          mainHolderForm.get('accountType').value === 'Individual'
+            ? this.userAgreementTextSource.next(environment.inputs.userAgreementStepDone.checkBoxText.individual)
+            : this.userAgreementTextSource.next('');
+        } else {
+          mainHolderForm.get('accountType').setValue('Joint');
+        }
+      }),
+    );
   }
 }

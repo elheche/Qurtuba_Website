@@ -152,7 +152,13 @@
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Indicate the type of account</mat-label>
-              <mat-select formControlName="accountType" required (selectionChange)="onAccountTypeSelectionChange()">
+              <mat-select
+                formControlName="accountType"
+                required
+                (selectionChange)="
+                  registrationService.onAccountTypeSelectionChange(registrationFormStep3, registrationFormStep4, registrationFormStep5)
+                "
+              >
                 <mat-option>-- Clear --</mat-option>
                 <mat-option *ngFor="let accountType of environment.inputs.accountType.types" [value]="accountType">
                   {{ accountType }}
@@ -365,7 +371,7 @@
           </form>
         </mat-step>
         <!-- Step 4 -->
-        <mat-step [stepControl]="registrationFormStep4" [editable]="isEditable" *ngIf="isActive">
+        <mat-step [stepControl]="registrationFormStep4" [editable]="isEditable" *ngIf="jointMemberStatus">
           <form [formGroup]="registrationFormStep4" id="registration-form-step-4">
             <ng-template matStepLabel>Step 4</ng-template>
             <h2>Joint member information</h2>
@@ -610,7 +616,7 @@
               }"
             >
               <mat-checkbox color="primary" formControlName="userAgreementStepDone" required>
-                {{ userAgreementStepDoneText }}
+                {{ userAgreementText }}
               </mat-checkbox>
               <mat-error *ngIf="registrationFormStep5.get('userAgreementStepDone').invalid && registrationFormStep5Ref.submitted">
                 {{ registrationService.getErrorMessage(registrationFormStep5, 'userAgreementStepDone') }}

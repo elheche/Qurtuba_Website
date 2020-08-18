@@ -1,18 +1,15 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatHorizontalStepper } from '@angular/material/stepper';
-import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
 import { RecaptchaComponent } from 'ng-recaptcha';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { RegistrationService } from 'src/services/registration.service';
 import { RecaptchaValidation } from '../../../../common/communication/recaptcha-validation';
 import data from '../../assets/countries-data.json';
 import { environment } from '../../environments/environment';
-import { AlertDialogComponent } from '../alert-dialog/alert-dialog.component';
 import { CustomValidators } from './custom-validators';
 import { ICountry } from './icountry';
 
@@ -21,7 +18,7 @@ import { ICountry } from './icountry';
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss'],
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent implements OnInit, OnDestroy {
   @ViewChild('registrationFormStep1Ref') registrationFormStep1Ref: FormGroupDirective;
   @ViewChild('registrationFormStep2Ref') registrationFormStep2Ref: FormGroupDirective;
   @ViewChild('stepper') stepper: MatHorizontalStepper;
@@ -33,19 +30,19 @@ export class RegistrationComponent implements OnInit {
   registrationFormStep5: FormGroup;
   hide: boolean;
   isEditable: boolean;
-  isActive: boolean;
+  jointMemberStatus: boolean;
   environment: typeof environment;
   countries: ICountry[];
   filteredRelationships: Observable<string[]>;
-  userAgreementStepDoneText: string;
+  userAgreementText: string;
+  private subscriptions: Subscription[];
 
-  constructor(public registrationService: RegistrationService, protected alertDialog: MatDialog, protected snackBar: MatSnackBar) {
+  constructor(public registrationService: RegistrationService, protected snackBar: MatSnackBar) {
     this.hide = true;
     this.isEditable = true;
-    this.isActive = false;
     this.environment = environment;
     this.countries = data as ICountry[];
-    this.userAgreementStepDoneText = '';
+    this.subscriptions = [];
 
     this.registrationFormStep1 = new FormGroup({
       userAgreementStep1: new FormControl(null, [Validators.required]),
@@ -110,6 +107,18 @@ export class RegistrationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.subscriptions.push(
+      this.registrationService.jointMemberStatus.subscribe((jointMemberStatus) => {
+        this.jointMemberStatus = jointMemberStatus;
+      }),
+    );
+
+    this.subscriptions.push(
+      this.registrationService.userAgreementText.subscribe((userAgreementText) => {
+        this.userAgreementText = userAgreementText;
+      }),
+    );
+
     this.filteredRelationships = this.registrationFormStep4.get('relationship').valueChanges.pipe(
       startWith(''),
       map((relationshipType) => {
@@ -118,70 +127,16 @@ export class RegistrationComponent implements OnInit {
     );
   }
 
-  onAccountTypeSelectionChange(): void {
-    let isEmpty = true;
-    if (this.isActive) {
-      const registrationFormStep4Values = Object.values(this.registrationFormStep4.value);
-      for (const value of registrationFormStep4Values) {
-        if (value) {
-          isEmpty = false;
-          break;
-        }
-      }
-    }
-    const accountType = this.registrationFormStep3.get('accountType').value;
-    switch (accountType) {
-      case 'Individual':
-        if (isEmpty) {
-          this.isActive = false;
-          this.registrationFormStep5.reset();
-          this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.checkBoxText.individual;
-        } else {
-          this.openAlertDialog();
-        }
-        break;
-      case 'Joint':
-        this.registrationFormStep4.reset();
-        this.registrationFormStep5.reset();
-        this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.checkBoxText.joint;
-        this.isActive = true;
-        break;
-      default:
-        if (isEmpty) {
-          this.isActive = false;
-          this.registrationFormStep5.reset();
-          this.userAgreementStepDoneText = '';
-        } else {
-          this.openAlertDialog();
-        }
-    }
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
   }
 
   protected filterRelationshipTypes(filterValue: string): string[] {
     return environment.inputs.relationship.types.filter(
       (relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0,
     );
-  }
-
-  protected openAlertDialog(): void {
-    if (this.alertDialog.openDialogs.length > 0) {
-      return; // To avoid selectionChange bug (triggered twice when value === undefined).
-    }
-    const alertDialogRef = this.alertDialog.open(AlertDialogComponent, {
-      width: '400px',
-      disableClose: true,
-    });
-    alertDialogRef.afterClosed().subscribe((result: 'OK' | 'Cancel') => {
-      if (result === 'OK') {
-        this.isActive = false;
-        this.registrationFormStep5.reset();
-        this.registrationFormStep3.get('accountType').value === 'Individual'
-          ? (this.userAgreementStepDoneText = environment.inputs.userAgreementStepDone.checkBoxText.individual)
-          : (this.userAgreementStepDoneText = '');
-      } else {
-        this.registrationFormStep3.get('accountType').setValue('Joint');
-      }
-    });
   }
 
   @HostListener('click', ['$event'])
@@ -203,16 +158,18 @@ export class RegistrationComponent implements OnInit {
 
   validateRecaptcha(reCaptchaResponse: string): void {
     if (reCaptchaResponse) {
-      this.registrationService.sendToken(reCaptchaResponse).subscribe(
-        (res: RecaptchaValidation) => {
-          if (res.success) {
-            this.registrationFormStep2.get('reCaptchaValidation').setValue(true);
-          }
-        },
-        (error: Error) => {
-          this.reCaptcha.reset();
-          this.showReCaptchaValidationError(error.name);
-        },
+      this.subscriptions.push(
+        this.registrationService.sendToken(reCaptchaResponse).subscribe(
+          (res: RecaptchaValidation) => {
+            if (res.success) {
+              this.registrationFormStep2.get('reCaptchaValidation').setValue(true);
+            }
+          },
+          (error: Error) => {
+            this.reCaptcha.reset();
+            this.showReCaptchaValidationError(error.name);
+          },
+        ),
       );
     } else {
       this.registrationFormStep2.get('reCaptchaValidation').setValue(null); // When recaptcha token expire.
