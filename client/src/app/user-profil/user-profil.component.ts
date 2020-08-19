@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAccordion } from '@angular/material/expansion';
-import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { RegistrationService } from 'src/services/registration.service';
 import data from '../../assets/countries-data.json';
 import { CustomValidators } from '../registration/custom-validators';
 import { ICountry } from '../registration/icountry';
@@ -57,22 +56,25 @@ const inputs4 = {
   templateUrl: './user-profil.component.html',
   styleUrls: ['./user-profil.component.scss'],
 })
-export class UserProfilComponent implements OnInit {
+export class UserProfilComponent implements OnInit, OnDestroy {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   readonly: boolean;
   hide: boolean;
   environment: typeof environment;
   countries: ICountry[];
   filteredRelationships: Observable<string[]>;
+  jointMemberStatus: boolean;
   loginForm: FormGroup;
   mainHolderForm: FormGroup;
   jointMemberForm: FormGroup;
+  private subscriptions: Subscription[];
 
-  constructor() {
+  constructor(public registrationService: RegistrationService) {
     this.readonly = true;
     this.hide = true;
     this.environment = environment;
     this.countries = data as ICountry[];
+    this.subscriptions = [];
     this.loginForm = new FormGroup({
       email: new FormControl(null, [
         Validators.required,
@@ -123,159 +125,21 @@ export class UserProfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.filteredRelationships = this.jointMemberForm.get('relationship').valueChanges.pipe(
-      startWith(''),
-      map((relationshipType) => {
-        return relationshipType ? this.filterRelationshipTypes(relationshipType) : environment.inputs.relationship.types.slice();
+    this.filteredRelationships = this.registrationService.filterRelationships(this.jointMemberForm);
+    this.subscriptions.push(
+      this.registrationService.jointMemberStatus.subscribe((jointMemberStatus) => {
+        this.jointMemberStatus = jointMemberStatus;
       }),
     );
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+  }
+
   onEdit(): void {
     this.readonly = !this.readonly;
-  }
-
-  getErrorMessage(formGroup: string, input: string): string {
-    return environment.inputs[input].errorMessages[Object.keys(this[formGroup].get(input).errors)[0]];
-  }
-
-  onPasswordValueChange(): void {
-    this.loginForm.get('confirmPassword').reset();
-  }
-
-  formatPhoneNumber(event: InputEvent | FocusEvent, formGroup: string, input: string): void {
-    if (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') {
-      return;
-    }
-
-    const control: AbstractControl = this[formGroup].get(input);
-    const countryIndex = this.findSelectedCountryIndex(formGroup);
-    const regionCode = this.countries[countryIndex].countryShortCode;
-    const regEx1 = /[^\d\(\)\-+ ]+/g;
-    const inputValue = control.value as string;
-
-    if (inputValue && regEx1.test(inputValue)) {
-      control.setValue(inputValue.replace(regEx1, ''));
-    }
-
-    if (control.valid) {
-      const phoneNumberUtil = PhoneNumberUtil.getInstance();
-      try {
-        const phoneNumber = phoneNumberUtil.parseAndKeepRawInput(control.value, regionCode);
-        regionCode === 'CA'
-          ? control.setValue(phoneNumberUtil.format(phoneNumber, PhoneNumberFormat.NATIONAL))
-          : control.setValue(phoneNumberUtil.format(phoneNumber, PhoneNumberFormat.INTERNATIONAL));
-      } catch (e) {
-        return;
-      }
-    }
-  }
-
-  formatCanadianPostalCode(event: InputEvent | FocusEvent, formGroup: string): void {
-    if (
-      (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') ||
-      this[formGroup].get('country').value !== 'Canada'
-    ) {
-      return;
-    }
-
-    const control: AbstractControl = this[formGroup].get('postalCode');
-    const regExTests = [
-      /[^A-Za-z0-9 ]+/g,
-      /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z])[\- ]?(\d)$/i,
-      /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z])[\- ]?(\d[ABCEGHJ-NPRSTV-Z])$/i,
-      /^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z])[\- ]?(\d[ABCEGHJ-NPRSTV-Z]\d)(.*)$/i,
-    ];
-
-    let postalCode = control.value as string;
-
-    if (postalCode) {
-      regExTests.forEach((regEx, index) => {
-        if (index === 0) {
-          postalCode = postalCode.replace(regEx, '');
-        } else {
-          postalCode = postalCode.replace(regEx, '$1 $2');
-        }
-      });
-      control.setValue(postalCode.toUpperCase());
-    }
-  }
-
-  findSelectedCountryIndex(formGroup: string): number {
-    return this.countries.findIndex((country) => country.countryName === this[formGroup].get('country').value);
-  }
-
-  onCountryValueChange(formGroup: string): void {
-    let inputsTochange: string[];
-    formGroup === 'mainHolderForm'
-      ? (inputsTochange = ['city', 'province', 'postalCode', 'phoneNumber', 'employerPhoneNumber'])
-      : (inputsTochange = ['city', 'province', 'postalCode']);
-
-    if (this[formGroup].get('country').value) {
-      const countryIndex = this.findSelectedCountryIndex(formGroup);
-      const regionCode = this.countries[countryIndex].countryShortCode;
-      const postalCodeRegEx = this.countries[countryIndex].postalCodeRegEx;
-
-      inputsTochange.forEach((input) => {
-        this[formGroup].get(input).reset();
-        this[formGroup].get(input).enable({ onlySelf: true });
-        switch (input) {
-          case 'postalCode':
-            this[formGroup].get('postalCode').setValidators([Validators.required, Validators.pattern(new RegExp(postalCodeRegEx))]);
-            break;
-          case 'phoneNumber':
-            this[formGroup].get('phoneNumber').setValidators([Validators.required, CustomValidators.phoneNumberValidator(regionCode)]);
-            break;
-          case 'employerPhoneNumber':
-            this[formGroup].get('employerPhoneNumber').setValidators([CustomValidators.phoneNumberValidator(regionCode)]);
-            break;
-        }
-        this[formGroup].get(input).updateValueAndValidity({ onlySelf: true });
-      });
-    } else {
-      inputsTochange.forEach((input) => {
-        this[formGroup].get(input).reset();
-        this[formGroup].get(input).disable({ onlySelf: true });
-      });
-    }
-  }
-
-  formatSocialInsuranceNumber(event: InputEvent | FocusEvent, formGroup: string): void {
-    if (event.type === 'input' && (event as InputEvent).inputType === 'insertCompositionText') {
-      return;
-    }
-
-    const control: AbstractControl = this[formGroup].get('socialInsuranceNumber');
-    const regExTests = [
-      /[^\d\-]+/g,
-      /^(\d{3})[\- ]?(\d{1,3})$/,
-      /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{1,3})$/,
-      /^(\d{3})[\- ]?(\d{3})[\- ]?(\d{3})(.*)$/,
-    ];
-
-    let socialInsuranceNumber = control.value as string;
-
-    if (socialInsuranceNumber) {
-      regExTests.forEach((regEx, index) => {
-        if (index === 0) {
-          socialInsuranceNumber = socialInsuranceNumber.replace(regEx, '');
-        } else if (index === 1) {
-          socialInsuranceNumber = socialInsuranceNumber.replace(regEx, '$1-$2');
-        } else {
-          socialInsuranceNumber = socialInsuranceNumber.replace(regEx, '$1-$2-$3');
-        }
-      });
-      control.setValue(socialInsuranceNumber);
-    }
-  }
-
-  onAccountTypeSelectionChange(): void {
-    /*  */
-  }
-
-  protected filterRelationshipTypes(filterValue: string): string[] {
-    return environment.inputs.relationship.types.filter(
-      (relationshipType) => relationshipType.toLowerCase().indexOf(filterValue.toLowerCase()) === 0,
-    );
   }
 }

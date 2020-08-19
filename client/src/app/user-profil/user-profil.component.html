@@ -34,12 +34,12 @@
             <mat-icon class="material-icons-round">vpn_key</mat-icon>
           </mat-panel-description>
         </mat-expansion-panel-header>
-        <form [formGroup]="loginForm" id="login-form" #loginFormRef="ngForm">
+        <form [formGroup]="loginForm" id="login-form">
           <mat-form-field appearance="outline">
             <mat-label>Email address</mat-label>
             <input matInput type="email" placeholder="user@example.com" formControlName="email" required readonly />
             <mat-error *ngIf="loginForm.get('email').invalid">
-              {{ getErrorMessage('loginForm', 'email') }}
+              {{ registrationService.getErrorMessage(loginForm, 'email') }}
             </mat-error>
             <button mat-icon-button matPrefix disabled>
               <mat-icon class="material-icons-round">email</mat-icon>
@@ -52,14 +52,14 @@
               [type]="hide ? 'password' : 'text'"
               formControlName="password"
               required
-              (input)="onPasswordValueChange()"
+              (input)="registrationService.onPasswordValueChange(loginForm)"
               #passwordInput
               maxlength="32"
               [readonly]="readonly"
             />
             <mat-hint align="end" *ngIf="!readonly">{{ passwordInput.value?.length || 0 }}/32</mat-hint>
             <mat-error *ngIf="loginForm.get('password').invalid">
-              {{ getErrorMessage('loginForm', 'password') }}
+              {{ registrationService.getErrorMessage(loginForm, 'password') }}
             </mat-error>
             <button mat-icon-button matPrefix disabled>
               <mat-icon class="material-icons-round">lock</mat-icon>
@@ -79,7 +79,9 @@
           <mat-form-field appearance="outline" *ngIf="!readonly">
             <mat-label>Confirm your password</mat-label>
             <input matInput [type]="hide ? 'password' : 'text'" formControlName="confirmPassword" required [readonly]="readonly" />
-            <mat-error *ngIf="loginForm.get('confirmPassword').invalid"> {{ getErrorMessage('loginForm', 'confirmPassword') }}</mat-error>
+            <mat-error *ngIf="loginForm.get('confirmPassword').invalid">
+              {{ registrationService.getErrorMessage(loginForm, 'confirmPassword') }}</mat-error
+            >
             <button mat-icon-button matPrefix disabled>
               <mat-icon class="material-icons-round">lock</mat-icon>
             </button>
@@ -116,7 +118,7 @@
               readonly
             />
             <mat-error *ngIf="mainHolderForm.get('membershipType').invalid">
-              {{ getErrorMessage('mainHolderForm', 'membershipType') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'membershipType') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" *ngIf="!readonly">
@@ -128,40 +130,44 @@
               </mat-option>
             </mat-select>
             <mat-error *ngIf="mainHolderForm.get('membershipType').invalid">
-              {{ getErrorMessage('mainHolderForm', 'membershipType') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'membershipType') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" *ngIf="readonly">
             <mat-label>Indicate the type of account</mat-label>
             <input matInput formControlName="accountType" required [value]="mainHolderForm.get('accountType').value | titlecase" readonly />
             <mat-error *ngIf="mainHolderForm.get('accountType').invalid">
-              {{ getErrorMessage('mainHolderForm', 'accountType') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'accountType') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" *ngIf="!readonly">
             <mat-label>Indicate the type of account</mat-label>
-            <mat-select formControlName="accountType" required (selectionChange)="onAccountTypeSelectionChange()">
+            <mat-select
+              formControlName="accountType"
+              required
+              (selectionChange)="registrationService.onAccountTypeSelectionChange(mainHolderForm, jointMemberForm)"
+            >
               <mat-option>-- Clear --</mat-option>
               <mat-option *ngFor="let accountType of environment.inputs.accountType.types" [value]="accountType">
                 {{ accountType }}
               </mat-option>
             </mat-select>
             <mat-error *ngIf="mainHolderForm.get('accountType').invalid">
-              {{ getErrorMessage('mainHolderForm', 'accountType') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'accountType') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Title</mat-label>
             <input matInput formControlName="title" required [value]="mainHolderForm.get('title').value | titlecase" readonly />
             <mat-error *ngIf="mainHolderForm.get('title').invalid">
-              {{ getErrorMessage('mainHolderForm', 'title') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'title') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>First name</mat-label>
             <input matInput formControlName="firstName" required [value]="mainHolderForm.get('firstName').value | titlecase" readonly />
             <mat-error *ngIf="mainHolderForm.get('firstName').invalid">
-              {{ getErrorMessage('mainHolderForm', 'firstName') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'firstName') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -175,26 +181,26 @@
               [readonly]="readonly"
             />
             <mat-error *ngIf="mainHolderForm.get('address').invalid">
-              {{ getErrorMessage('mainHolderForm', 'address') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'address') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Last name</mat-label>
             <input matInput formControlName="lastName" required [value]="mainHolderForm.get('lastName').value | titlecase" readonly />
             <mat-error *ngIf="mainHolderForm.get('lastName').invalid">
-              {{ getErrorMessage('mainHolderForm', 'lastName') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'lastName') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" *ngIf="readonly">
             <mat-label>Country</mat-label>
             <input matInput formControlName="country" required [value]="mainHolderForm.get('country').value | titlecase" readonly />
             <mat-error *ngIf="mainHolderForm.get('country').invalid">
-              {{ getErrorMessage('mainHolderForm', 'country') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'country') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" *ngIf="!readonly">
             <mat-label>Country</mat-label>
-            <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('mainHolderForm')">
+            <mat-select formControlName="country" required (selectionChange)="registrationService.onCountryValueChange(mainHolderForm)">
               <mat-option>-- Clear --</mat-option>
               <mat-option value="Canada">
                 <img class="flag-icon" src="../../assets/countries-flags-png/ca.png" />
@@ -216,7 +222,7 @@
               </mat-option>
             </mat-select>
             <mat-error *ngIf="mainHolderForm.get('country').invalid">
-              {{ getErrorMessage('mainHolderForm', 'country') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'country') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -230,7 +236,7 @@
               [readonly]="readonly"
             />
             <mat-error *ngIf="mainHolderForm.get('city').invalid">
-              {{ getErrorMessage('mainHolderForm', 'city') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'city') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -244,7 +250,7 @@
               readonly
             />
             <mat-error *ngIf="mainHolderForm.get('birthDay').invalid">
-              {{ getErrorMessage('mainHolderForm', 'birthDay') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'birthDay') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -256,19 +262,19 @@
               [maxlength]="environment.inputs.phoneNumber.maxLength"
               required
               placeholder="Ex. (555) 555-1234 (for Canada)"
-              (input)="formatPhoneNumber($event, 'mainHolderForm', 'phoneNumber')"
-              (blur)="formatPhoneNumber($event, 'mainHolderForm', 'phoneNumber')"
+              (input)="registrationService.formatPhoneNumber($event, mainHolderForm, 'phoneNumber')"
+              (blur)="registrationService.formatPhoneNumber($event, mainHolderForm, 'phoneNumber')"
               [readonly]="readonly"
             />
             <mat-error *ngIf="mainHolderForm.get('phoneNumber').invalid">
-              {{ getErrorMessage('mainHolderForm', 'phoneNumber') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'phoneNumber') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" *ngIf="readonly">
             <mat-label>State/Province/Region</mat-label>
             <input matInput formControlName="province" required [value]="mainHolderForm.get('province').value | titlecase" readonly />
             <mat-error *ngIf="mainHolderForm.get('province').invalid">
-              {{ getErrorMessage('mainHolderForm', 'province') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'province') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" *ngIf="!readonly">
@@ -277,8 +283,8 @@
               <mat-option>-- Clear --</mat-option>
               <mat-option
                 *ngFor="
-                  let province of countries[findSelectedCountryIndex('mainHolderForm')]
-                    ? countries[findSelectedCountryIndex('mainHolderForm')].regions
+                  let province of countries[registrationService.findSelectedCountryIndex(mainHolderForm)]
+                    ? countries[registrationService.findSelectedCountryIndex(mainHolderForm)].regions
                     : []
                 "
                 [value]="province.name + ' (' + province.shortCode + ')'"
@@ -287,7 +293,7 @@
               </mat-option>
             </mat-select>
             <mat-error *ngIf="mainHolderForm.get('province').invalid">
-              {{ getErrorMessage('mainHolderForm', 'province') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'province') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -298,13 +304,13 @@
               maxlength="14"
               required
               [value]="mainHolderForm.get('postalCode').value | uppercase"
-              (input)="formatCanadianPostalCode($event, 'mainHolderForm')"
-              (blur)="formatCanadianPostalCode($event, 'mainHolderForm')"
+              (input)="registrationService.formatCanadianPostalCode($event, mainHolderForm)"
+              (blur)="registrationService.formatCanadianPostalCode($event, mainHolderForm)"
               placeholder="Ex. J4K 5G7 (for Canada)"
               [readonly]="readonly"
             />
             <mat-error *ngIf="mainHolderForm.get('postalCode').invalid">
-              {{ getErrorMessage('mainHolderForm', 'postalCode') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'postalCode') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -315,12 +321,12 @@
               maxlength="11"
               required
               placeholder="Ex. 111-111-111"
-              (input)="formatSocialInsuranceNumber($event, 'mainHolderForm')"
-              (blur)="formatSocialInsuranceNumber($event, 'mainHolderForm')"
+              (input)="registrationService.formatSocialInsuranceNumber($event, mainHolderForm)"
+              (blur)="registrationService.formatSocialInsuranceNumber($event, mainHolderForm)"
               readonly
             />
             <mat-error *ngIf="mainHolderForm.get('socialInsuranceNumber').invalid">
-              {{ getErrorMessage('mainHolderForm', 'socialInsuranceNumber') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'socialInsuranceNumber') }}
             </mat-error>
             <button
               mat-icon-button
@@ -343,14 +349,14 @@
               [readonly]="readonly"
             />
             <mat-error *ngIf="mainHolderForm.get('profession').invalid">
-              {{ getErrorMessage('mainHolderForm', 'profession') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'profession') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Employer</mat-label>
             <input matInput formControlName="employer" [value]="mainHolderForm.get('employer').value | titlecase" [readonly]="readonly" />
             <mat-error *ngIf="mainHolderForm.get('employer').invalid">
-              {{ getErrorMessage('mainHolderForm', 'employer') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'employer') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -361,18 +367,18 @@
               formControlName="employerPhoneNumber"
               [maxlength]="environment.inputs.phoneNumber.maxLength"
               placeholder="Ex. (555) 555-1234 (for Canada)"
-              (input)="formatPhoneNumber($event, 'mainHolderForm', 'employerPhoneNumber')"
-              (blur)="formatPhoneNumber($event, 'mainHolderForm', 'employerPhoneNumber')"
+              (input)="registrationService.formatPhoneNumber($event, mainHolderForm, 'employerPhoneNumber')"
+              (blur)="registrationService.formatPhoneNumber($event, mainHolderForm, 'employerPhoneNumber')"
               [readonly]="readonly"
             />
             <mat-error *ngIf="mainHolderForm.get('employerPhoneNumber').invalid">
-              {{ getErrorMessage('mainHolderForm', 'employerPhoneNumber') }}
+              {{ registrationService.getErrorMessage(mainHolderForm, 'employerPhoneNumber') }}
             </mat-error>
           </mat-form-field>
         </form>
       </mat-expansion-panel>
       <!-- Joint member information -->
-      <mat-expansion-panel>
+      <mat-expansion-panel *ngIf="jointMemberStatus">
         <mat-expansion-panel-header>
           <mat-panel-title>3- Joint member information</mat-panel-title>
           <mat-panel-description>
@@ -384,7 +390,7 @@
             <mat-label>Title</mat-label>
             <input matInput formControlName="title" required [value]="jointMemberForm.get('title').value | titlecase" readonly />
             <mat-error *ngIf="jointMemberForm.get('title').invalid">
-              {{ getErrorMessage('jointMemberForm', 'title') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'title') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" *ngIf="!readonly">
@@ -396,7 +402,7 @@
               </mat-option>
             </mat-select>
             <mat-error *ngIf="jointMemberForm.get('title').invalid">
-              {{ getErrorMessage('jointMemberForm', 'title') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'title') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -409,7 +415,7 @@
               [readonly]="readonly"
             />
             <mat-error *ngIf="jointMemberForm.get('firstName').invalid">
-              {{ getErrorMessage('jointMemberForm', 'firstName') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'firstName') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -423,7 +429,7 @@
               [readonly]="readonly"
             />
             <mat-error *ngIf="jointMemberForm.get('address').invalid">
-              {{ getErrorMessage('jointMemberForm', 'address') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'address') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -436,19 +442,19 @@
               [readonly]="readonly"
             />
             <mat-error *ngIf="jointMemberForm.get('lastName').invalid">
-              {{ getErrorMessage('jointMemberForm', 'lastName') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'lastName') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" *ngIf="readonly">
             <mat-label>Country</mat-label>
             <input matInput formControlName="country" required [value]="jointMemberForm.get('country').value | titlecase" readonly />
             <mat-error *ngIf="jointMemberForm.get('country').invalid">
-              {{ getErrorMessage('jointMemberForm', 'country') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'country') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" *ngIf="!readonly">
             <mat-label>Country</mat-label>
-            <mat-select formControlName="country" required (selectionChange)="onCountryValueChange('jointMemberForm')">
+            <mat-select formControlName="country" required (selectionChange)="registrationService.onCountryValueChange(jointMemberForm)">
               <mat-option>-- Clear --</mat-option>
               <mat-option value="Canada">
                 <img class="flag-icon" src="../../assets/countries-flags-png/ca.png" />
@@ -470,7 +476,7 @@
               </mat-option>
             </mat-select>
             <mat-error *ngIf="jointMemberForm.get('country').invalid">
-              {{ getErrorMessage('jointMemberForm', 'country') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'country') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -484,7 +490,7 @@
               [readonly]="readonly"
             />
             <mat-error *ngIf="jointMemberForm.get('city').invalid">
-              {{ getErrorMessage('jointMemberForm', 'city') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'city') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -495,12 +501,12 @@
               maxlength="11"
               required
               placeholder="Ex. 111-111-111"
-              (input)="formatSocialInsuranceNumber($event, 'jointMemberForm')"
-              (blur)="formatSocialInsuranceNumber($event, 'jointMemberForm')"
+              (input)="registrationService.formatSocialInsuranceNumber($event, jointMemberForm)"
+              (blur)="registrationService.formatSocialInsuranceNumber($event, jointMemberForm)"
               [readonly]="readonly"
             />
             <mat-error *ngIf="jointMemberForm.get('socialInsuranceNumber').invalid">
-              {{ getErrorMessage('jointMemberForm', 'socialInsuranceNumber') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'socialInsuranceNumber') }}
             </mat-error>
             <button
               mat-icon-button
@@ -518,7 +524,7 @@
             <mat-label>State/Province/Region</mat-label>
             <input matInput formControlName="province" required [value]="jointMemberForm.get('province').value | titlecase" readonly />
             <mat-error *ngIf="jointMemberForm.get('province').invalid">
-              {{ getErrorMessage('jointMemberForm', 'province') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'province') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" *ngIf="!readonly">
@@ -527,8 +533,8 @@
               <mat-option>-- Clear --</mat-option>
               <mat-option
                 *ngFor="
-                  let province of countries[findSelectedCountryIndex('jointMemberForm')]
-                    ? countries[findSelectedCountryIndex('jointMemberForm')].regions
+                  let province of countries[registrationService.findSelectedCountryIndex(jointMemberForm)]
+                    ? countries[registrationService.findSelectedCountryIndex(jointMemberForm)].regions
                     : []
                 "
                 [value]="province.name + ' (' + province.shortCode + ')'"
@@ -537,7 +543,7 @@
               </mat-option>
             </mat-select>
             <mat-error *ngIf="jointMemberForm.get('province').invalid">
-              {{ getErrorMessage('jointMemberForm', 'province') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'province') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -548,13 +554,13 @@
               maxlength="14"
               required
               [value]="jointMemberForm.get('postalCode').value | uppercase"
-              (input)="formatCanadianPostalCode($event, 'jointMemberForm')"
-              (blur)="formatCanadianPostalCode($event, 'jointMemberForm')"
+              (input)="registrationService.formatCanadianPostalCode($event, jointMemberForm)"
+              (blur)="registrationService.formatCanadianPostalCode($event, jointMemberForm)"
               placeholder="Ex. J4K 5G7 (for Canada)"
               [readonly]="readonly"
             />
             <mat-error *ngIf="jointMemberForm.get('postalCode').invalid">
-              {{ getErrorMessage('jointMemberForm', 'postalCode') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'postalCode') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -566,7 +572,7 @@
               [readonly]="readonly"
             />
             <mat-error *ngIf="jointMemberForm.get('profession').invalid">
-              {{ getErrorMessage('jointMemberForm', 'profession') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'profession') }}
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
@@ -587,7 +593,7 @@
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="jointMemberForm.get('relationship').invalid">
-              {{ getErrorMessage('jointMemberForm', 'relationship') }}
+              {{ registrationService.getErrorMessage(jointMemberForm, 'relationship') }}
             </mat-error>
           </mat-form-field>
         </form>
