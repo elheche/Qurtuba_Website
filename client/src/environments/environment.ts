@@ -232,17 +232,6 @@ export const environment = {
     },
   },
   userProfil: {
-    tabs: {
-      loginTab: 0,
-      personalTab: 1,
-      jointMemberTab: 2,
-    },
-    forms: {
-      registrationFormStep1: 0,
-      registrationFormStep2: 1,
-      registrationFormStep3: 2,
-      registrationFormStep4: 3,
-    },
     snackbarDuration: 3000,
   },
 };

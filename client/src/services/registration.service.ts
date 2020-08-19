@@ -306,6 +306,10 @@ export class RegistrationService implements OnDestroy {
     }
   }
 
+  updateJointMemberStatus(status: boolean): void {
+    this.jointMemberStatusSource.next(status);
+  }
+
   protected handleError(error: HttpErrorResponse): Observable<never> {
     const errorToThrow = new Error();
     if (error.error instanceof ErrorEvent) {

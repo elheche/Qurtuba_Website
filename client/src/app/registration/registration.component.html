@@ -13,7 +13,7 @@
     </mat-card-header>
     <mat-card-content>
       <mat-horizontal-stepper
-        linear="false"
+        linear="true"
         #stepper
         (animationDone)="
           registrationService.setRecaptchaValidators(registrationFormStep2, stepper);

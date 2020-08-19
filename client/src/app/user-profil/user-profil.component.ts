@@ -4,18 +4,20 @@ import { MatAccordion } from '@angular/material/expansion';
 import { Observable, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { RegistrationService } from 'src/services/registration.service';
+import { UserProfilService } from 'src/services/user-profil.service';
 import data from '../../assets/countries-data.json';
 import { CustomValidators } from '../registration/custom-validators';
 import { ICountry } from '../registration/icountry';
 
-const inputs1 = {
+const loginInputs = {
   email: 'hichem.lamraoui@yahoo.ca',
   password: 'Elheche2020@',
   confirmPassword: 'Elheche2020@',
 };
-const inputs2 = {
+const mainHolderInputs = {
   membershipType: 'Buy a house',
   accountType: 'Joint',
+  title: 'Mr.',
   firstName: 'Hichem',
   lastName: 'Lamraoui',
   birthDay: '1983-07-06',
@@ -25,19 +27,14 @@ const inputs2 = {
   country: 'Canada',
   province: 'Quebec (QC)',
   postalCode: 'H1Z 3K6',
-};
-const inputs3 = {
-  socialInsuranceNumber: '111-222-333',
-  citizenship: 'Algeria',
+  socialInsuranceNumber: '240-000-000',
   profession: 'Student',
   employer: 'Polytechnique Montreal',
   employerPhoneNumber: '(514) 444-5555',
-  numberOfDependents: '0',
-  depositAmount: '50000',
-  donationForMosque: '100',
-  membershipFee: '75',
 };
-const inputs4 = {
+
+const jointMemberInputs = {
+  title: 'Mrs.',
   firstName: 'Amina',
   lastName: 'Kadri',
   address: '8689, 13E Avenue',
@@ -45,8 +42,7 @@ const inputs4 = {
   country: 'Canada',
   province: 'Quebec (QC)',
   postalCode: 'H1Z 3K6',
-  socialInsuranceNumber: '444-555-666',
-  citizenship: 'Algeria',
+  socialInsuranceNumber: '240-420-000',
   profession: 'Nurse',
   relationship: 'Wife',
 };
@@ -69,8 +65,7 @@ export class UserProfilComponent implements OnInit, OnDestroy {
   jointMemberForm: FormGroup;
   private subscriptions: Subscription[];
 
-  constructor(public registrationService: RegistrationService) {
-    this.readonly = true;
+  constructor(public registrationService: RegistrationService, public userProfilService: UserProfilService) {
     this.hide = true;
     this.environment = environment;
     this.countries = data as ICountry[];
@@ -125,7 +120,24 @@ export class UserProfilComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    Object.keys(loginInputs).forEach((input: string) => {
+      this.loginForm.get(input).setValue(loginInputs[input]);
+    });
+    Object.keys(mainHolderInputs).forEach((input: string) => {
+      this.mainHolderForm.get(input).setValue(mainHolderInputs[input]);
+    });
+    Object.keys(jointMemberInputs).forEach((input: string) => {
+      this.jointMemberForm.get(input).setValue(jointMemberInputs[input]);
+    });
     this.filteredRelationships = this.registrationService.filterRelationships(this.jointMemberForm);
+    this.subscriptions.push(
+      this.userProfilService.readonly.subscribe((readonly) => {
+        this.readonly = readonly;
+      }),
+    );
+    if (this.mainHolderForm.get('accountType').value === 'Joint') {
+      this.registrationService.updateJointMemberStatus(true);
+    }
     this.subscriptions.push(
       this.registrationService.jointMemberStatus.subscribe((jointMemberStatus) => {
         this.jointMemberStatus = jointMemberStatus;
@@ -137,9 +149,5 @@ export class UserProfilComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
-  }
-
-  onEdit(): void {
-    this.readonly = !this.readonly;
   }
 }
