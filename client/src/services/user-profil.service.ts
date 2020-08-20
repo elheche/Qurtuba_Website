@@ -24,10 +24,8 @@ export class UserProfilService {
     let isValid = true;
     for (let i = 0; i < forms.length; i++) {
       if (i === 2 && forms[1].get('accountType').value === 'Individual') {
-        console.log('hi eleheche@');
         continue; // To avoid checking jointMemberForm validity when accountType === Individual.
       }
-      console.log('wech l7ala!');
       if (forms[i].invalid) {
         isValid = false;
         break;
