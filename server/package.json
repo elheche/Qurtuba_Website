@@ -39,6 +39,9 @@
     "instrument": true
   },
   "author": "Hichem Lamraoui",
+  "engines": {
+    "node": "12.x"
+  },
   "dependencies": {
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
