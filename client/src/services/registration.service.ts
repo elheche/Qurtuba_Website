@@ -29,7 +29,7 @@ export class RegistrationService implements OnDestroy {
   userAgreementText: Observable<string>;
 
   constructor(private http: HttpClient, private alertDialog: MatDialog, private snackBar: MatSnackBar) {
-    this.RECAPTCHA_VALIDATION_URL = 'http://localhost:3000/api/recaptcha/token-validation';
+    this.RECAPTCHA_VALIDATION_URL = environment.inputs.reCaptcha.reCaptchaValidationUrl;
     this.httpOptions = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       responseType: 'json',

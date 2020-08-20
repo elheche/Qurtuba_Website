@@ -16,7 +16,6 @@ export const environment = {
         "Your employer's full information (if you plan to choose to contribute by payroll deductions).",
       ],
       checkBoxText: 'I consent to the Privacy Policy and confirm that I am between the ages of 18 and 70 and reside in Quebec.',
-      readonly: true,
     },
     reCaptcha: {
       errorMessages: {
@@ -24,14 +23,13 @@ export const environment = {
       },
       siteKey: '6LebULwZAAAAAMnP3RJz59YQCgFJ6QxXrteQInpj',
       language: 'en',
-      readonly: true,
+      reCaptchaValidationUrl: 'http://localhost:3000/api/recaptcha/token-validation',
     },
     email: {
       errorMessages: {
         required: 'You must enter a valid email address.',
         pattern: 'Invalid email.',
       },
-      readonly: true,
     },
     password: {
       errorMessages: {
@@ -41,47 +39,40 @@ export const environment = {
       },
       hintLabel:
         'Your password must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character.',
-      readonly: true,
     },
     confirmPassword: {
       errorMessages: {
         required: 'You must confirm the password.',
         noPassswordMatch: 'Error: password and confirm password do not match.',
       },
-      readonly: true,
     },
     membershipType: {
       errorMessages: {
         required: 'You must choose the type of the membership.',
       },
       types: ['Buy a house', 'Investment'],
-      readonly: true,
     },
     accountType: {
       errorMessages: {
         required: 'You must choose the type of the account.',
       },
       types: ['Individual', 'Joint'],
-      readonly: true,
     },
     title: {
       errorMessages: {
         required: 'Invalid title.',
       },
       titles: ['Mr.', 'Ms.', 'Mrs.', 'Miss'],
-      readonly: true,
     },
     firstName: {
       errorMessages: {
         required: 'You must enter a first name.',
       },
-      readonly: true,
     },
     lastName: {
       errorMessages: {
         required: 'You must enter a last name.',
       },
-      readonly: true,
     },
     birthDay: {
       errorMessages: {
@@ -91,38 +82,32 @@ export const environment = {
       acceptedRange: {
         minDate: '1900-01-01',
       },
-      readonly: true,
     },
     address: {
       errorMessages: {
         required: 'You must enter an address.',
       },
-      readonly: true,
     },
     country: {
       errorMessages: {
         required: 'You must choose a country.',
       },
-      readonly: true,
     },
     city: {
       errorMessages: {
         required: 'You must enter a city.',
       },
-      readonly: true,
     },
     province: {
       errorMessages: {
         required: 'You must choose a province.',
       },
-      readonly: true,
     },
     postalCode: {
       errorMessages: {
         required: 'You must enter a valid postal code.',
         pattern: 'Invalid postal code.',
       },
-      readonly: true,
     },
     phoneNumber: {
       errorMessages: {
@@ -130,7 +115,6 @@ export const environment = {
         invalidPhoneNumber: 'Invalid phone number.',
       },
       maxLength: 17,
-      readonly: true,
     },
     socialInsuranceNumber: {
       errorMessages: {
@@ -140,19 +124,16 @@ export const environment = {
       tooltip: `Do I need to provide my social insurance number?
          The Canada Revenue Agency requires that you provide your SIN to anyone who issues a tax slip in your name.
          Visit the Service Canada site for more information on how to use your social insurance number.`,
-      readonly: true,
     },
     profession: {
       errorMessages: {
         required: 'You must enter a profession.',
       },
-      readonly: true,
     },
     employer: {
       errorMessages: {
         required: 'You must enter an employer.',
       },
-      readonly: true,
     },
     employerPhoneNumber: {
       errorMessages: {
@@ -160,7 +141,6 @@ export const environment = {
         invalidPhoneNumber: 'Invalid phone number.',
       },
       maxLength: 17,
-      readonly: true,
     },
     relationship: {
       errorMessages: {
@@ -204,11 +184,9 @@ export const environment = {
         'Uncle',
         'Wife',
       ],
-      readonly: true,
     },
     sameAddressCheckBox: {
       checkBoxText: 'Same as the main holder address.',
-      readonly: true,
     },
     userAgreementStepDone: {
       errorMessages: {
@@ -218,7 +196,6 @@ export const environment = {
         individual: 'I have read the Regulations and By-laws of the "Co-operative" and I fully agree to abide by them.',
         joint: 'We have read the Regulations and By-laws of the "Co-operative" and We fully agree to abide by them.',
       },
-      readonly: true,
     },
   },
   registration: {

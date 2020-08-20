@@ -3,12 +3,30 @@
 export const environment = {
   production: true,
   inputs: {
+    userAgreementStep1: {
+      errorMessages: {
+        required: 'You must agree to the terms and conditions to continue.',
+      },
+      requiredInformations: [
+        'Your social insurance number.',
+        'Your bank information.',
+        "Your employer's full information (if you plan to choose to contribute by payroll deductions).",
+      ],
+      checkBoxText: 'I consent to the Privacy Policy and confirm that I am between the ages of 18 and 70 and reside in Quebec.',
+    },
+    reCaptcha: {
+      errorMessages: {
+        required: 'You must resolve the reCAPTCHA to continue.',
+      },
+      siteKey: '6LebULwZAAAAAMnP3RJz59YQCgFJ6QxXrteQInpj',
+      language: 'en',
+      reCaptchaValidationUrl: 'https://qurtuba-server.herokuapp.com/api/recaptcha/token-validation',
+    },
     email: {
       errorMessages: {
         required: 'You must enter a valid email address.',
-        email: 'Invalid email.',
+        pattern: 'Invalid email.',
       },
-      readonly: true,
     },
     password: {
       errorMessages: {
@@ -16,152 +34,114 @@ export const environment = {
         pattern:
           'Invalid password. It must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character.',
       },
-      readonly: true,
+      hintLabel:
+        'Your password must contain at least 8 characters with at least 1 numeric character, 1 uppercase letter, 1 lowercase letter and 1 special character.',
     },
     confirmPassword: {
       errorMessages: {
         required: 'You must confirm the password.',
         noPassswordMatch: 'Error: password and confirm password do not match.',
       },
-      readonly: true,
     },
     membershipType: {
       errorMessages: {
         required: 'You must choose the type of the membership.',
       },
       types: ['Buy a house', 'Investment'],
-      readonly: true,
     },
     accountType: {
       errorMessages: {
         required: 'You must choose the type of the account.',
       },
       types: ['Individual', 'Joint'],
-      readonly: true,
+    },
+    title: {
+      errorMessages: {
+        required: 'Invalid title.',
+      },
+      titles: ['Mr.', 'Ms.', 'Mrs.', 'Miss'],
     },
     firstName: {
       errorMessages: {
         required: 'You must enter a first name.',
       },
-      readonly: true,
     },
     lastName: {
       errorMessages: {
         required: 'You must enter a last name.',
       },
-      readonly: true,
     },
     birthDay: {
       errorMessages: {
         required: 'Invalid date.',
         belowMinimumDateLimit: 'The minimum date allowed is 01/01/1900.',
-        aboveMaximumDateLimit: 'You must be at least 18 years old!',
       },
       acceptedRange: {
         minDate: '1900-01-01',
-        // User must be at least 18 years old
-        maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()).toISOString().slice(0, 10),
       },
-      readonly: true,
-    },
-    phoneNumber: {
-      errorMessages: {
-        required: 'You must enter a phone number.',
-        pattern: 'Invalid phone number.',
-      },
-      readonly: true,
     },
     address: {
       errorMessages: {
         required: 'You must enter an address.',
       },
-      readonly: true,
-    },
-    city: {
-      errorMessages: {
-        required: 'You must enter a city.',
-      },
-      readonly: true,
     },
     country: {
       errorMessages: {
         required: 'You must choose a country.',
       },
-      readonly: true,
+    },
+    city: {
+      errorMessages: {
+        required: 'You must enter a city.',
+      },
     },
     province: {
       errorMessages: {
         required: 'You must choose a province.',
       },
-      readonly: true,
     },
     postalCode: {
       errorMessages: {
         required: 'You must enter a valid postal code.',
         pattern: 'Invalid postal code.',
       },
-      readonly: true,
+    },
+    phoneNumber: {
+      errorMessages: {
+        required: 'You must enter a phone number.',
+        invalidPhoneNumber: 'Invalid phone number.',
+      },
+      maxLength: 17,
     },
     socialInsuranceNumber: {
       errorMessages: {
-        required: 'You must enter a social insurance number (SIN).',
-        pattern: 'Invalid social insurance number (SIN).',
+        required: 'You must enter a social insurance number.',
+        invalidSocialInsuranceNumber: 'Invalid social insurance number.',
       },
-      readonly: true,
-    },
-    citizenship: {
-      errorMessages: {
-        required: 'You must choose a citizenship.',
-      },
-      readonly: true,
+      tooltip: `Do I need to provide my social insurance number?
+         The Canada Revenue Agency requires that you provide your SIN to anyone who issues a tax slip in your name.
+         Visit the Service Canada site for more information on how to use your social insurance number.`,
     },
     profession: {
       errorMessages: {
         required: 'You must enter a profession.',
       },
-      readonly: true,
     },
     employer: {
       errorMessages: {
         required: 'You must enter an employer.',
       },
-      readonly: true,
     },
     employerPhoneNumber: {
       errorMessages: {
         required: 'You must enter an employer phone number.',
-        pattern: 'Invalid phone number.',
+        invalidPhoneNumber: 'Invalid phone number.',
       },
-      readonly: true,
-    },
-    numberOfDependents: {
-      errorMessages: {
-        required: 'you must enter the number of your dependents.',
-      },
-      readonly: true,
-    },
-    depositAmount: {
-      errorMessages: {
-        required: 'you must enter your deposit amount.',
-      },
-      readonly: true,
-    },
-    donationForMosque: {
-      errorMessages: {
-        required: 'you must enter your donation amount for mosque.',
-      },
-      readonly: true,
-    },
-    membershipFee: {
-      defaultAmount: 75,
-      readonly: true,
-    },
-    totalAmount: {
-      readonly: true,
+      maxLength: 17,
     },
     relationship: {
       errorMessages: {
-        required: 'you must enter a relationship.',
+        required: 'You must enter a relationship.',
       },
       types: [
         'Aunt',
@@ -201,34 +181,31 @@ export const environment = {
         'Uncle',
         'Wife',
       ],
-      readonly: true,
     },
-    userAgreement: {
+    sameAddressCheckBox: {
+      checkBoxText: 'Same as the main holder address.',
+    },
+    userAgreementStepDone: {
       errorMessages: {
-        required: 'you must accept the regulation.',
+        required: 'You must accept the regulation.',
       },
-      text: {
+      checkBoxText: {
         individual: 'I have read the Regulations and By-laws of the "Co-operative" and I fully agree to abide by them.',
         joint: 'We have read the Regulations and By-laws of the "Co-operative" and We fully agree to abide by them.',
       },
-      readonly: true,
     },
   },
   registration: {
-    batchLength: 8,
+    snackbarDuration: 4000,
+    stepsIndex: {
+      step1: 0,
+      step2: 1,
+      step3: 2,
+      step4: 3,
+      step5: 4,
+    },
   },
   userProfil: {
-    tabs: {
-      loginTab: 0,
-      personalTab: 1,
-      jointMemberTab: 2,
-    },
-    forms: {
-      registrationFormStep1: 0,
-      registrationFormStep2: 1,
-      registrationFormStep3: 2,
-      registrationFormStep4: 3,
-    },
     snackbarDuration: 3000,
   },
 };
