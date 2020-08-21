@@ -46,14 +46,14 @@ export class DatabaseService {
 
   async getUser(userData: IUser): Promise<mongoose.Document> {
     return new Promise((resolve, reject) => {
-      User.findOne({ email: userData.email }, (err, res) => {
+      User.findOne({ email: userData.login.email }, (err, res) => {
         if (err) {
           reject(err);
         } else {
           if (!res) {
             reject(new mongoose.Error('Invalid email.'));
           } else {
-            if (userData.password !== res.password) {
+            if (userData.login.password !== res.login.password) {
               reject(new mongoose.Error('Invalid password.'));
             } else {
               resolve(res);
