@@ -4,6 +4,7 @@ import { inject, injectable } from 'inversify';
 import * as mongoose from 'mongoose';
 import { DatabaseService } from '../services/database.service';
 import Types from '../types';
+import { IUser } from '../user';
 
 @injectable()
 export class DatabaseController {
@@ -45,11 +46,13 @@ export class DatabaseController {
     this.router.post('/registration', async (req: Request, res: Response, next: NextFunction) => {
       this.databaseService
         .addUser(req.body)
-        .then((registredUser: mongoose.Document) => {
-          res.status(Httpstatus.CREATED).send(registredUser);
+        .then((registredUser: IUser) => {
+          res.status(Httpstatus.CREATED).json(registredUser);
         })
-        .catch((error: mongoose.Error) => {
-          res.status(Httpstatus.NOT_ACCEPTABLE).send(error.message);
+        .catch((error: Error) => {
+          error.name === 'MongooseServerSelectionError'
+            ? res.status(Httpstatus.INTERNAL_SERVER_ERROR).json(error)
+            : res.status(Httpstatus.NOT_ACCEPTABLE).json(error);
         });
     });
 
