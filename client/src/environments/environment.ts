@@ -23,7 +23,6 @@ export const environment = {
       },
       siteKey: '6LebULwZAAAAAMnP3RJz59YQCgFJ6QxXrteQInpj',
       language: 'en',
-      reCaptchaValidationUrl: 'http://localhost:3000/api/recaptcha/token-validation',
     },
     email: {
       errorMessages: {
@@ -211,6 +210,7 @@ export const environment = {
   userProfil: {
     snackbarDuration: 3000,
   },
+  serverUrl: 'http://localhost:3000',
 };
 
 /*

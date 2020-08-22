@@ -20,7 +20,6 @@ export const environment = {
       },
       siteKey: '6LebULwZAAAAAMnP3RJz59YQCgFJ6QxXrteQInpj',
       language: 'en',
-      reCaptchaValidationUrl: 'https://qurtuba-server.herokuapp.com/api/recaptcha/token-validation',
     },
     email: {
       errorMessages: {
@@ -208,4 +207,5 @@ export const environment = {
   userProfil: {
     snackbarDuration: 3000,
   },
+  serverUrl: 'https://qurtuba-server.herokuapp.com',
 };
