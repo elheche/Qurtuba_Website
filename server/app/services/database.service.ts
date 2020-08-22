@@ -64,12 +64,30 @@ export class DatabaseService {
     });
   }
 
-  async addUser(userData: IUser): Promise<mongoose.Document> {
+  async addUser(userData: IUser): Promise<IUser> {
     return new Promise((resolve, reject) => {
       const user = new User(userData);
       user.save((err, res) => {
         if (err) {
-          reject(err);
+          const duplicateKeyErrorCode = 11000;
+          if (err.code === duplicateKeyErrorCode) {
+            const errorToSend = new Error();
+            errorToSend.name = 'DuplicateKeyError';
+            const duplicateKey = Object.keys(err.keyValue)[0];
+            switch (duplicateKey) {
+              case 'login.email':
+                errorToSend.message = 'Your email address already exists in our database.';
+                break;
+              case 'mainHolder.socialInsuranceNumber':
+                errorToSend.message = 'Your social insurance number already exists in our database.';
+                break;
+              case 'jointMember.socialInsuranceNumber':
+                errorToSend.message = "The joint member's social insurance number already exists in our database.";
+            }
+            reject(errorToSend);
+          } else {
+            reject(err);
+          }
         } else {
           resolve(res);
         }
