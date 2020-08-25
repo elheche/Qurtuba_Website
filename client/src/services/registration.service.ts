@@ -1,7 +1,7 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { AbstractControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
@@ -9,17 +9,19 @@ import { RecaptchaComponent } from 'ng-recaptcha';
 import { BehaviorSubject, Observable, Subscription, throwError } from 'rxjs';
 import { catchError, map, startWith } from 'rxjs/operators';
 import { AlertDialogComponent } from 'src/app/alert-dialog/alert-dialog.component';
+import { RegistrationDialogComponent } from 'src/app/registration-dialog/registration-dialog.component';
 import { CustomValidators } from 'src/app/registration/custom-validators';
 import { ICountry } from 'src/app/registration/icountry';
 import { environment } from 'src/environments/environment';
 import { RecaptchaValidation } from '../../../common/communication/recaptcha-validation';
+import { IUser } from '../../../server/app/user';
 import data from '../assets/countries-data.json';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegistrationService implements OnDestroy {
-  private readonly RECAPTCHA_VALIDATION_URL: string;
+  private readonly SERVER_URL: string;
   private httpOptions: {};
   private jointMemberStatusSource: BehaviorSubject<boolean>;
   private userAgreementTextSource: BehaviorSubject<string>;
@@ -28,12 +30,8 @@ export class RegistrationService implements OnDestroy {
   jointMemberStatus: Observable<boolean>;
   userAgreementText: Observable<string>;
 
-  constructor(private http: HttpClient, private alertDialog: MatDialog, private snackBar: MatSnackBar) {
-    this.RECAPTCHA_VALIDATION_URL = environment.inputs.reCaptcha.reCaptchaValidationUrl;
-    this.httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-      responseType: 'json',
-    };
+  constructor(private http: HttpClient, private dialog: MatDialog, private snackBar: MatSnackBar) {
+    this.SERVER_URL = environment.serverUrl;
     this.countries = data as ICountry[];
     this.subscriptions = [];
     this.jointMemberStatusSource = new BehaviorSubject<boolean>(false);
@@ -49,8 +47,13 @@ export class RegistrationService implements OnDestroy {
   }
 
   sendToken(reCaptchaResponse: string): Observable<RecaptchaValidation> {
+    this.httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      responseType: 'json',
+    };
+    const reCaptchaUrl = `${this.SERVER_URL}/api/recaptcha/token-validation`;
     return this.http
-      .post<RecaptchaValidation>(this.RECAPTCHA_VALIDATION_URL, { token: reCaptchaResponse }, this.httpOptions)
+      .post<RecaptchaValidation>(reCaptchaUrl, { token: reCaptchaResponse }, this.httpOptions)
       .pipe(catchError(this.handleError));
   }
 
@@ -283,7 +286,7 @@ export class RegistrationService implements OnDestroy {
   showReCaptchaValidationError(errorName: string): void {
     let errorMessage: string;
     errorName === 'ClientOrNetworkError'
-      ? (errorMessage = 'A client-side or network error occurred!')
+      ? (errorMessage = 'A client-side or network error occurred! Please try again later.')
       : (errorMessage = 'A server error occured! Please try again later.');
     this.snackBar.open(errorMessage, undefined, {
       duration: environment.registration.snackbarDuration,
@@ -310,6 +313,17 @@ export class RegistrationService implements OnDestroy {
     this.jointMemberStatusSource.next(status);
   }
 
+  AddUser(user: IUser): Observable<HttpEvent<IUser>> {
+    this.httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      responseType: 'json',
+      reportProgress: true,
+      observe: 'events',
+    };
+    const registrationUrl = `${this.SERVER_URL}/api/database/registration`;
+    return this.http.post<HttpEvent<IUser>>(registrationUrl, user, this.httpOptions).pipe(catchError(this.handleError));
+  }
+
   protected handleError(error: HttpErrorResponse): Observable<never> {
     const errorToThrow = new Error();
     if (error.error instanceof ErrorEvent) {
@@ -323,11 +337,18 @@ export class RegistrationService implements OnDestroy {
     }
   }
 
+  openRegistrationDialog(): MatDialogRef<RegistrationDialogComponent> {
+    const registrationDialogRef = this.dialog.open(RegistrationDialogComponent, {
+      width: '400px',
+      disableClose: true,
+    });
+    return registrationDialogRef;
+  }
   protected openAlertDialog(mainHolderForm: FormGroup, doneForm?: FormGroup): void {
-    if (this.alertDialog.openDialogs.length > 0) {
+    if (this.dialog.openDialogs.length > 0) {
       return; // To avoid selectionChange bug (triggered twice when value === undefined).
     }
-    const alertDialogRef = this.alertDialog.open(AlertDialogComponent, {
+    const alertDialogRef = this.dialog.open(AlertDialogComponent, {
       width: '400px',
       disableClose: true,
     });
