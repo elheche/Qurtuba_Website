@@ -1,0 +1,30 @@
+h1 {
+  display: flex;
+}
+
+h1 mat-icon.material-icons-round {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+}
+
+h1.dialog-title-uploading mat-icon.material-icons-round{
+  color: black;
+}
+
+h1.dialog-title-success mat-icon.material-icons-round{
+  color: green;
+}
+
+h1.dialog-title-error mat-icon.material-icons-round{
+  color: red;
+}
+
+div.dialog-content {
+  background-color: #f8f8f8;
+  border: 1px solid #e2e2e2;
+  padding: 15px;
+  font-size: 14px;
+  border-radius: 5px;
+}

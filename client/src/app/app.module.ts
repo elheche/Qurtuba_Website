@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule, MAT_RADIO_DEFAULT_OPTIONS } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -30,11 +31,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
+import { RegistrationDialogComponent } from './registration-dialog/registration-dialog.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { UserProfilComponent } from './user-profil/user-profil.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegistrationComponent, LogoutComponent, UserProfilComponent, AlertDialogComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    RegistrationComponent,
+    LogoutComponent,
+    UserProfilComponent,
+    AlertDialogComponent,
+    RegistrationDialogComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -63,6 +73,7 @@ import { UserProfilComponent } from './user-profil/user-profil.component';
     RecaptchaFormsModule,
     ScrollingModule,
     MatExpansionModule,
+    MatProgressBarModule,
   ],
   providers: [
     {
@@ -79,6 +90,6 @@ import { UserProfilComponent } from './user-profil/user-profil.component';
     },
   ],
   bootstrap: [AppComponent],
-  entryComponents: [AlertDialogComponent],
+  entryComponents: [AlertDialogComponent, RegistrationDialogComponent],
 })
 export class AppModule {}
