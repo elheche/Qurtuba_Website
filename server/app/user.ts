@@ -98,7 +98,7 @@ const schema = new mongoose.Schema({
 
 schema.index({ 'login.email': 1 }, { unique: true });
 schema.index({ 'mainHolder.socialInsuranceNumber': 1 }, { unique: true });
-schema.index({ 'jointMember.socialInsuranceNumber': 1 }, { unique: true });
+schema.index({ 'jointMember.socialInsuranceNumber': 1 }, { unique: true, sparse: true });
 
 // tslint:disable-next-line: variable-name
 const User = mongoose.model<IUser>('User', schema, 'users');
