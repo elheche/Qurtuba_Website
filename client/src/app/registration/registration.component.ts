@@ -1,9 +1,11 @@
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 import { RecaptchaComponent } from 'ng-recaptcha';
 import { Observable, Subscription } from 'rxjs';
 import { RegistrationService } from 'src/services/registration.service';
+import User, { IUser } from '../../../../server/app/user';
 import data from '../../assets/countries-data.json';
 import { environment } from '../../environments/environment';
 import { CustomValidators } from './custom-validators';
@@ -139,5 +141,104 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         break;
       }
     }
+  }
+
+  sendRegistrationForm(): void {
+    if (this.registrationFormStep5.invalid) {
+      return;
+    }
+
+    const registrationDialogRef = this.registrationService.openRegistrationDialog();
+
+    const user = new User({
+      login: {
+        email: this.registrationFormStep2.get('email').value,
+        password: this.registrationFormStep2.get('password').value,
+      },
+      mainHolder: {
+        membershipType: this.registrationFormStep3.get('membershipType').value,
+        accountType: this.registrationFormStep3.get('accountType').value,
+        title: this.registrationFormStep3.get('title').value,
+        firstName: this.registrationFormStep3.get('firstName').value,
+        lastName: this.registrationFormStep3.get('lastName').value,
+        birthDay: this.registrationFormStep3.get('birthDay').value,
+        address: this.registrationFormStep3.get('address').value,
+        country: this.registrationFormStep3.get('country').value,
+        city: this.registrationFormStep3.get('city').value,
+        province: this.registrationFormStep3.get('province').value,
+        postalCode: this.registrationFormStep3.get('postalCode').value,
+        phoneNumber: this.registrationFormStep3.get('phoneNumber').value,
+        socialInsuranceNumber: this.registrationFormStep3.get('socialInsuranceNumber').value,
+        profession: this.registrationFormStep3.get('profession').value,
+        employer: this.registrationFormStep3.get('employer').value,
+        employerPhoneNumber: this.registrationFormStep3.get('employerPhoneNumber').value,
+      },
+      jointMember:
+        this.registrationFormStep3.get('accountType').value === 'Joint'
+          ? {
+              title: this.registrationFormStep4.get('title').value,
+              firstName: this.registrationFormStep4.get('firstName').value,
+              lastName: this.registrationFormStep4.get('lastName').value,
+              address: this.registrationFormStep4.get('address').value,
+              country: this.registrationFormStep4.get('country').value,
+              city: this.registrationFormStep4.get('city').value,
+              province: this.registrationFormStep4.get('province').value,
+              postalCode: this.registrationFormStep4.get('postalCode').value,
+              relationship: this.registrationFormStep4.get('relationship').value,
+              socialInsuranceNumber: this.registrationFormStep4.get('socialInsuranceNumber').value,
+              profession: this.registrationFormStep4.get('profession').value,
+            }
+          : undefined,
+    });
+
+    this.subscriptions.push(
+      this.registrationService.AddUser(user).subscribe(
+        (event: HttpEvent<IUser>) => {
+          switch (event.type) {
+            case HttpEventType.Sent:
+              registrationDialogRef.componentInstance.message = 'Sending the request to the server...';
+              break;
+            case HttpEventType.UploadProgress:
+              const percentageCoefficent = 100;
+              const uploadProgress = Math.round((event.loaded / (event.total as number)) * percentageCoefficent);
+              registrationDialogRef.componentInstance.uploadProgress = uploadProgress;
+              registrationDialogRef.componentInstance.message = `Creating your account is in progress...${uploadProgress}%`;
+              break;
+            case HttpEventType.ResponseHeader:
+              registrationDialogRef.componentInstance.message = 'Receiving response from server...';
+              break;
+            case HttpEventType.Response:
+              registrationDialogRef.componentInstance.message = 'Account created successfully.';
+          }
+        },
+
+        (error: Error) => {
+          registrationDialogRef.componentInstance.dialogTitle = 'Error!';
+          registrationDialogRef.componentInstance.dialogIcon = 'error';
+          registrationDialogRef.componentInstance.resgistrationStatus = 'isFail';
+          if (error.name === 'ClientOrNetworkError') {
+            registrationDialogRef.componentInstance.message = 'A client-side or network error occurred!';
+          } else if (
+            error.message.includes('Your email address already exists in our database.') ||
+            error.message.includes('Your social insurance number already exists in our database.') ||
+            error.message.includes("The joint member's social insurance number already exists in our database.")
+          ) {
+            registrationDialogRef.componentInstance.message = `${error.message} Please check your information and try again.`;
+          } else if (error.message.includes('User validation failed')) {
+            registrationDialogRef.componentInstance.message =
+              'Error: Some fields are invalid! Please check your information and try again.';
+          } else {
+            registrationDialogRef.componentInstance.message = 'A server error occured! Please try again later.';
+          }
+        },
+
+        () => {
+          registrationDialogRef.componentInstance.dialogTitle = 'Done!';
+          registrationDialogRef.componentInstance.dialogIcon = 'cloud_done';
+          registrationDialogRef.componentInstance.resgistrationStatus = 'isSuccess';
+          registrationDialogRef.componentInstance.message = 'Congratulations! Your account has been successfully created!';
+        },
+      ),
+    );
   }
 }
